@@ -8,9 +8,12 @@ import { ProgressBar } from '@/components/shared/ProgressBar'
 import { TeamMemberList } from '@/components/modules/projects/TeamMemberList'
 import { AddTeamMemberForm } from '@/components/modules/projects/AddTeamMemberForm'
 import { TaskStatusBadge } from '@/components/modules/tasks/TaskStatusBadge'
+import { DeliverableStatusBadge } from '@/components/modules/deliverables/DeliverableStatusBadge'
 import { getProjectById } from '@/lib/projects/queries'
 import { getTeamByProjectId } from '@/lib/projects/team-queries'
 import { getTasksByProjectId, type TaskWithRelations } from '@/lib/tasks/queries'
+import { getDeliverablesByProjectId, type DeliverableWithRelations } from '@/lib/deliverables/queries'
+import { getFilesByProjectId, type FileWithRelations } from '@/lib/files/queries'
 import { getUsersForSelect } from '@/lib/users/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import {
@@ -24,6 +27,8 @@ import {
   Activity,
   Plus,
   AlertTriangle,
+  ExternalLink as ExternalLinkIcon,
+  HardDrive,
 } from 'lucide-react'
 
 interface PageProps {
@@ -56,6 +61,14 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
 
   const projectTasks = activeTab === 'tasks'
     ? await getTasksByProjectId(id)
+    : []
+
+  const projectDeliverables = activeTab === 'deliverables'
+    ? await getDeliverablesByProjectId(id)
+    : []
+
+  const projectFiles = activeTab === 'files'
+    ? await getFilesByProjectId(id)
     : []
 
   const tabs = [
@@ -174,7 +187,13 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       {activeTab === 'tasks' && (
         <TasksTab projectId={project.id} tasks={projectTasks} />
       )}
-      {activeTab !== 'overview' && activeTab !== 'team' && activeTab !== 'tasks' && (
+      {activeTab === 'deliverables' && (
+        <DeliverablesTab projectId={project.id} deliverables={projectDeliverables} />
+      )}
+      {activeTab === 'files' && (
+        <FilesTab projectId={project.id} files={projectFiles} driveFolderLink={project.google_drive_folder_link} />
+      )}
+      {activeTab !== 'overview' && activeTab !== 'team' && activeTab !== 'tasks' && activeTab !== 'deliverables' && activeTab !== 'files' && (
         <PlaceholderTab tabName={activeTab} />
       )}
     </div>
@@ -547,6 +566,280 @@ function TasksTab({ projectId, tasks }: { projectId: string; tasks: TaskWithRela
                           <ProgressBar value={task.progress_percent} height={5} />
                           <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>{task.progress_percent}%</span>
                         </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SectionCard>
+    </div>
+  )
+}
+
+/* ─── Deliverables Tab ─────────────────────────────────────────── */
+function DeliverablesTab({ projectId, deliverables }: { projectId: string; deliverables: DeliverableWithRelations[] }) {
+  const headers = ['Deliverable', 'Type', 'Rev', 'Prepared By', 'Status', 'Submitted', 'File']
+
+  const typeLabels: Record<string, string> = {
+    drawing: 'Drawing', '3d_model': '3D Model', report: 'Report', boq: 'BOQ',
+    calculation_sheet: 'Calc Sheet', presentation: 'Presentation', specification: 'Specification',
+    revision_package: 'Rev Package', submission_package: 'Sub Package',
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <SectionCard
+        title="Project Deliverables"
+        actions={
+          <Link
+            href={`/deliverables/new?project_id=${projectId}`}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.75rem',
+              color: 'var(--color-primary)',
+              textDecoration: 'none',
+              fontWeight: 500,
+            }}
+          >
+            <Plus size={12} aria-hidden="true" />
+            Add Deliverable
+          </Link>
+        }
+        noPadding
+      >
+        {deliverables.length === 0 ? (
+          <div style={{
+            padding: '24px 16px',
+            textAlign: 'center',
+            color: 'var(--color-text-muted)',
+            fontSize: '0.8125rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}>
+            <FileText size={16} />
+            No deliverables created for this project yet.
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  {headers.map(h => (
+                    <th
+                      key={h}
+                      style={{
+                        padding: '8px 14px',
+                        textAlign: 'left',
+                        fontSize: '0.6875rem',
+                        fontWeight: 600,
+                        color: 'var(--color-text-muted)',
+                        backgroundColor: 'var(--color-surface-subtle)',
+                        letterSpacing: '0.02em',
+                        textTransform: 'uppercase',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {deliverables.map((d, idx) => {
+                  const isRevisionRequested = d.status === 'revision_requested'
+
+                  return (
+                    <tr
+                      key={d.id}
+                      style={{
+                        borderBottom: idx < deliverables.length - 1 ? '1px solid var(--color-border)' : undefined,
+                        backgroundColor: isRevisionRequested ? '#FEF2F2' : undefined,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <td style={{ padding: '8px 14px', maxWidth: '220px' }}>
+                        <Link href={`/deliverables/${d.id}`} style={{ textDecoration: 'none' }}>
+                          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.8125rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                            {d.name}
+                          </span>
+                        </Link>
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                        {typeLabels[d.type] ?? d.type}
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        <span style={{
+                          fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600,
+                          color: 'var(--color-text-primary)', backgroundColor: 'var(--color-surface-subtle)',
+                          padding: '1px 6px', borderRadius: '4px',
+                        }}>
+                          R{d.revision_number}
+                        </span>
+                        {d.version_label && (
+                          <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginLeft: '4px' }}>
+                            {d.version_label}
+                          </span>
+                        )}
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                        {d.preparer?.full_name ?? '—'}
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        <DeliverableStatusBadge status={d.status} />
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.75rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+                        {formatDate(d.submitted_to_client_date)}
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        {d.file_link ? (
+                          <a href={d.file_link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)' }}>
+                            <ExternalLinkIcon size={13} />
+                          </a>
+                        ) : (
+                          <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SectionCard>
+    </div>
+  )
+}
+
+/* ─── Files Tab ────────────────────────────────────────────────── */
+function FilesTab({ projectId, files, driveFolderLink }: { projectId: string; files: FileWithRelations[]; driveFolderLink: string | null }) {
+  const categoryLabels: Record<string, string> = {
+    reference: 'Reference', draft: 'Draft', working_file: 'Working File',
+    review_copy: 'Review Copy', final: 'Final', submission: 'Submission',
+    supporting_document: 'Supporting Doc',
+  }
+  const headers = ['File', 'Category', 'Provider', 'Rev', 'Uploaded By', 'Added', 'Link']
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {/* Drive folder link */}
+      {driveFolderLink && (
+        <SectionCard title="Project Drive Folder">
+          <a
+            href={driveFolderLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: '0.8125rem', color: 'var(--color-primary)', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: '5px',
+            }}
+          >
+            <FolderOpen size={14} />
+            Open project folder in Google Drive
+          </a>
+        </SectionCard>
+      )}
+
+      <SectionCard
+        title="Attached Files"
+        actions={
+          <Link
+            href={`/files/new?project_id=${projectId}`}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              fontSize: '0.75rem', color: 'var(--color-primary)',
+              textDecoration: 'none', fontWeight: 500,
+            }}
+          >
+            <Plus size={12} aria-hidden="true" />
+            Add File
+          </Link>
+        }
+        noPadding
+      >
+        {files.length === 0 ? (
+          <div style={{
+            padding: '24px 16px', textAlign: 'center', color: 'var(--color-text-muted)',
+            fontSize: '0.8125rem', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: '8px',
+          }}>
+            <FolderOpen size={16} />
+            No files attached to this project yet.
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  {headers.map(h => (
+                    <th key={h} style={{
+                      padding: '8px 14px', textAlign: 'left', fontSize: '0.6875rem', fontWeight: 600,
+                      color: 'var(--color-text-muted)', backgroundColor: 'var(--color-surface-subtle)',
+                      letterSpacing: '0.02em', textTransform: 'uppercase', whiteSpace: 'nowrap',
+                    }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {files.map((f, idx) => {
+                  const link = f.manual_link || f.google_web_view_link
+                  return (
+                    <tr key={f.id} style={{ borderBottom: idx < files.length - 1 ? '1px solid var(--color-border)' : undefined }}>
+                      <td style={{ padding: '8px 14px', maxWidth: '220px' }}>
+                        <Link href={`/files/${f.id}`} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.8125rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {f.file_name}
+                          </span>
+                          {f.extension && (
+                            <span style={{ fontSize: '0.625rem', color: 'var(--color-text-muted)', backgroundColor: 'var(--color-surface-subtle)', padding: '0 4px', borderRadius: '3px', fontWeight: 600, textTransform: 'uppercase', flexShrink: 0 }}>
+                              {f.extension}
+                            </span>
+                          )}
+                        </Link>
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                        {categoryLabels[f.file_category] ?? f.file_category}
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '3px',
+                          fontSize: '0.6875rem', fontWeight: 500,
+                          color: f.provider === 'google_drive' ? '#2563EB' : '#94A3B8',
+                          backgroundColor: f.provider === 'google_drive' ? '#DBEAFE' : '#F1F5F9',
+                          padding: '2px 8px', borderRadius: '10px',
+                        }}>
+                          {f.provider === 'google_drive' ? <HardDrive size={10} /> : null}
+                          {f.provider === 'google_drive' ? 'Drive' : 'Manual'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        {f.revision_number != null ? (
+                          <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-primary)', backgroundColor: 'var(--color-surface-subtle)', padding: '1px 6px', borderRadius: '4px' }}>
+                            R{f.revision_number}
+                          </span>
+                        ) : <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>}
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                        {f.uploader?.full_name ?? '—'}
+                      </td>
+                      <td style={{ padding: '8px 14px', fontSize: '0.75rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+                        {formatDate(f.created_at)}
+                      </td>
+                      <td style={{ padding: '8px 14px' }}>
+                        {link ? (
+                          <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)' }}>
+                            <ExternalLinkIcon size={13} />
+                          </a>
+                        ) : <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>}
                       </td>
                     </tr>
                   )

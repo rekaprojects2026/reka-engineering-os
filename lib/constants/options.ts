@@ -118,3 +118,39 @@ export const TASK_CATEGORY_OPTIONS = [
   { value: 'admin',                label: 'Admin' },
 ] as const
 
+export const DELIVERABLE_STATUS_OPTIONS = [
+  { value: 'draft',              label: 'Draft' },
+  { value: 'internal_review',    label: 'Internal Review' },
+  { value: 'ready_to_submit',    label: 'Ready to Submit' },
+  { value: 'sent_to_client',     label: 'Sent to Client' },
+  { value: 'revision_requested', label: 'Revision Requested' },
+  { value: 'approved',           label: 'Approved' },
+  { value: 'final_issued',       label: 'Final Issued' },
+] as const
+
+export const DELIVERABLE_TYPE_OPTIONS = [
+  { value: 'drawing',            label: 'Drawing' },
+  { value: '3d_model',           label: '3D Model' },
+  { value: 'report',             label: 'Report' },
+  { value: 'boq',                label: 'BOQ' },
+  { value: 'calculation_sheet',  label: 'Calculation Sheet' },
+  { value: 'presentation',       label: 'Presentation' },
+  { value: 'specification',      label: 'Specification' },
+  { value: 'revision_package',   label: 'Revision Package' },
+  { value: 'submission_package', label: 'Submission Package' },
+] as const
+
+export const FILE_CATEGORY_OPTIONS = [
+  { value: 'reference',            label: 'Reference' },
+  { value: 'draft',                label: 'Draft' },
+  { value: 'working_file',        label: 'Working File' },
+  { value: 'review_copy',         label: 'Review Copy' },
+  { value: 'final',               label: 'Final' },
+  { value: 'submission',          label: 'Submission' },
+  { value: 'supporting_document', label: 'Supporting Document' },
+] as const
+
+export const FILE_PROVIDER_OPTIONS = [
+  { value: 'manual',       label: 'Manual Link' },
+  { value: 'google_drive', label: 'Google Drive' },
+] as const

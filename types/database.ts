@@ -132,17 +132,21 @@ export interface ProjectFile {
   project_id: string
   task_id: string | null
   deliverable_id: string | null
-  google_drive_file_id: string
-  google_drive_folder_id: string | null
   file_name: string
-  mime_type: string
-  extension: string
   file_category: string
+  provider: string
+  manual_link: string | null
+  external_file_id: string | null
+  google_drive_folder_id: string | null
+  google_web_view_link: string | null
+  mime_type: string | null
+  extension: string | null
   revision_number: number | null
   version_label: string | null
-  google_web_view_link: string
+  notes: string | null
   uploaded_by_user_id: string
-  uploaded_at: string
+  created_at: string
+  updated_at: string
 }
 
 export interface ProjectTeamAssignment {
