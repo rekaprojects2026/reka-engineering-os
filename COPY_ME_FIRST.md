@@ -1,21 +1,36 @@
 # Copy Me First
 
-This folder is designed to be copied into a fresh project workspace before you ask Antigravity to code.
+This pack is designed so you can copy-paste prompts into Antigravity or Claude Code without rebuilding the plan from scratch.
 
-## Immediate setup order
-1. Copy this whole folder into your new project root.
-2. Open the root folder in Antigravity.
-3. Attach these files first:
-   - `docs/prd/01_MASTER_PRD_ENGINEERING_AGENCY_APP.md`
-   - `docs/prd/02_AI_USAGE_PROTOCOL_ANTIGRAVITY_CLAUDE.md`
-   - `docs/stages/stage-01/STAGE_01_BRIEFING_FOUNDATION_DESIGN_SYSTEM.md`
-   - `docs/stages/stage-01/STAGE_01_PROMPT_ANTIGRAVITY_CLAUDE.md`
-4. Tell Antigravity to inspect the workspace first and then implement Stage 01 only.
-5. Review the changed files manually before moving to Stage 02.
+## Recommended order
+1. Read `docs/00_V2_README_BUILD_ORDER.md`
+2. Read `docs/01_V2_MASTER_PRD_FREELANCE_FIRST.md`
+3. Read `docs/02_V2_AI_EXECUTION_PROTOCOL.md`
+4. Read `docs/03_V2_UI_UX_SPEC.md`
+5. Read `docs/04_V2_ACCESS_MATRIX.md`
+6. Read `docs/05_V2_DATA_MODEL_EXTENSIONS.md`
 
-## Rules
-- One stage only per run.
-- Do not ask for the full app in one shot.
-- Keep the UI calm, professional, simple, and desktop-first.
-- Prefer maintainable code over clever code.
-- Do not allow the AI to invent extra modules or analytics not in the PRD.
+Then work sprint by sprint:
+- Sprint 01
+- Sprint 02
+- Sprint 03
+- Sprint 04
+- Sprint 05
+- Sprint 06
+- Sprint 07
+- Sprint 08
+
+## How to use each sprint
+For each sprint:
+- first paste the sprint prompt exactly
+- let the AI inspect before coding
+- review its planned files
+- let it implement only that sprint
+- run migrations
+- test manually
+- commit
+- move on
+
+## Reminder
+This is a freelance-first V2.
+Do not let the AI add giant enterprise features outside the sprint.

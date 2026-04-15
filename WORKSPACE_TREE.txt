@@ -1,37 +1,25 @@
-engineering-agency-os/
-├── .agents/
-│   ├── agents.md
-│   ├── workflows/
-│   │   └── stage-sequence.md
-│   └── skills/
-│       ├── coding-standards.md
-│       ├── scope-guardrails.md
-│       └── ui-ux-rules.md
-├── docs/
-│   ├── prd/
-│   │   ├── 00_README_BUILD_ORDER.md
-│   │   ├── 01_MASTER_PRD_ENGINEERING_AGENCY_APP.md
-│   │   └── 02_AI_USAGE_PROTOCOL_ANTIGRAVITY_CLAUDE.md
-│   ├── stages/
-│   │   ├── stage-01/
-│   │   ├── stage-02/
-│   │   ├── stage-03/
-│   │   ├── stage-04/
-│   │   ├── stage-05/
-│   │   └── stage-06/
-│   └── ui-ux/
-│       ├── 01_UI_UX_RULES.md
-│       ├── 02_COLOR_SYSTEM.md
-│       └── 03_PAGE_STRUCTURE_REFERENCE.md
-├── app/
-├── components/
-├── lib/
-├── types/
-├── supabase/
-├── scripts/
-├── artifacts/
-├── .env.example
-├── .gitignore
-├── COPY_ME_FIRST.md
-├── README.md
-└── WORKSPACE_TREE.txt
+reka_v2_freelance_first_pack/
+├── docs
+│   ├── 00_V2_README_BUILD_ORDER.md
+│   ├── 01_V2_MASTER_PRD_FREELANCE_FIRST.md
+│   ├── 02_V2_AI_EXECUTION_PROTOCOL.md
+│   ├── 03_V2_UI_UX_SPEC.md
+│   ├── 04_V2_ACCESS_MATRIX.md
+│   └── 05_V2_DATA_MODEL_EXTENSIONS.md
+└── sprints
+    ├── SPRINT_01_BRIEF_TEAM_FREELANCER.md
+    ├── SPRINT_01_PROMPT_TEAM_FREELANCER.md
+    ├── SPRINT_02_BRIEF_INVITE_ONBOARDING.md
+    ├── SPRINT_02_PROMPT_INVITE_ONBOARDING.md
+    ├── SPRINT_03_BRIEF_COMPENSATION_PAYMENTS_IDR.md
+    ├── SPRINT_03_PROMPT_COMPENSATION_PAYMENTS_IDR.md
+    ├── SPRINT_04_BRIEF_ROLE_BASED_ACCESS_AND_VIEWS.md
+    ├── SPRINT_04_PROMPT_ROLE_BASED_ACCESS_AND_VIEWS.md
+    ├── SPRINT_05_BRIEF_SETTINGS_ADMIN.md
+    ├── SPRINT_05_PROMPT_SETTINGS_ADMIN.md
+    ├── SPRINT_06_BRIEF_UI_UX_PERFECT_PASS.md
+    ├── SPRINT_06_PROMPT_UI_UX_PERFECT_PASS.md
+    ├── SPRINT_07_BRIEF_INFRA_MIGRATION_PROD_HARDENING.md
+    ├── SPRINT_07_PROMPT_INFRA_MIGRATION_PROD_HARDENING.md
+    ├── SPRINT_08_BRIEF_GOOGLE_DRIVE_LIVE_INTEGRATION.md
+    └── SPRINT_08_PROMPT_GOOGLE_DRIVE_LIVE_INTEGRATION.md
