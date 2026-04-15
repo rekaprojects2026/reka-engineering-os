@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
-import { AppSidebar } from '@/components/layout/AppSidebar'
-import { AppTopbar } from '@/components/layout/AppTopbar'
+import { AppSidebar }    from '@/components/layout/AppSidebar'
+import { AppTopbar }     from '@/components/layout/AppTopbar'
+import { TopbarSearch }  from '@/components/layout/TopbarSearch'
 
 export default async function ProtectedLayout({
   children,
@@ -28,7 +29,7 @@ export default async function ProtectedLayout({
       <AppSidebar userFullName={fullName} userEmail={email} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <AppTopbar />
+        <AppTopbar right={<TopbarSearch />} />
 
         <main
           style={{
