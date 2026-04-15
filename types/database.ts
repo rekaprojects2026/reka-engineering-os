@@ -2,6 +2,11 @@
 // These are type stubs — full Supabase-generated types added in later stages
 
 export type UserRole = 'admin' | 'staff'
+export type SystemRole = 'admin' | 'coordinator' | 'reviewer' | 'member'
+export type WorkerType = 'internal' | 'freelancer' | 'subcontractor'
+export type ActiveStatus = 'active' | 'inactive' | 'archived'
+export type AvailabilityStatus = 'available' | 'partially_available' | 'unavailable' | 'on_leave'
+export type RateType = 'hourly' | 'daily' | 'per_task' | 'per_deliverable' | 'per_project' | 'monthly_fixed'
 
 export interface UserProfile {
   id: string
@@ -12,6 +17,43 @@ export interface UserProfile {
   is_active: boolean
   created_at: string
   updated_at: string
+  // V2 team/freelancer fields
+  phone: string | null
+  system_role: SystemRole | null
+  functional_role: string | null
+  worker_type: WorkerType | null
+  active_status: ActiveStatus
+  availability_status: AvailabilityStatus
+  joined_date: string | null
+  expected_rate: number | null
+  approved_rate: number | null
+  rate_type: RateType | null
+  currency_code: string
+  city: string | null
+  portfolio_link: string | null
+  notes_internal: string | null
+  bank_name: string | null
+  bank_account_name: string | null
+  bank_account_number: string | null
+  ewallet_type: string | null
+  ewallet_number: string | null
+  // Sprint 02 onboarding fields
+  profile_completed_at: string | null
+  skill_tags: string[]
+}
+
+export interface Invite {
+  id:          string
+  email:       string
+  token:       string
+  full_name:   string | null
+  system_role: SystemRole | null
+  worker_type: WorkerType | null
+  invited_by:  string | null
+  status:      'pending' | 'accepted' | 'expired' | 'revoked'
+  invited_at:  string
+  accepted_at: string | null
+  expires_at:  string
 }
 
 export interface Client {

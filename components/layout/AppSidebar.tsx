@@ -12,6 +12,7 @@ import {
   UserSquare2,
   Settings,
   LogOut,
+  UserCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { logout } from '@/app/auth/login/actions'
@@ -147,6 +148,24 @@ export function AppSidebar({ userFullName = 'User', userEmail = '' }: AppSidebar
           flexShrink: 0,
         }}
       >
+        {/* My Profile link */}
+        <Link
+          href="/my-profile"
+          aria-current={pathname === '/my-profile' ? 'page' : undefined}
+          className="flex items-center gap-2.5 rounded-md px-3 py-2 transition-colors no-underline mb-2"
+          style={{
+            color:           pathname === '/my-profile' ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+            backgroundColor: pathname === '/my-profile' ? 'var(--color-primary-subtle)' : 'transparent',
+            fontSize:        '0.8125rem',
+            fontWeight:      500,
+          }}
+        >
+          <span aria-hidden="true" style={{ color: pathname === '/my-profile' ? 'var(--color-primary)' : 'var(--color-text-muted)' }}>
+            <UserCircle size={16} />
+          </span>
+          My Profile
+        </Link>
+
         <div
           style={{
             display: 'flex',

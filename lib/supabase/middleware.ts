@@ -32,11 +32,12 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-  const isAuthRoute = pathname.startsWith('/auth')
-  const isApiRoute = pathname.startsWith('/api')
+  const isAuthRoute       = pathname.startsWith('/auth')
+  const isApiRoute        = pathname.startsWith('/api')
+  const isOnboardingRoute = pathname.startsWith('/onboarding')
 
   // Unauthenticated user trying to access protected routes
-  if (!user && !isAuthRoute && !isApiRoute) {
+  if (!user && !isAuthRoute && !isApiRoute && !isOnboardingRoute) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/auth/login'
     return NextResponse.redirect(loginUrl)

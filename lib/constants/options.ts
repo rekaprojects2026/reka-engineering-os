@@ -64,6 +64,58 @@ export const USER_ROLES = [
   { value: 'staff', label: 'Staff' },
 ] as const
 
+// ── V2 Team / Freelancer options ──────────────────────────────
+
+export const SYSTEM_ROLES = [
+  { value: 'admin',       label: 'Admin' },
+  { value: 'coordinator', label: 'Coordinator' },
+  { value: 'reviewer',    label: 'Reviewer' },
+  { value: 'member',      label: 'Member' },
+] as const
+
+export const WORKER_TYPES = [
+  { value: 'internal',      label: 'Internal' },
+  { value: 'freelancer',    label: 'Freelancer' },
+  { value: 'subcontractor', label: 'Subcontractor' },
+] as const
+
+export const ACTIVE_STATUS_OPTIONS = [
+  { value: 'active',   label: 'Active' },
+  { value: 'inactive', label: 'Inactive' },
+  { value: 'archived', label: 'Archived' },
+] as const
+
+export const AVAILABILITY_STATUS_OPTIONS = [
+  { value: 'available',           label: 'Available' },
+  { value: 'partially_available', label: 'Partially Available' },
+  { value: 'unavailable',         label: 'Unavailable' },
+  { value: 'on_leave',            label: 'On Leave' },
+] as const
+
+export const RATE_TYPE_OPTIONS = [
+  { value: 'hourly',          label: 'Per Hour' },
+  { value: 'daily',           label: 'Per Day' },
+  { value: 'per_task',        label: 'Per Task' },
+  { value: 'per_deliverable', label: 'Per Deliverable' },
+  { value: 'per_project',     label: 'Per Project' },
+  { value: 'monthly_fixed',   label: 'Monthly Fixed' },
+] as const
+
+export const FUNCTIONAL_ROLES = [
+  { value: 'civil_engineer',       label: 'Civil Engineer' },
+  { value: 'structural_engineer',  label: 'Structural Engineer' },
+  { value: 'mechanical_engineer',  label: 'Mechanical Engineer' },
+  { value: 'electrical_engineer',  label: 'Electrical Engineer' },
+  { value: 'drafter',              label: 'Drafter' },
+  { value: 'bim_modeler',          label: 'BIM Modeler' },
+  { value: 'cad_freelancer',       label: 'CAD Freelancer' },
+  { value: 'checker',              label: 'Checker' },
+  { value: 'estimator',            label: 'Estimator' },
+  { value: 'project_manager',      label: 'Project Manager' },
+  { value: 'admin_ops',            label: 'Admin Ops' },
+  { value: 'other',                label: 'Other' },
+] as const
+
 export const CLIENT_TYPES = [
   { value: 'company',    label: 'Company' },
   { value: 'individual', label: 'Individual' },

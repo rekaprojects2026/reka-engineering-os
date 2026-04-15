@@ -7,11 +7,17 @@ export const metadata = {
   description: 'Sign in to access the Engineering Agency internal control app.',
 }
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ activated?: string }>
+}) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (user) redirect('/dashboard')
+
+  const { activated } = await searchParams
 
   return (
     <div
@@ -69,6 +75,23 @@ export default async function LoginPage() {
           <h1 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '24px' }}>
             Sign in to your account
           </h1>
+
+          {activated && (
+            <div
+              style={{
+                padding:         '10px 12px',
+                marginBottom:    '20px',
+                backgroundColor: '#DCFCE7',
+                border:          '1px solid #BBF7D0',
+                borderRadius:    '6px',
+                color:           '#16A34A',
+                fontSize:        '0.8125rem',
+              }}
+            >
+              Account activated! Sign in with your email and the password you just set.
+            </div>
+          )}
+
           <LoginForm />
         </div>
       </div>
