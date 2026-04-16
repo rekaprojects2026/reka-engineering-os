@@ -34,6 +34,25 @@ export function isAdminOrCoordinator(role: SystemRole | null | undefined): boole
   return r === 'admin' || r === 'coordinator'
 }
 
+// ── Route / CTA surface (Stage RBAC-02) ──────────────────────
+// Pure predicates aligned to docs/ROLE_PERMISSION_HARDENING_BRIEFING.md
+// Server-side mutation checks are deferred to Stage RBAC-03.
+
+/** Global “New Project” — admin only (coordinators do not create org-wide projects). */
+export function canAccessProjectsNewRoute(role: SystemRole | null | undefined): boolean {
+  return effectiveRole(role) === 'admin'
+}
+
+/** /tasks/new, /deliverables/new, /files/new — coordinators may create in scope; route still guarded separately on project hub. */
+export function canAccessTasksDeliverablesFilesNewRoute(role: SystemRole | null | undefined): boolean {
+  return isAdminOrCoordinator(role)
+}
+
+/** Primary list/header CTAs for adding file metadata (same as new-route gate). */
+export function canShowFilesAddButton(role: SystemRole | null | undefined): boolean {
+  return isAdminOrCoordinator(role)
+}
+
 // ── Nav visibility + labelling helpers ───────────────────────
 
 export type NavPermissions = {

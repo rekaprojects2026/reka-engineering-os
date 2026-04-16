@@ -1,6 +1,8 @@
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { TaskForm } from '@/components/modules/tasks/TaskForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
 import { getUsersForSelect } from '@/lib/users/queries'
 import { getProjects } from '@/lib/projects/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
@@ -12,6 +14,9 @@ interface PageProps {
 }
 
 export default async function NewTaskPage({ searchParams }: PageProps) {
+  const profile = await getSessionProfile()
+  requireTasksDeliverablesFilesNewPageAccess(profile.system_role)
+
   const params = await searchParams
   const [projectsRaw, users, taskCategoryOptions] = await Promise.all([
     getProjects(),

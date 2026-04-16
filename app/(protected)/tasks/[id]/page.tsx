@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireTaskView, userCanEditTask } from '@/lib/auth/access-surface'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
@@ -24,8 +26,12 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function TaskDetailPage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const task = await getTaskById(id)
   if (!task) notFound()
+
+  await requireTaskView(profile, task)
+  const showEditTask = await userCanEditTask(profile, task)
 
   const isBlocked = task.status === 'blocked'
 
@@ -36,25 +42,27 @@ export default async function TaskDetailPage({ params }: PageProps) {
         title={task.title}
         subtitle={task.projects ? `${task.projects.project_code} · ${task.projects.name}` : 'No project'}
         actions={
-          <Link
-            href={`/tasks/${task.id}/edit`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              textDecoration: 'none',
-            }}
-          >
-            <Pencil size={13} aria-hidden="true" />
-            Edit Task
-          </Link>
+          showEditTask ? (
+            <Link
+              href={`/tasks/${task.id}/edit`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-control)',
+                fontSize: '0.8125rem',
+                fontWeight: 500,
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              <Pencil size={13} aria-hidden="true" />
+              Edit Task
+            </Link>
+          ) : undefined
         }
       />
 

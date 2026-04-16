@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireFileView, userCanEditFile } from '@/lib/auth/access-surface'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { getFileById } from '@/lib/files/queries'
@@ -24,8 +26,12 @@ const categoryLabels: Record<string, string> = {
 
 export default async function FileDetailPage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const f = await getFileById(id)
   if (!f) notFound()
+
+  await requireFileView(profile, f)
+  const showEditFile = await userCanEditFile(profile, f)
 
   const link = f.manual_link || f.google_web_view_link
 
@@ -35,19 +41,21 @@ export default async function FileDetailPage({ params }: PageProps) {
         title={f.file_name}
         subtitle={f.projects ? `${f.projects.project_code} · ${f.projects.name}` : 'No project'}
         actions={
-          <Link
-            href={`/files/${f.id}/edit`}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '6px',
-              padding: '8px 14px', backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)',
-              textDecoration: 'none',
-            }}
-          >
-            <Pencil size={13} aria-hidden="true" />
-            Edit File
-          </Link>
+          showEditFile ? (
+            <Link
+              href={`/files/${f.id}/edit`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '8px 14px', backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)',
+                fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              <Pencil size={13} aria-hidden="true" />
+              Edit File
+            </Link>
+          ) : undefined
         }
       />
 

@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import { getSessionProfile } from '@/lib/auth/session'
+import { canShowFilesAddButton } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -26,6 +28,7 @@ const categoryLabels: Record<string, string> = {
 }
 
 export default async function FilesPage({ searchParams }: PageProps) {
+  const profile = await getSessionProfile()
   const params = await searchParams
   const files = await getFiles({
     search: params.search,
@@ -40,24 +43,26 @@ export default async function FilesPage({ searchParams }: PageProps) {
         title="Files"
         subtitle="File metadata and links attached to projects, tasks, and deliverables."
         actions={
-          <Link
-            href="/files/new"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-primary-fg)',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              textDecoration: 'none',
-            }}
-          >
-            <Plus size={14} aria-hidden="true" />
-            Add File
-          </Link>
+          canShowFilesAddButton(profile.system_role) ? (
+            <Link
+              href="/files/new"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                backgroundColor: 'var(--color-primary)',
+                color: 'var(--color-primary-fg)',
+                borderRadius: 'var(--radius-control)',
+                fontSize: '0.8125rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+              }}
+            >
+              <Plus size={14} aria-hidden="true" />
+              Add File
+            </Link>
+          ) : undefined
         }
       />
 

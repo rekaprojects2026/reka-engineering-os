@@ -6,6 +6,8 @@ import { Users } from 'lucide-react'
 interface TeamMemberListProps {
   members: TeamMemberWithProfile[]
   projectId: string
+  /** When false, hide remove actions (read-only roster). Default true. */
+  allowRemove?: boolean
 }
 
 const roleLabels: Record<string, string> = {
@@ -16,7 +18,7 @@ const roleLabels: Record<string, string> = {
   support: 'Support',
 }
 
-export function TeamMemberList({ members, projectId }: TeamMemberListProps) {
+export function TeamMemberList({ members, projectId, allowRemove = true }: TeamMemberListProps) {
   if (members.length === 0) {
     return (
       <div
@@ -37,7 +39,9 @@ export function TeamMemberList({ members, projectId }: TeamMemberListProps) {
     )
   }
 
-  const headers = ['Name', 'Role', 'Discipline', 'Assigned', '']
+  const headers = allowRemove
+    ? ['Name', 'Role', 'Discipline', 'Assigned', '']
+    : ['Name', 'Role', 'Discipline', 'Assigned']
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -132,14 +136,15 @@ export function TeamMemberList({ members, projectId }: TeamMemberListProps) {
               >
                 {formatDate(member.assigned_at)}
               </td>
-              {/* Remove */}
-              <td style={{ padding: '8px 14px', textAlign: 'right' }}>
-                <RemoveTeamMemberButton
-                  assignmentId={member.id}
-                  projectId={projectId}
-                  memberName={member.profiles.full_name}
-                />
-              </td>
+              {allowRemove && (
+                <td style={{ padding: '8px 14px', textAlign: 'right' }}>
+                  <RemoveTeamMemberButton
+                    assignmentId={member.id}
+                    projectId={projectId}
+                    memberName={member.profiles.full_name}
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

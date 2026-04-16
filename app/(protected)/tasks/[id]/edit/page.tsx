@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { TaskForm } from '@/components/modules/tasks/TaskForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireTaskEditPage } from '@/lib/auth/access-surface'
 import { getTaskById } from '@/lib/tasks/queries'
 import { getProjects } from '@/lib/projects/queries'
 import { getUsersForSelect } from '@/lib/users/queries'
@@ -19,6 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function EditTaskPage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const [task, projectsRaw, users, taskCategoryOptions] = await Promise.all([
     getTaskById(id),
     getProjects(),
@@ -27,6 +30,7 @@ export default async function EditTaskPage({ params }: PageProps) {
   ])
 
   if (!task) notFound()
+  await requireTaskEditPage(profile, task)
 
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))
 

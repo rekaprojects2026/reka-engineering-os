@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireDeliverableView, userCanEditDeliverable } from '@/lib/auth/access-surface'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
@@ -35,8 +37,12 @@ const typeLabels: Record<string, string> = {
 
 export default async function DeliverableDetailPage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const d = await getDeliverableById(id)
   if (!d) notFound()
+
+  await requireDeliverableView(profile, d)
+  const showEditDeliverable = await userCanEditDeliverable(profile, d)
 
   const isRevisionRequested = d.status === 'revision_requested'
 
@@ -47,25 +53,27 @@ export default async function DeliverableDetailPage({ params }: PageProps) {
         title={d.name}
         subtitle={d.projects ? `${d.projects.project_code} · ${d.projects.name}` : 'No project'}
         actions={
-          <Link
-            href={`/deliverables/${d.id}/edit`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              textDecoration: 'none',
-            }}
-          >
-            <Pencil size={13} aria-hidden="true" />
-            Edit Deliverable
-          </Link>
+          showEditDeliverable ? (
+            <Link
+              href={`/deliverables/${d.id}/edit`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-control)',
+                fontSize: '0.8125rem',
+                fontWeight: 500,
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              <Pencil size={13} aria-hidden="true" />
+              Edit Deliverable
+            </Link>
+          ) : undefined
         }
       />
 

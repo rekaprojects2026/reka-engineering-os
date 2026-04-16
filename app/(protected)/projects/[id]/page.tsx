@@ -1,5 +1,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getSessionProfile } from '@/lib/auth/session'
+import { isAdminOrCoordinator } from '@/lib/auth/permissions'
+import { requireProjectView, userCanEditProjectMetadata } from '@/lib/auth/access-surface'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
@@ -50,8 +53,13 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
   const { tab } = await searchParams
   const activeTab = tab || 'overview'
 
+  const profile = await getSessionProfile()
   const project = await getProjectById(id)
   if (!project) notFound()
+
+  await requireProjectView(profile, project)
+  const canEditProjectMeta = await userCanEditProjectMetadata(profile, project)
+  const showClientIntakeLinks = isAdminOrCoordinator(profile.system_role)
 
   const clientName = project.clients?.client_name ?? '—'
   const leadName = project.lead?.full_name ?? '—'
@@ -94,25 +102,27 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         title={project.name}
         subtitle={`${project.project_code} · ${project.discipline.charAt(0).toUpperCase() + project.discipline.slice(1)} · ${project.project_type.charAt(0).toUpperCase() + project.project_type.slice(1)}`}
         actions={
-          <Link
-            href={`/projects/${project.id}/edit`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              textDecoration: 'none',
-            }}
-          >
-            <Pencil size={13} aria-hidden="true" />
-            Edit Project
-          </Link>
+          canEditProjectMeta ? (
+            <Link
+              href={`/projects/${project.id}/edit`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-control)',
+                fontSize: '0.8125rem',
+                fontWeight: 500,
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              <Pencil size={13} aria-hidden="true" />
+              Edit Project
+            </Link>
+          ) : undefined
         }
       />
 
@@ -166,7 +176,13 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
 
       {/* Tab content */}
       {activeTab === 'overview' && (
-        <OverviewTab project={project} clientName={clientName} leadName={leadName} reviewerName={reviewerName} />
+        <OverviewTab
+          project={project}
+          clientName={clientName}
+          leadName={leadName}
+          reviewerName={reviewerName}
+          showClientIntakeLinks={showClientIntakeLinks}
+        />
       )}
       {activeTab === 'team' && (
         <TeamTab
@@ -175,16 +191,22 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           users={users}
           leadName={leadName}
           reviewerName={reviewerName}
+          canManageTeam={canEditProjectMeta}
         />
       )}
       {activeTab === 'tasks' && (
-        <TasksTab projectId={project.id} tasks={projectTasks} />
+        <TasksTab projectId={project.id} tasks={projectTasks} showAddTask={canEditProjectMeta} />
       )}
       {activeTab === 'deliverables' && (
-        <DeliverablesTab projectId={project.id} deliverables={projectDeliverables} />
+        <DeliverablesTab projectId={project.id} deliverables={projectDeliverables} showAddDeliverable={canEditProjectMeta} />
       )}
       {activeTab === 'files' && (
-        <FilesTab projectId={project.id} files={projectFiles} driveFolderLink={project.google_drive_folder_link} />
+        <FilesTab
+          projectId={project.id}
+          files={projectFiles}
+          driveFolderLink={project.google_drive_folder_link}
+          showAddFile={canEditProjectMeta}
+        />
       )}
       {activeTab === 'activity' && (
         <ActivityTab logs={projectActivity} />
@@ -199,11 +221,13 @@ function OverviewTab({
   clientName,
   leadName,
   reviewerName,
+  showClientIntakeLinks,
 }: {
   project: Awaited<ReturnType<typeof getProjectById>> & {}
   clientName: string
   leadName: string
   reviewerName: string | null
+  showClientIntakeLinks: boolean
 }) {
   if (!project) return null
 
@@ -215,7 +239,7 @@ function OverviewTab({
         <SectionCard title="Overview">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <DetailRow label="Client">
-              {project.clients ? (
+              {project.clients && showClientIntakeLinks ? (
                 <Link
                   href={`/clients/${project.clients.id}`}
                   style={{
@@ -228,7 +252,7 @@ function OverviewTab({
                   {clientName}
                 </Link>
               ) : (
-                <span>{clientName}</span>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{clientName}</span>
               )}
             </DetailRow>
             <DetailRow label="Source">
@@ -303,30 +327,49 @@ function OverviewTab({
         {/* Linked Intake */}
         {project.intakes && (
           <SectionCard title="Linked Intake">
-            <Link
-              href={`/intakes/${project.intakes.id}`}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2px',
-                textDecoration: 'none',
-              }}
-            >
-              <span style={{
-                fontFamily: 'monospace',
-                fontSize: '0.75rem',
-                color: 'var(--color-text-muted)',
-              }}>
-                {project.intakes.intake_code}
-              </span>
-              <span style={{
-                fontSize: '0.8125rem',
-                color: 'var(--color-primary)',
-                fontWeight: 500,
-              }}>
-                {project.intakes.title}
-              </span>
-            </Link>
+            {showClientIntakeLinks ? (
+              <Link
+                href={`/intakes/${project.intakes.id}`}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  textDecoration: 'none',
+                }}
+              >
+                <span style={{
+                  fontFamily: 'monospace',
+                  fontSize: '0.75rem',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  {project.intakes.intake_code}
+                </span>
+                <span style={{
+                  fontSize: '0.8125rem',
+                  color: 'var(--color-primary)',
+                  fontWeight: 500,
+                }}>
+                  {project.intakes.title}
+                </span>
+              </Link>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span style={{
+                  fontFamily: 'monospace',
+                  fontSize: '0.75rem',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  {project.intakes.intake_code}
+                </span>
+                <span style={{
+                  fontSize: '0.8125rem',
+                  color: 'var(--color-text-primary)',
+                  fontWeight: 500,
+                }}>
+                  {project.intakes.title}
+                </span>
+              </div>
+            )}
           </SectionCard>
         )}
 
@@ -394,12 +437,14 @@ function TeamTab({
   users,
   leadName,
   reviewerName,
+  canManageTeam,
 }: {
   projectId: string
   teamMembers: Awaited<ReturnType<typeof getTeamByProjectId>>
   users: Awaited<ReturnType<typeof getUsersForSelect>>
   leadName: string
   reviewerName: string | null
+  canManageTeam: boolean
 }) {
   const assignedUserIds = teamMembers.map((m) => m.user_id)
 
@@ -416,17 +461,18 @@ function TeamTab({
           }
           noPadding
         >
-          <TeamMemberList members={teamMembers} projectId={projectId} />
+          <TeamMemberList members={teamMembers} projectId={projectId} allowRemove={canManageTeam} />
         </SectionCard>
 
-        {/* Add member form */}
-        <SectionCard title="Add Team Member">
-          <AddTeamMemberForm
-            projectId={projectId}
-            users={users}
-            assignedUserIds={assignedUserIds}
-          />
-        </SectionCard>
+        {canManageTeam && (
+          <SectionCard title="Add Team Member">
+            <AddTeamMemberForm
+              projectId={projectId}
+              users={users}
+              assignedUserIds={assignedUserIds}
+            />
+          </SectionCard>
+        )}
       </div>
 
       {/* Right — assignment summary */}
@@ -445,7 +491,15 @@ function TeamTab({
 }
 
 /* ─── Tasks Tab ────────────────────────────────────────────────── */
-function TasksTab({ projectId, tasks }: { projectId: string; tasks: TaskWithRelations[] }) {
+function TasksTab({
+  projectId,
+  tasks,
+  showAddTask,
+}: {
+  projectId: string
+  tasks: TaskWithRelations[]
+  showAddTask: boolean
+}) {
   const today = new Date().toISOString().split('T')[0]
   const headers = ['Task', 'Category', 'Assigned To', 'Due Date', 'Priority', 'Status', 'Progress']
 
@@ -454,21 +508,23 @@ function TasksTab({ projectId, tasks }: { projectId: string; tasks: TaskWithRela
       <SectionCard
         title="Project Tasks"
         actions={
-          <Link
-            href={`/tasks/new?project_id=${projectId}`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.75rem',
-              color: 'var(--color-primary)',
-              textDecoration: 'none',
-              fontWeight: 500,
-            }}
-          >
-            <Plus size={12} aria-hidden="true" />
-            Add Task
-          </Link>
+          showAddTask ? (
+            <Link
+              href={`/tasks/new?project_id=${projectId}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
+                color: 'var(--color-primary)',
+                textDecoration: 'none',
+                fontWeight: 500,
+              }}
+            >
+              <Plus size={12} aria-hidden="true" />
+              Add Task
+            </Link>
+          ) : undefined
         }
         noPadding
       >
@@ -563,7 +619,15 @@ function TasksTab({ projectId, tasks }: { projectId: string; tasks: TaskWithRela
 }
 
 /* ─── Deliverables Tab ─────────────────────────────────────────── */
-function DeliverablesTab({ projectId, deliverables }: { projectId: string; deliverables: DeliverableWithRelations[] }) {
+function DeliverablesTab({
+  projectId,
+  deliverables,
+  showAddDeliverable,
+}: {
+  projectId: string
+  deliverables: DeliverableWithRelations[]
+  showAddDeliverable: boolean
+}) {
   const headers = ['Deliverable', 'Type', 'Rev', 'Prepared By', 'Status', 'Submitted', 'File']
 
   const typeLabels: Record<string, string> = {
@@ -577,21 +641,23 @@ function DeliverablesTab({ projectId, deliverables }: { projectId: string; deliv
       <SectionCard
         title="Project Deliverables"
         actions={
-          <Link
-            href={`/deliverables/new?project_id=${projectId}`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.75rem',
-              color: 'var(--color-primary)',
-              textDecoration: 'none',
-              fontWeight: 500,
-            }}
-          >
-            <Plus size={12} aria-hidden="true" />
-            Add Deliverable
-          </Link>
+          showAddDeliverable ? (
+            <Link
+              href={`/deliverables/new?project_id=${projectId}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
+                color: 'var(--color-primary)',
+                textDecoration: 'none',
+                fontWeight: 500,
+              }}
+            >
+              <Plus size={12} aria-hidden="true" />
+              Add Deliverable
+            </Link>
+          ) : undefined
         }
         noPadding
       >
@@ -692,7 +758,17 @@ function DeliverablesTab({ projectId, deliverables }: { projectId: string; deliv
 }
 
 /* ─── Files Tab ────────────────────────────────────────────────── */
-function FilesTab({ projectId, files, driveFolderLink }: { projectId: string; files: FileWithRelations[]; driveFolderLink: string | null }) {
+function FilesTab({
+  projectId,
+  files,
+  driveFolderLink,
+  showAddFile,
+}: {
+  projectId: string
+  files: FileWithRelations[]
+  driveFolderLink: string | null
+  showAddFile: boolean
+}) {
   const categoryLabels: Record<string, string> = {
     reference: 'Reference', draft: 'Draft', working_file: 'Working File',
     review_copy: 'Review Copy', final: 'Final', submission: 'Submission',
@@ -723,17 +799,19 @@ function FilesTab({ projectId, files, driveFolderLink }: { projectId: string; fi
       <SectionCard
         title="Attached Files"
         actions={
-          <Link
-            href={`/files/new?project_id=${projectId}`}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              fontSize: '0.75rem', color: 'var(--color-primary)',
-              textDecoration: 'none', fontWeight: 500,
-            }}
-          >
-            <Plus size={12} aria-hidden="true" />
-            Add File
-          </Link>
+          showAddFile ? (
+            <Link
+              href={`/files/new?project_id=${projectId}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                fontSize: '0.75rem', color: 'var(--color-primary)',
+                textDecoration: 'none', fontWeight: 500,
+              }}
+            >
+              <Plus size={12} aria-hidden="true" />
+              Add File
+            </Link>
+          ) : undefined
         }
         noPadding
       >

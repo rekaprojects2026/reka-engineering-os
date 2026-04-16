@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { DeliverableForm } from '@/components/modules/deliverables/DeliverableForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireDeliverableEditPage } from '@/lib/auth/access-surface'
 import { getDeliverableById } from '@/lib/deliverables/queries'
 import { getProjects } from '@/lib/projects/queries'
 import { getUsersForSelect } from '@/lib/users/queries'
@@ -20,6 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function EditDeliverablePage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const [deliverable, projectsRaw, users, deliverableTypeOptions] = await Promise.all([
     getDeliverableById(id),
     getProjects(),
@@ -28,6 +31,7 @@ export default async function EditDeliverablePage({ params }: PageProps) {
   ])
 
   if (!deliverable) notFound()
+  await requireDeliverableEditPage(profile, deliverable)
 
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))
 

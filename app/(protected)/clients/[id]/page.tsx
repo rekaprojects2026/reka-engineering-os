@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getSessionProfile, requireRole } from '@/lib/auth/session'
+import { canAccessProjectsNewRoute } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { ClientStatusBadge } from '@/components/modules/clients/ClientStatusBadge'
@@ -211,21 +212,23 @@ export default async function ClientDetailPage({ params }: PageProps) {
           <SectionCard
             title="Projects"
             actions={
-              <Link
-                href={`/projects/new`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '0.75rem',
-                  color: 'var(--color-primary)',
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                }}
-              >
-                <Plus size={12} aria-hidden="true" />
-                New Project
-              </Link>
+              canAccessProjectsNewRoute(_sp.system_role) ? (
+                <Link
+                  href={`/projects/new`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontSize: '0.75rem',
+                    color: 'var(--color-primary)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  <Plus size={12} aria-hidden="true" />
+                  New Project
+                </Link>
+              ) : undefined
             }
             noPadding
           >

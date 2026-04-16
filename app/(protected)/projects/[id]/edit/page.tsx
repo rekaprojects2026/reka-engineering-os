@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { ProjectForm } from '@/components/modules/projects/ProjectForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireProjectMetadataEdit, requireProjectView } from '@/lib/auth/access-surface'
 import { getProjectById } from '@/lib/projects/queries'
 import { getClientsForSelect } from '@/lib/clients/queries'
 import { getUsersForSelect } from '@/lib/users/queries'
@@ -19,6 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function EditProjectPage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const [project, clients, users, disciplineOptions, projectTypeOptions] = await Promise.all([
     getProjectById(id),
     getClientsForSelect(),
@@ -28,6 +31,8 @@ export default async function EditProjectPage({ params }: PageProps) {
   ])
 
   if (!project) notFound()
+  await requireProjectView(profile, project)
+  await requireProjectMetadataEdit(profile, project)
 
   return (
     <div>

@@ -1,6 +1,8 @@
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { FileForm } from '@/components/modules/files/FileForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
 import { getProjects } from '@/lib/projects/queries'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getDeliverablesByProjectId } from '@/lib/deliverables/queries'
@@ -13,6 +15,9 @@ interface PageProps {
 }
 
 export default async function NewFilePage({ searchParams }: PageProps) {
+  const profile = await getSessionProfile()
+  requireTasksDeliverablesFilesNewPageAccess(profile.system_role)
+
   const params = await searchParams
   const [projectsRaw, fileCategoryOptions] = await Promise.all([
     getProjects(),

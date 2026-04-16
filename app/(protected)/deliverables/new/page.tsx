@@ -1,6 +1,8 @@
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { DeliverableForm } from '@/components/modules/deliverables/DeliverableForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
 import { getUsersForSelect } from '@/lib/users/queries'
 import { getProjects } from '@/lib/projects/queries'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
@@ -13,6 +15,9 @@ interface PageProps {
 }
 
 export default async function NewDeliverablePage({ searchParams }: PageProps) {
+  const profile = await getSessionProfile()
+  requireTasksDeliverablesFilesNewPageAccess(profile.system_role)
+
   const params = await searchParams
   const [projectsRaw, users, deliverableTypeOptions] = await Promise.all([
     getProjects(),

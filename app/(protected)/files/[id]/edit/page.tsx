@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { FileForm } from '@/components/modules/files/FileForm'
+import { getSessionProfile } from '@/lib/auth/session'
+import { requireFileEditPage } from '@/lib/auth/access-surface'
 import { getFileById } from '@/lib/files/queries'
 import { getProjects } from '@/lib/projects/queries'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
@@ -20,6 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function EditFilePage({ params }: PageProps) {
   const { id } = await params
+  const profile = await getSessionProfile()
   const [file, projectsRaw, fileCategoryOptions] = await Promise.all([
     getFileById(id),
     getProjects(),
@@ -27,6 +30,7 @@ export default async function EditFilePage({ params }: PageProps) {
   ])
 
   if (!file) notFound()
+  await requireFileEditPage(profile, file)
 
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))
 

@@ -23,6 +23,20 @@ async function getAssignedProjectIds(userId: string): Promise<string[]> {
   return (data ?? []).map((r) => r.project_id)
 }
 
+/** True if the user has a row in project_team_assignments for this project. */
+export async function isUserAssignedToProject(userId: string, projectId: string): Promise<boolean> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('project_team_assignments')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('project_id', projectId)
+    .limit(1)
+    .maybeSingle()
+  if (error) return false
+  return data != null
+}
+
 // ─── List ─────────────────────────────────────────────────────
 
 export async function getProjects(opts?: {

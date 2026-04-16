@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { getSessionProfile } from '@/lib/auth/session'
-import { effectiveRole } from '@/lib/auth/permissions'
+import { canAccessTasksDeliverablesFilesNewRoute, effectiveRole } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -52,7 +52,7 @@ export default async function TasksPage({ searchParams }: PageProps) {
       : role === 'coordinator'
         ? 'Tasks in your assigned projects.'
         : 'Executable work items assigned to team members across all projects.'
-  const canCreate = role === 'admin' || role === 'coordinator'
+  const canCreate = canAccessTasksDeliverablesFilesNewRoute(profile.system_role)
 
   return (
     <div>
