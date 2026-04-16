@@ -3,10 +3,12 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
+import { loadMutationProfile, ensureProjectTeamMutation } from '@/lib/auth/mutation-policy'
 
 // ─── Add team member ─────────────────────────────────────────
 export async function addTeamMember(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
@@ -16,6 +18,9 @@ export async function addTeamMember(formData: FormData) {
 
   if (!projectId) return { error: 'Project is required.' }
   if (!userId) return { error: 'Team member is required.' }
+
+  const gate = await ensureProjectTeamMutation(profile, projectId)
+  if ('error' in gate) return { error: gate.error }
 
   const { error } = await supabase
     .from('project_team_assignments')
@@ -39,6 +44,7 @@ export async function addTeamMember(formData: FormData) {
 // ─── Remove team member ──────────────────────────────────────
 export async function removeTeamMember(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
@@ -46,6 +52,10 @@ export async function removeTeamMember(formData: FormData) {
   const projectId = (formData.get('project_id') as string)?.trim()
 
   if (!assignmentId) return { error: 'Assignment ID is required.' }
+  if (!projectId) return { error: 'Project is required.' }
+
+  const gate = await ensureProjectTeamMutation(profile, projectId)
+  if ('error' in gate) return { error: gate.error }
 
   const { error } = await supabase
     .from('project_team_assignments')

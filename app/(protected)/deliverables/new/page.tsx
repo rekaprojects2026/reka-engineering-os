@@ -4,7 +4,7 @@ import { DeliverableForm } from '@/components/modules/deliverables/DeliverableFo
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
 import { getUsersForSelect } from '@/lib/users/queries'
-import { getProjects } from '@/lib/projects/queries'
+import { projectOptionsForMutationForms } from '@/lib/auth/query-scope'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 
@@ -20,7 +20,7 @@ export default async function NewDeliverablePage({ searchParams }: PageProps) {
 
   const params = await searchParams
   const [projectsRaw, users, deliverableTypeOptions] = await Promise.all([
-    getProjects(),
+    projectOptionsForMutationForms(profile, params.project_id ?? null),
     getUsersForSelect(),
     getSettingOptions('deliverable_type'),
   ])

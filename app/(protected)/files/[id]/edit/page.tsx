@@ -5,7 +5,7 @@ import { FileForm } from '@/components/modules/files/FileForm'
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireFileEditPage } from '@/lib/auth/access-surface'
 import { getFileById } from '@/lib/files/queries'
-import { getProjects } from '@/lib/projects/queries'
+import { projectOptionsForMutationForms } from '@/lib/auth/query-scope'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getDeliverablesByProjectId } from '@/lib/deliverables/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function EditFilePage({ params }: PageProps) {
   const { id } = await params
   const profile = await getSessionProfile()
-  const [file, projectsRaw, fileCategoryOptions] = await Promise.all([
-    getFileById(id),
-    getProjects(),
-    getSettingOptions('file_category'),
-  ])
-
+  const file = await getFileById(id)
   if (!file) notFound()
   await requireFileEditPage(profile, file)
+
+  const [projectsRaw, fileCategoryOptions] = await Promise.all([
+    projectOptionsForMutationForms(profile, file.project_id),
+    getSettingOptions('file_category'),
+  ])
 
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))
 

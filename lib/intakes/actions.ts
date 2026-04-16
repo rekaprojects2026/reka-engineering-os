@@ -3,12 +3,17 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
+import { loadMutationProfile, ensureIntakeMutation } from '@/lib/auth/mutation-policy'
 
 // ─── Create ───────────────────────────────────────────────────
 export async function createIntake(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureIntakeMutation(profile)
+  if (perm) return { error: perm }
 
   const clientId = (formData.get('client_id') as string)?.trim() || null
   const tempClientName = (formData.get('temp_client_name') as string)?.trim() || null
@@ -56,8 +61,12 @@ export async function createIntake(formData: FormData) {
 // ─── Update ───────────────────────────────────────────────────
 export async function updateIntake(id: string, formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureIntakeMutation(profile)
+  if (perm) return { error: perm }
 
   const clientId = (formData.get('client_id') as string)?.trim() || null
   const tempClientName = (formData.get('temp_client_name') as string)?.trim() || null

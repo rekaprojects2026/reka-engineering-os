@@ -3,7 +3,7 @@ import { SectionCard } from '@/components/shared/SectionCard'
 import { FileForm } from '@/components/modules/files/FileForm'
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
-import { getProjects } from '@/lib/projects/queries'
+import { projectOptionsForMutationForms } from '@/lib/auth/query-scope'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getDeliverablesByProjectId } from '@/lib/deliverables/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
@@ -20,7 +20,7 @@ export default async function NewFilePage({ searchParams }: PageProps) {
 
   const params = await searchParams
   const [projectsRaw, fileCategoryOptions] = await Promise.all([
-    getProjects(),
+    projectOptionsForMutationForms(profile, params.project_id ?? null),
     getSettingOptions('file_category'),
   ])
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
+import { loadMutationProfile, ensureCompensationOrPaymentMutation } from '@/lib/auth/mutation-policy'
 
 function buildPayload(formData: FormData) {
   const qty = parseFloat(formData.get('qty') as string) || 1
@@ -28,8 +29,12 @@ function buildPayload(formData: FormData) {
 
 export async function createCompensation(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureCompensationOrPaymentMutation(profile)
+  if (perm) return { error: perm }
 
   const payload = buildPayload(formData)
   if (!payload.member_id) return { error: 'Member is required.' }
@@ -50,8 +55,12 @@ export async function createCompensation(formData: FormData) {
 
 export async function updateCompensation(id: string, formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureCompensationOrPaymentMutation(profile)
+  if (perm) return { error: perm }
 
   const payload = buildPayload(formData)
   if (!payload.member_id) return { error: 'Member is required.' }
@@ -71,8 +80,12 @@ export async function updateCompensation(id: string, formData: FormData) {
 
 export async function deleteCompensation(id: string) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureCompensationOrPaymentMutation(profile)
+  if (perm) return { error: perm }
 
   const { error } = await supabase
     .from('compensation_records')

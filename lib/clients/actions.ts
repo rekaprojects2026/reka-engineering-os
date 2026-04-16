@@ -3,12 +3,17 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
+import { loadMutationProfile, ensureClientMutation } from '@/lib/auth/mutation-policy'
 
 // ─── Create ───────────────────────────────────────────────────
 export async function createClient(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureClientMutation(profile)
+  if (perm) return { error: perm }
 
   const payload = {
     client_name:           (formData.get('client_name') as string).trim(),
@@ -41,8 +46,12 @@ export async function createClient(formData: FormData) {
 // ─── Update ───────────────────────────────────────────────────
 export async function updateClient(id: string, formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureClientMutation(profile)
+  if (perm) return { error: perm }
 
   const payload = {
     client_name:           (formData.get('client_name') as string).trim(),

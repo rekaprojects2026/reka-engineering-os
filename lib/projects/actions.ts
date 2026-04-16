@@ -4,12 +4,21 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { logActivity } from '@/lib/activity/actions'
+import {
+  loadMutationProfile,
+  ensureCreateProjectMutation,
+  ensureProjectOperationalMutation,
+} from '@/lib/auth/mutation-policy'
 
 // ─── Create ───────────────────────────────────────────────────
 export async function createProject(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureCreateProjectMutation(profile)
+  if (perm) return { error: perm }
 
   const name = (formData.get('name') as string)?.trim()
   const clientId = (formData.get('client_id') as string)?.trim()
@@ -72,8 +81,12 @@ export async function createProject(formData: FormData) {
 // ─── Update ───────────────────────────────────────────────────
 export async function updateProject(id: string, formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const gate = await ensureProjectOperationalMutation(profile, id)
+  if ('error' in gate) return { error: gate.error }
 
   const name = (formData.get('name') as string)?.trim()
   const clientId = (formData.get('client_id') as string)?.trim()

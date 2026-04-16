@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { logActivity } from '@/lib/activity/actions'
+import { loadMutationProfile, ensureCreateProjectMutation } from '@/lib/auth/mutation-policy'
 
 /**
  * Convert a qualified intake into a project.
@@ -13,8 +14,12 @@ import { logActivity } from '@/lib/activity/actions'
  */
 export async function convertIntakeToProject(formData: FormData) {
   const supabase = await createServerClient()
+  const profile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureCreateProjectMutation(profile)
+  if (perm) return { error: perm }
 
   const intakeId = (formData.get('intake_id') as string)?.trim()
   if (!intakeId) return { error: 'Intake ID is required.' }

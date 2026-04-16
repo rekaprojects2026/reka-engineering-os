@@ -4,7 +4,7 @@ import { TaskForm } from '@/components/modules/tasks/TaskForm'
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-surface'
 import { getUsersForSelect } from '@/lib/users/queries'
-import { getProjects } from '@/lib/projects/queries'
+import { projectOptionsForMutationForms } from '@/lib/auth/query-scope'
 import { getSettingOptions } from '@/lib/settings/queries'
 
 export const metadata = { title: 'New Task — Engineering Agency OS' }
@@ -19,7 +19,7 @@ export default async function NewTaskPage({ searchParams }: PageProps) {
 
   const params = await searchParams
   const [projectsRaw, users, taskCategoryOptions] = await Promise.all([
-    getProjects(),
+    projectOptionsForMutationForms(profile, params.project_id ?? null),
     getUsersForSelect(),
     getSettingOptions('task_category'),
   ])

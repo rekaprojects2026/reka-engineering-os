@@ -76,6 +76,9 @@ export async function userCanViewTask(profile: SessionProfile, task: TaskWithRel
   return userCanViewProject(profile, project)
 }
 
+/**
+ * May open the task edit form. Full vs review-only vs assignee-partial is enforced in server actions (Stage RBAC-03).
+ */
 export async function userCanEditTask(
   profile: SessionProfile,
   task: TaskWithRelations,

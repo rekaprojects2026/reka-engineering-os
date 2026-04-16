@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { loadMutationProfile, ensureAdmin } from '@/lib/auth/mutation-policy'
 
 // ── Shared profile payload builder ────────────────────────────
 
@@ -38,8 +39,12 @@ function buildProfilePayload(formData: FormData) {
 
 export async function createMember(formData: FormData) {
   const supabase = await createServerClient()
+  const sessionProfile = await loadMutationProfile()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const perm = ensureAdmin(sessionProfile)
+  if (perm) return { error: perm }
 
   const email     = (formData.get('email') as string)?.trim().toLowerCase()
   const full_name = (formData.get('full_name') as string)?.trim()

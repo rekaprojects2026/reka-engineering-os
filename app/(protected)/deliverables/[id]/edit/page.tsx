@@ -5,7 +5,7 @@ import { DeliverableForm } from '@/components/modules/deliverables/DeliverableFo
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireDeliverableEditPage } from '@/lib/auth/access-surface'
 import { getDeliverableById } from '@/lib/deliverables/queries'
-import { getProjects } from '@/lib/projects/queries'
+import { projectOptionsForMutationForms } from '@/lib/auth/query-scope'
 import { getUsersForSelect } from '@/lib/users/queries'
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
@@ -23,15 +23,15 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function EditDeliverablePage({ params }: PageProps) {
   const { id } = await params
   const profile = await getSessionProfile()
-  const [deliverable, projectsRaw, users, deliverableTypeOptions] = await Promise.all([
-    getDeliverableById(id),
-    getProjects(),
+  const deliverable = await getDeliverableById(id)
+  if (!deliverable) notFound()
+  await requireDeliverableEditPage(profile, deliverable)
+
+  const [projectsRaw, users, deliverableTypeOptions] = await Promise.all([
+    projectOptionsForMutationForms(profile, deliverable.project_id),
     getUsersForSelect(),
     getSettingOptions('deliverable_type'),
   ])
-
-  if (!deliverable) notFound()
-  await requireDeliverableEditPage(profile, deliverable)
 
   const projects = projectsRaw.map(p => ({ id: p.id, name: p.name, project_code: p.project_code }))
 
