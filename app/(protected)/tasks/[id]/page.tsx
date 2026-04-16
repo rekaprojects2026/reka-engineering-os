@@ -2,15 +2,14 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
+import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
 import { TaskStatusBadge } from '@/components/modules/tasks/TaskStatusBadge'
 import { PriorityBadge } from '@/components/shared/PriorityBadge'
-import { ProgressBar } from '@/components/shared/ProgressBar'
 import { getTaskById } from '@/lib/tasks/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import {
   Pencil,
   ExternalLink,
-  AlertTriangle,
 } from 'lucide-react'
 
 interface PageProps {
@@ -28,8 +27,6 @@ export default async function TaskDetailPage({ params }: PageProps) {
   const task = await getTaskById(id)
   if (!task) notFound()
 
-  const today = new Date().toISOString().split('T')[0]
-  const isOverdue = task.due_date && task.due_date < today && task.status !== 'done'
   const isBlocked = task.status === 'blocked'
 
   return (
@@ -61,27 +58,10 @@ export default async function TaskDetailPage({ params }: PageProps) {
         }
       />
 
-      {/* Status strip */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        <TaskStatusBadge status={task.status} />
-        <PriorityBadge priority={task.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />
-        {isOverdue && (
-          <span style={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            color: 'var(--color-warning)',
-            backgroundColor: 'var(--color-warning-subtle)',
-            padding: '2px 10px',
-            borderRadius: 'var(--radius-pill)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-          }}>
-            <AlertTriangle size={12} />
-            Overdue
-          </span>
-        )}
-        {isBlocked && task.blocked_reason && (
+      <EntityStatusStrip
+        statusBadge={<TaskStatusBadge status={task.status} />}
+        priorityBadge={<PriorityBadge priority={task.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />}
+        extraBadge={isBlocked && task.blocked_reason ? (
           <span style={{
             fontSize: '0.75rem',
             fontWeight: 500,
@@ -92,19 +72,10 @@ export default async function TaskDetailPage({ params }: PageProps) {
           }}>
             Blocked: {task.blocked_reason}
           </span>
-        )}
-        {task.due_date && (
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-            Due {formatDate(task.due_date)}
-          </span>
-        )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: '120px' }}>
-          <ProgressBar value={task.progress_percent} height={5} />
-          <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
-            {task.progress_percent}%
-          </span>
-        </div>
-      </div>
+        ) : undefined}
+        dueDate={task.due_date}
+        progress={task.progress_percent}
+      />
 
       {/* Two-column detail */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'start' }}>

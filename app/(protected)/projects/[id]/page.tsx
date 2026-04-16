@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
+import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
+import { EmptyState } from '@/components/shared/EmptyState'
 import { ProjectStatusBadge } from '@/components/modules/projects/ProjectStatusBadge'
 import { PriorityBadge } from '@/components/shared/PriorityBadge'
 import { ProgressBar } from '@/components/shared/ProgressBar'
@@ -114,17 +116,10 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         }
       />
 
-      {/* Quick status strip */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        marginBottom: '20px',
-        flexWrap: 'wrap',
-      }}>
-        <ProjectStatusBadge status={project.status} />
-        <PriorityBadge priority={project.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />
-        {project.waiting_on !== 'none' && (
+      <EntityStatusStrip
+        statusBadge={<ProjectStatusBadge status={project.status} />}
+        priorityBadge={<PriorityBadge priority={project.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />}
+        extraBadge={project.waiting_on !== 'none' ? (
           <span style={{
             fontSize: '0.75rem',
             fontWeight: 500,
@@ -135,17 +130,10 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           }}>
             Waiting: {(project.waiting_on ?? 'none').charAt(0).toUpperCase() + (project.waiting_on ?? 'none').slice(1)}
           </span>
-        )}
-        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-          Due {formatDate(project.target_due_date)}
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: '120px' }}>
-          <ProgressBar value={project.progress_percent} height={5} />
-          <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
-            {project.progress_percent}%
-          </span>
-        </div>
-      </div>
+        ) : undefined}
+        dueDate={project.target_due_date}
+        progress={project.progress_percent}
+      />
 
       {/* Tabs */}
       <div style={{
@@ -485,18 +473,8 @@ function TasksTab({ projectId, tasks }: { projectId: string; tasks: TaskWithRela
         noPadding
       >
         {tasks.length === 0 ? (
-          <div style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            color: 'var(--color-text-muted)',
-            fontSize: '0.8125rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-          }}>
-            <CheckSquare size={16} />
-            No tasks created for this project yet.
+          <div style={{ padding: '16px' }}>
+            <EmptyState compact icon={<CheckSquare size={16} />} title="No tasks created for this project yet." />
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -618,18 +596,8 @@ function DeliverablesTab({ projectId, deliverables }: { projectId: string; deliv
         noPadding
       >
         {deliverables.length === 0 ? (
-          <div style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            color: 'var(--color-text-muted)',
-            fontSize: '0.8125rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-          }}>
-            <FileText size={16} />
-            No deliverables created for this project yet.
+          <div style={{ padding: '16px' }}>
+            <EmptyState compact icon={<FileText size={16} />} title="No deliverables created for this project yet." />
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -770,13 +738,8 @@ function FilesTab({ projectId, files, driveFolderLink }: { projectId: string; fi
         noPadding
       >
         {files.length === 0 ? (
-          <div style={{
-            padding: '24px 16px', textAlign: 'center', color: 'var(--color-text-muted)',
-            fontSize: '0.8125rem', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', gap: '8px',
-          }}>
-            <FolderOpen size={16} />
-            No files attached to this project yet.
+          <div style={{ padding: '16px' }}>
+            <EmptyState compact icon={<FolderOpen size={16} />} title="No files attached to this project yet." />
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -869,19 +832,7 @@ function ActivityTab({ logs }: { logs: ActivityLogEntry[] }) {
   if (logs.length === 0) {
     return (
       <SectionCard title="Activity">
-        <div style={{
-          padding: '24px 0',
-          textAlign: 'center',
-          color: 'var(--color-text-muted)',
-          fontSize: '0.8125rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-        }}>
-          <Activity size={16} />
-          No activity recorded for this project yet.
-        </div>
+        <EmptyState compact icon={<Activity size={16} />} title="No activity recorded for this project yet." />
       </SectionCard>
     )
   }

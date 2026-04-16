@@ -78,7 +78,16 @@ export default async function SettingsPage({ searchParams }: PageProps) {
 
       {/* Domain tabs */}
       <div
-        className="flex flex-wrap gap-3 mb-6"
+        style={{
+          padding: '12px 16px',
+          backgroundColor: 'var(--color-surface-subtle)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-card)',
+          marginBottom: '20px',
+        }}
+      >
+      <div
+        className="flex flex-wrap gap-2"
         role="tablist"
       >
         {summary.map((s) => {
@@ -121,6 +130,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
             </Link>
           )
         })}
+      </div>
       </div>
 
       {/* Options table */}

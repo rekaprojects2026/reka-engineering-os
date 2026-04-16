@@ -3,6 +3,7 @@
 import { useTransition, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createProject, updateProject } from '@/lib/projects/actions'
+import { FormSection } from '@/components/shared/FormSection'
 import {
   SOURCE_PLATFORMS,
   DISCIPLINES,
@@ -49,16 +50,6 @@ const fieldGroupStyle: React.CSSProperties = {
   gap: '16px',
 }
 
-const sectionTitleStyle: React.CSSProperties = {
-  fontSize: '0.8125rem',
-  fontWeight: 600,
-  color: 'var(--color-text-muted)',
-  textTransform: 'uppercase',
-  letterSpacing: '0.04em',
-  marginBottom: '12px',
-  paddingBottom: '8px',
-  borderBottom: '1px solid var(--color-border)',
-}
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
@@ -91,11 +82,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
 
   return (
     <form action={handleSubmit}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-        {/* Section: Project Info */}
-        <div>
-          <p style={sectionTitleStyle}>Project Information</p>
+        <FormSection title="Project Information" first>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <Field label="Project Name" required>
               <input
@@ -117,11 +106,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               />
             </Field>
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Client & Intake */}
-        <div>
-          <p style={sectionTitleStyle}>Client & Intake</p>
+        <FormSection title="Client & Intake">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={fieldGroupStyle}>
               <Field label="Client" required>
@@ -150,11 +137,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               </Field>
             </div>
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Source & Classification */}
-        <div>
-          <p style={sectionTitleStyle}>Source & Classification</p>
+        <FormSection title="Source & Classification">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={fieldGroupStyle}>
               <Field label="Source" required>
@@ -191,11 +176,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               </Field>
             </div>
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Timeline */}
-        <div>
-          <p style={sectionTitleStyle}>Timeline</p>
+        <FormSection title="Timeline">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={fieldGroupStyle}>
               <Field label="Start Date" required>
@@ -230,11 +213,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               </div>
             )}
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Assignment */}
-        <div>
-          <p style={sectionTitleStyle}>Assignment</p>
+        <FormSection title="Assignment">
           <div style={fieldGroupStyle}>
             <Field label="Project Lead" required>
               <select
@@ -266,11 +247,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               </select>
             </Field>
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Status & Priority */}
-        <div>
-          <p style={sectionTitleStyle}>Status & Priority</p>
+        <FormSection title="Status & Priority">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={fieldGroupStyle}>
               <Field label="Status" required>
@@ -308,11 +287,9 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               </Field>
             </div>
           </div>
-        </div>
+        </FormSection>
 
-        {/* Section: Links & Notes */}
-        <div>
-          <p style={sectionTitleStyle}>Links & Notes</p>
+        <FormSection title="Links & Notes">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <Field label="Google Drive Folder Link">
               <input
@@ -333,7 +310,7 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
               />
             </Field>
           </div>
-        </div>
+        </FormSection>
 
         {/* Error */}
         {error && (

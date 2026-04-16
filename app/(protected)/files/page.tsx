@@ -1,10 +1,17 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { FilterBar } from '@/components/shared/FilterBar'
 import { getFiles, type FileWithRelations } from '@/lib/files/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { FolderOpen, Plus, ExternalLink, HardDrive } from 'lucide-react'
+
+const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
+const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
+const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
+const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Files — Engineering Agency OS' }
 
@@ -55,75 +62,29 @@ export default async function FilesPage({ searchParams }: PageProps) {
       />
 
       {/* Filters */}
-      <form method="GET" style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', rowGap: '10px' }}>
-        <input
-          name="search"
-          type="search"
-          defaultValue={params.search ?? ''}
-          placeholder="Search files…"
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            minWidth: '220px',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        />
-        <select
-          name="file_category"
-          defaultValue={params.file_category ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Categories</option>
-          <option value="reference">Reference</option>
-          <option value="draft">Draft</option>
-          <option value="working_file">Working File</option>
-          <option value="review_copy">Review Copy</option>
-          <option value="final">Final</option>
-          <option value="submission">Submission</option>
-          <option value="supporting_document">Supporting Doc</option>
-        </select>
-        <select
-          name="provider"
-          defaultValue={params.provider ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Providers</option>
-          <option value="manual">Manual</option>
-          <option value="google_drive">Google Drive</option>
-        </select>
-        <button type="submit" style={{
-          padding: '8px 14px',
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-control)',
-          fontSize: '0.8125rem',
-          cursor: 'pointer',
-          color: 'var(--color-text-secondary)',
-        }}>
-          Filter
-        </button>
-        {(params.search || params.file_category || params.provider || params.project_id) && (
-          <Link href="/files" style={{ padding: '7px 14px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            Clear
-          </Link>
-        )}
+      <form method="GET">
+        <FilterBar>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search files…" style={FI} />
+          <select name="file_category" defaultValue={params.file_category ?? ''} style={FS}>
+            <option value="">All Categories</option>
+            <option value="reference">Reference</option>
+            <option value="draft">Draft</option>
+            <option value="working_file">Working File</option>
+            <option value="review_copy">Review Copy</option>
+            <option value="final">Final</option>
+            <option value="submission">Submission</option>
+            <option value="supporting_document">Supporting Doc</option>
+          </select>
+          <select name="provider" defaultValue={params.provider ?? ''} style={FS}>
+            <option value="">All Providers</option>
+            <option value="manual">Manual</option>
+            <option value="google_drive">Google Drive</option>
+          </select>
+          <button type="submit" style={FB}>Filter</button>
+          {(params.search || params.file_category || params.provider || params.project_id) && (
+            <Link href="/files" style={FC}>Clear filters</Link>
+          )}
+        </FilterBar>
       </form>
 
       <SectionCard noPadding>

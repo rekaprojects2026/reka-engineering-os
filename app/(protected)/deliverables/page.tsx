@@ -1,13 +1,20 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { getSessionProfile } from '@/lib/auth/session'
 import { effectiveRole } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { FilterBar } from '@/components/shared/FilterBar'
 import { DeliverableStatusBadge } from '@/components/modules/deliverables/DeliverableStatusBadge'
 import { getDeliverables, type DeliverableWithRelations } from '@/lib/deliverables/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { FileText, Plus, ExternalLink } from 'lucide-react'
+
+const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
+const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
+const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
+const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Deliverables — Engineering Agency OS' }
 
@@ -72,95 +79,36 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
       />
 
       {/* Filters */}
-      <form method="GET" style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', rowGap: '10px' }}>
-        <input
-          name="search"
-          type="search"
-          defaultValue={params.search ?? ''}
-          placeholder="Search deliverables…"
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            minWidth: '220px',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        />
-        <select
-          name="status"
-          defaultValue={params.status ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Statuses</option>
-          <option value="draft">Draft</option>
-          <option value="internal_review">Internal Review</option>
-          <option value="ready_to_submit">Ready to Submit</option>
-          <option value="sent_to_client">Sent to Client</option>
-          <option value="revision_requested">Revision Requested</option>
-          <option value="approved">Approved</option>
-          <option value="final_issued">Final Issued</option>
-        </select>
-        <select
-          name="type"
-          defaultValue={params.type ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Types</option>
-          <option value="drawing">Drawing</option>
-          <option value="3d_model">3D Model</option>
-          <option value="report">Report</option>
-          <option value="boq">BOQ</option>
-          <option value="calculation_sheet">Calculation Sheet</option>
-          <option value="presentation">Presentation</option>
-          <option value="specification">Specification</option>
-          <option value="revision_package">Revision Package</option>
-          <option value="submission_package">Submission Package</option>
-        </select>
-        <button
-          type="submit"
-          style={{
-            padding: '8px 14px',
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            cursor: 'pointer',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Filter
-        </button>
-        {(params.search || params.status || params.type || params.project_id) && (
-          <Link
-            href="/deliverables"
-            style={{
-              padding: '7px 14px',
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-muted)',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            Clear
-          </Link>
-        )}
+      <form method="GET">
+        <FilterBar>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search deliverables…" style={FI} />
+          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+            <option value="">All Statuses</option>
+            <option value="draft">Draft</option>
+            <option value="internal_review">Internal Review</option>
+            <option value="ready_to_submit">Ready to Submit</option>
+            <option value="sent_to_client">Sent to Client</option>
+            <option value="revision_requested">Revision Requested</option>
+            <option value="approved">Approved</option>
+            <option value="final_issued">Final Issued</option>
+          </select>
+          <select name="type" defaultValue={params.type ?? ''} style={FS}>
+            <option value="">All Types</option>
+            <option value="drawing">Drawing</option>
+            <option value="3d_model">3D Model</option>
+            <option value="report">Report</option>
+            <option value="boq">BOQ</option>
+            <option value="calculation_sheet">Calculation Sheet</option>
+            <option value="presentation">Presentation</option>
+            <option value="specification">Specification</option>
+            <option value="revision_package">Revision Package</option>
+            <option value="submission_package">Submission Package</option>
+          </select>
+          <button type="submit" style={FB}>Filter</button>
+          {(params.search || params.status || params.type || params.project_id) && (
+            <Link href="/deliverables" style={FC}>Clear filters</Link>
+          )}
+        </FilterBar>
       </form>
 
       {/* Table */}

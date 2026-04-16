@@ -2,13 +2,13 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
+import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
 import { DeliverableStatusBadge } from '@/components/modules/deliverables/DeliverableStatusBadge'
 import { getDeliverableById } from '@/lib/deliverables/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import {
   Pencil,
   ExternalLink,
-  AlertTriangle,
 } from 'lucide-react'
 
 interface PageProps {
@@ -69,42 +69,41 @@ export default async function DeliverableDetailPage({ params }: PageProps) {
         }
       />
 
-      {/* Status strip */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        <DeliverableStatusBadge status={d.status} />
-        <span style={{
-          fontFamily: 'monospace',
-          fontSize: '0.8125rem',
-          fontWeight: 600,
-          color: 'var(--color-text-primary)',
-          backgroundColor: 'var(--color-surface-subtle)',
-          padding: '2px 10px',
-          borderRadius: '4px',
-        }}>
-          Rev {d.revision_number}
-        </span>
-        {d.version_label && (
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-            {d.version_label}
-          </span>
-        )}
-        {isRevisionRequested && (
-          <span style={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            color: 'var(--color-danger)',
-            backgroundColor: 'var(--color-danger-subtle)',
-            padding: '2px 10px',
-            borderRadius: 'var(--radius-pill)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-          }}>
-            <AlertTriangle size={12} />
-            Revision Requested
-          </span>
-        )}
-      </div>
+      <EntityStatusStrip
+        statusBadge={<DeliverableStatusBadge status={d.status} />}
+        extraBadge={
+          <>
+            <span style={{
+              fontFamily: 'monospace',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              color: 'var(--color-text-primary)',
+              backgroundColor: 'var(--color-surface-subtle)',
+              padding: '2px 10px',
+              borderRadius: '4px',
+            }}>
+              Rev {d.revision_number}
+            </span>
+            {d.version_label && (
+              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                {d.version_label}
+              </span>
+            )}
+            {isRevisionRequested && (
+              <span style={{
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: 'var(--color-danger)',
+                backgroundColor: 'var(--color-danger-subtle)',
+                padding: '2px 10px',
+                borderRadius: 'var(--radius-pill)',
+              }}>
+                Revision Requested
+              </span>
+            )}
+          </>
+        }
+      />
 
       {/* Two-column detail */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'start' }}>

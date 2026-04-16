@@ -1,14 +1,21 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { getSessionProfile, requireRole } from '@/lib/auth/session'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { FilterBar } from '@/components/shared/FilterBar'
 import { DataTable } from '@/components/shared/DataTable'
 import { ClientStatusBadge } from '@/components/modules/clients/ClientStatusBadge'
 import { getClients } from '@/lib/clients/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { Users, Plus } from 'lucide-react'
 import type { Client } from '@/types/database'
+
+const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
+const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
+const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
+const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Clients — Engineering Agency OS' }
 
@@ -128,88 +135,29 @@ export default async function ClientsPage({ searchParams }: PageProps) {
       />
 
       {/* Filters */}
-      <form method="GET" style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', rowGap: '10px' }}>
-        <input
-          name="search"
-          type="search"
-          defaultValue={params.search ?? ''}
-          placeholder="Search clients…"
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            minWidth: '220px',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        />
-        <select
-          name="status"
-          defaultValue={params.status ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Statuses</option>
-          <option value="lead">Lead</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="archived">Archived</option>
-        </select>
-        <select
-          name="source"
-          defaultValue={params.source ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Sources</option>
-          <option value="upwork">Upwork</option>
-          <option value="fiverr">Fiverr</option>
-          <option value="direct">Direct</option>
-          <option value="referral">Referral</option>
-          <option value="other">Other</option>
-        </select>
-        <button
-          type="submit"
-          style={{
-            padding: '8px 14px',
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            cursor: 'pointer',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Filter
-        </button>
-        {(params.search || params.status || params.source) && (
-          <Link
-            href="/clients"
-            style={{
-              padding: '7px 14px',
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-muted)',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            Clear
-          </Link>
-        )}
+      <form method="GET">
+        <FilterBar>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search clients…" style={FI} />
+          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+            <option value="">All Statuses</option>
+            <option value="lead">Lead</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="archived">Archived</option>
+          </select>
+          <select name="source" defaultValue={params.source ?? ''} style={FS}>
+            <option value="">All Sources</option>
+            <option value="upwork">Upwork</option>
+            <option value="fiverr">Fiverr</option>
+            <option value="direct">Direct</option>
+            <option value="referral">Referral</option>
+            <option value="other">Other</option>
+          </select>
+          <button type="submit" style={FB}>Filter</button>
+          {(params.search || params.status || params.source) && (
+            <Link href="/clients" style={FC}>Clear filters</Link>
+          )}
+        </FilterBar>
       </form>
 
       {/* Table */}

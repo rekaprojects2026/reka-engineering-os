@@ -1,9 +1,11 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { getSessionProfile } from '@/lib/auth/session'
 import { effectiveRole } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
+import { FilterBar } from '@/components/shared/FilterBar'
 import { TaskStatusBadge } from '@/components/modules/tasks/TaskStatusBadge'
 import { PriorityBadge } from '@/components/shared/PriorityBadge'
 import { ProgressBar } from '@/components/shared/ProgressBar'
@@ -11,6 +13,11 @@ import { getTasks } from '@/lib/tasks/queries'
 import type { TaskWithRelations } from '@/lib/tasks/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { CheckSquare, Plus, AlertTriangle } from 'lucide-react'
+
+const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
+const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
+const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
+const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Tasks — Engineering Agency OS' }
 
@@ -75,89 +82,30 @@ export default async function TasksPage({ searchParams }: PageProps) {
       />
 
       {/* Filters */}
-      <form method="GET" style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', rowGap: '10px' }}>
-        <input
-          name="search"
-          type="search"
-          defaultValue={params.search ?? ''}
-          placeholder="Search tasks…"
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            minWidth: '220px',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        />
-        <select
-          name="status"
-          defaultValue={params.status ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Statuses</option>
-          <option value="to_do">To Do</option>
-          <option value="in_progress">In Progress</option>
-          <option value="review">Review</option>
-          <option value="revision">Revision</option>
-          <option value="blocked">Blocked</option>
-          <option value="done">Done</option>
-        </select>
-        <select
-          name="priority"
-          defaultValue={params.priority ?? ''}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-          }}
-        >
-          <option value="">All Priorities</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="urgent">Urgent</option>
-        </select>
-        <button
-          type="submit"
-          style={{
-            padding: '8px 14px',
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-control)',
-            fontSize: '0.8125rem',
-            cursor: 'pointer',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Filter
-        </button>
-        {(params.search || params.status || params.priority || params.project_id) && (
-          <Link
-            href="/tasks"
-            style={{
-              padding: '7px 14px',
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-muted)',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            Clear
-          </Link>
-        )}
+      <form method="GET">
+        <FilterBar>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search tasks…" style={FI} />
+          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+            <option value="">All Statuses</option>
+            <option value="to_do">To Do</option>
+            <option value="in_progress">In Progress</option>
+            <option value="review">Review</option>
+            <option value="revision">Revision</option>
+            <option value="blocked">Blocked</option>
+            <option value="done">Done</option>
+          </select>
+          <select name="priority" defaultValue={params.priority ?? ''} style={FS}>
+            <option value="">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+          <button type="submit" style={FB}>Filter</button>
+          {(params.search || params.status || params.priority || params.project_id) && (
+            <Link href="/tasks" style={FC}>Clear filters</Link>
+          )}
+        </FilterBar>
       </form>
 
       {/* Table */}
