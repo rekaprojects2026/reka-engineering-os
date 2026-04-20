@@ -27,13 +27,36 @@ export default async function ProtectedLayout({
 
         {/* Profile completion banner */}
         {profileIncomplete && (
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-warning-subtle)] px-7 py-2.5">
-            <span className="text-[0.8125rem] text-[var(--color-warning)]">
-              Your profile is incomplete. Complete it so the team knows how to reach you and what you work on.
-            </span>
+          <div
+            className="flex shrink-0 items-center justify-between gap-3 px-6 py-2.5 text-sm"
+            style={{
+              backgroundColor: 'var(--color-warning-subtle)',
+              borderBottom: '1px solid rgba(138, 74, 8, 0.15)',
+            }}
+          >
+            <div className="flex items-center gap-2.5">
+              <svg
+                className="h-4 w-4 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                style={{ color: 'var(--color-warning)' }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+              <span style={{ color: 'var(--color-warning)' }}>
+                Your profile is incomplete. Complete it so the team knows how to reach you.
+              </span>
+            </div>
             <Link
               href="/onboarding/complete"
-              className="shrink-0 rounded-[var(--radius-control)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-1 text-[0.8125rem] font-semibold text-[var(--color-warning)] no-underline hover:bg-[var(--color-surface-muted)] transition-colors"
+              className="shrink-0 rounded-md px-3 py-1 text-xs font-semibold transition-colors no-underline"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                color: 'var(--color-warning)',
+                border: '1px solid rgba(138,74,8,0.25)',
+              }}
             >
               Complete profile →
             </Link>

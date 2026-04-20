@@ -53,7 +53,7 @@ interface NavItem {
   label: string
   href:  string
   icon:  ReactNode
-  badge?: number // red badge count, omit if 0
+  badge?: number
 }
 
 interface NavGroup {
@@ -70,12 +70,8 @@ interface AppSidebarProps {
 /**
  * AppSidebar — premium vertical navigation rail.
  *
- * v0-inspired density:
- *   • 248px rail, h-14 brand area
- *   • Groups separated by whitespace (space-y-6), NOT dividers
- *   • Nav items: `rounded-md px-3 py-2 text-sm` with soft hover state
- *   • User footer is a single quiet row — avatar + name/role + signout icon,
- *     no visible inner border
+ * 248px rail, h-14 brand area, groups separated by whitespace (space-y-6).
+ * Nav items use inline style for active bg to support CSS variable theming.
  */
 export function AppSidebar({
   userFullName = 'User',
@@ -131,25 +127,27 @@ export function AppSidebar({
           href={item.href}
           aria-current={active ? 'page' : undefined}
           className={cn(
-            'sidebar-nav-item flex items-center gap-3 rounded-md px-3 py-2.5 text-sm no-underline transition-colors duration-150',
+            'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[0.8125rem] font-medium transition-all duration-100 no-underline',
             active
-              ? 'bg-[var(--sidebar-active-bg)] font-semibold text-[var(--sidebar-active-text)]'
-              : 'font-medium text-[var(--sidebar-text-muted)]'
+              ? 'text-[var(--sidebar-active-text)]'
+              : 'opacity-70 hover:opacity-100'
           )}
+          style={
+            active
+              ? { backgroundColor: 'var(--sidebar-active-bg)', color: 'var(--sidebar-active-text)' }
+              : { color: 'var(--sidebar-text)' }
+          }
         >
-          <span
-            aria-hidden="true"
-            className={cn(
-              'flex shrink-0',
-              active ? 'text-[var(--sidebar-active-text)]' : 'text-[var(--sidebar-text-muted)]'
-            )}
-          >
+          <span className={cn('shrink-0', active ? 'opacity-100' : 'opacity-70')}>
             {item.icon}
           </span>
           <span className="truncate">{item.label}</span>
-          {item.badge !== undefined && item.badge > 0 && (
-            <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded bg-[#851E1E] px-1.5 text-[10px] font-semibold text-white">
-              {item.badge > 99 ? '99+' : item.badge}
+          {item.badge != null && item.badge > 0 && (
+            <span
+              className="ml-auto flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.5625rem] font-bold"
+              style={{ backgroundColor: 'var(--color-danger)', color: 'var(--color-danger-fg)' }}
+            >
+              {item.badge}
             </span>
           )}
         </Link>
@@ -161,36 +159,37 @@ export function AppSidebar({
 
   return (
     <aside
-      className="sticky top-0 flex h-screen shrink-0 flex-col overflow-hidden border-r border-[var(--sidebar-border)] bg-[var(--sidebar-bg)]"
-      style={{ width: 'var(--sidebar-width)', minWidth: 'var(--sidebar-width)' }}
+      className="flex h-screen w-[var(--sidebar-width)] shrink-0 flex-col overflow-hidden"
+      style={{ backgroundColor: 'var(--sidebar-bg)', borderRight: '1px solid var(--sidebar-border)' }}
     >
       {/* ── Brand ─────────────────────────────────────────────── */}
       <div
-        className="flex shrink-0 items-center gap-3 border-b border-[var(--sidebar-border)] px-5"
-        style={{ height: 'var(--topbar-height)' }}
+        className="flex h-14 shrink-0 items-center gap-2.5 px-4"
+        style={{ borderBottom: '1px solid var(--sidebar-border)' }}
       >
         <div
-          aria-hidden="true"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-[var(--color-primary)] shadow-[0_1px_3px_rgba(20,45,80,0.35)]"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ring-1"
+          style={{ backgroundColor: 'rgba(255,255,255,0.08)', ringColor: 'rgba(255,255,255,0.12)' }}
         >
-          <span className="text-[12px] font-bold tracking-[0.02em] text-white">R</span>
+          <span className="text-xs font-bold" style={{ color: 'var(--sidebar-text)' }}>R</span>
         </div>
-        <div className="min-w-0 leading-tight">
-          <span className="block truncate text-[0.9375rem] font-semibold text-[var(--sidebar-text)]">
-            Agency OS
-          </span>
-          <span className="mt-0.5 block truncate text-[0.6875rem] font-medium text-[var(--sidebar-label)]">
-            {systemRole ? (ROLE_CONTEXT[systemRole] ?? 'Engineering Agency') : 'Engineering Agency'}
-          </span>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--sidebar-text)' }}>ReKa</p>
+          <p className="truncate text-[0.6875rem] leading-tight" style={{ color: 'var(--sidebar-text-muted)' }}>
+            {ROLE_CONTEXT[systemRole ?? 'member'] ?? 'Workspace'}
+          </p>
         </div>
       </div>
 
       {/* ── Nav groups ────────────────────────────────────────── */}
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5" aria-label="Main navigation">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4" aria-label="Main navigation">
         {navGroups.map((group, gi) => (
           <div key={gi}>
             {group.label && (
-              <p className="mb-3 px-3 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--sidebar-label)]">
+              <p
+                className="mb-1 px-2 text-[0.625rem] font-semibold uppercase tracking-[0.1em]"
+                style={{ color: 'var(--sidebar-label)' }}
+              >
                 {group.label}
               </p>
             )}
@@ -202,47 +201,53 @@ export function AppSidebar({
       </nav>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-4">
+      <div
+        className="shrink-0 px-3 py-3"
+        style={{ borderTop: '1px solid var(--sidebar-border)' }}
+      >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="flex w-full items-center gap-3 rounded-md px-2.5 py-2.5 text-left transition-colors hover:bg-[var(--sidebar-hover)] focus:outline-none"
+              className="flex w-full items-center gap-2.5 rounded-md px-2 py-2 transition-colors duration-100 outline-none"
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
             >
-              <Avatar className="h-8 w-8 shrink-0">
-                <AvatarFallback className="bg-[var(--color-primary)] text-[10px] font-semibold text-white">
+              <Avatar className="h-7 w-7 shrink-0">
+                <AvatarFallback
+                  className="text-[0.6875rem] font-semibold"
+                  style={{ backgroundColor: 'var(--sidebar-active-bg)', color: 'var(--sidebar-text)' }}
+                >
                   {getInitials(userFullName)}
                 </AvatarFallback>
               </Avatar>
-              <div className="min-w-0 flex-1 leading-tight">
-                <p className="truncate text-[0.8125rem] font-semibold text-[var(--sidebar-text)]">
+              <div className="min-w-0 flex-1 text-left">
+                <p className="truncate text-[0.8125rem] font-medium leading-tight" style={{ color: 'var(--sidebar-text)' }}>
                   {userFullName}
                 </p>
-                {systemRole && (
-                  <p className="mt-0.5 truncate text-[0.6875rem] font-medium capitalize text-[var(--sidebar-text-muted)]">
-                    {ROLE_LABEL[systemRole] ?? systemRole}
-                  </p>
-                )}
+                <p className="truncate text-[0.6875rem] leading-tight" style={{ color: 'var(--sidebar-text-muted)' }}>
+                  {ROLE_LABEL[systemRole ?? 'member'] ?? systemRole}
+                </p>
               </div>
-              <ChevronDown size={14} className="shrink-0 text-[var(--sidebar-text-muted)]" />
+              <ChevronDown size={13} style={{ color: 'var(--sidebar-text-muted)', flexShrink: 0 }} />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="top" align="start" sideOffset={4} className="w-56">
+          <DropdownMenuContent side="top" align="start" sideOffset={4} className="w-52">
             <DropdownMenuItem asChild>
-              <Link href="/my-profile">
-                <UserCircle className="mr-2 h-4 w-4" />
+              <Link href="/my-profile" className="flex cursor-pointer items-center gap-2">
+                <UserCircle size={14} className="opacity-60" />
                 My Profile
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-[var(--color-danger)] focus:text-[var(--color-danger)] focus:bg-[var(--color-danger-subtle)]"
+              className="flex cursor-pointer items-center gap-2 text-[var(--color-danger)] focus:text-[var(--color-danger)]"
               onClick={async () => {
                 await logout()
               }}
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
+              <LogOut size={14} className="opacity-80" />
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

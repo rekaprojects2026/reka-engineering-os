@@ -67,16 +67,22 @@ export function BreadcrumbNav() {
 
   return (
     <nav aria-label="Current section" className="flex items-center gap-1.5">
-      <span className={`text-[0.8125rem] font-medium ${sub ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-secondary)]'}`}>
-        {module}
-      </span>
+      {sub ? (
+        <span className="max-w-[180px] truncate text-[0.8125rem] text-[var(--color-text-muted)] transition-colors">
+          {module}
+        </span>
+      ) : (
+        <span className="max-w-[180px] truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
+          {module}
+        </span>
+      )}
 
       {sub && (
         <>
-          <span aria-hidden="true" className="select-none text-xs leading-none text-[var(--color-border-strong)]">
+          <span aria-hidden="true" className="select-none text-xs leading-none text-[var(--color-text-muted)] opacity-40">
             /
           </span>
-          <span className="text-[0.8125rem] font-medium text-[var(--color-text-secondary)]">
+          <span className="max-w-[180px] truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
             {sub}
           </span>
         </>
