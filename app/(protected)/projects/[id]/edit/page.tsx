@@ -17,7 +17,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const project = await getProjectById(id)
-  return { title: project ? `Edit ${project.name} — Engineering Agency OS` : 'Project Not Found' }
+  return { title: project ? `Edit ${project.name} — ReKa Engineering OS` : 'Project not found — ReKa Engineering OS' }
 }
 
 export default async function EditProjectPage({ params }: PageProps) {
@@ -42,7 +42,7 @@ export default async function EditProjectPage({ params }: PageProps) {
         title={`Edit: ${project.name}`}
         subtitle={`${project.project_code}`}
       />
-      <SectionCard>
+      <SectionCard className="overflow-visible">
         <ProjectForm mode="edit" project={project} clients={clients} users={users} disciplineOptions={disciplineOptions} projectTypeOptions={projectTypeOptions} />
       </SectionCard>
     </div>

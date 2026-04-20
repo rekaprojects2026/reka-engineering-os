@@ -4,7 +4,7 @@ import { SectionCard } from '@/components/shared/SectionCard'
 import { InviteForm }  from '@/components/modules/team/InviteForm'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'Invite Member — Engineering Agency OS' }
+export const metadata = { title: 'Invite Member — ReKa Engineering OS' }
 
 export default async function InviteMemberPage() {
   const profile = await getSessionProfile()

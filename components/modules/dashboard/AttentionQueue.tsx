@@ -14,7 +14,7 @@ type MergedRow =
   | { kind: 'revision';       id: string; title: string; href: string; project: string; detailLabel: string; detailValue: string }
   | { kind: 'waiting_client'; id: string; title: string; href: string; project: string; detailLabel: string; detailValue: string }
 
-function mergeRows(attention: NeedsAttentionData, waitingClient: WaitingClientProjectRow[]): MergedRow[] {
+export function mergeRows(attention: NeedsAttentionData, waitingClient: WaitingClientProjectRow[]): MergedRow[] {
   const rows: MergedRow[] = []
 
   for (const t of attention.overdueTasks) {
@@ -65,35 +65,36 @@ function mergeRows(attention: NeedsAttentionData, waitingClient: WaitingClientPr
   return rows
 }
 
-const KIND_LABEL: Record<RowKind, string> = {
+export const KIND_LABEL: Record<RowKind, string> = {
   overdue:        'Overdue',
   blocked:        'Blocked',
   revision:       'Revision',
   waiting_client: 'Client hold',
 }
 
-const KIND_ICON: Record<RowKind, ReactNode> = {
+export const KIND_ICON: Record<RowKind, ReactNode> = {
   overdue:        <AlertTriangle       className="h-3.5 w-3.5" aria-hidden />,
   blocked:        <Ban                 className="h-3.5 w-3.5" aria-hidden />,
   revision:       <RotateCcw           className="h-3.5 w-3.5" aria-hidden />,
   waiting_client: <MessageSquareWarning className="h-3.5 w-3.5" aria-hidden />,
 }
 
-/**
- * Row-wrapper classes per kind. Mirrors the v0 pattern:
- *   - overdue / blocked → danger-subtle background
- *   - revision          → warning-subtle background
- *   - waiting_client    → neutral surface-muted background
- * Opacity hover provides interaction affordance.
- */
+/** v0-ui row shells — overdue (danger), blocked + revision (warning / pending action), client hold (surface). */
+const ROW_OVERDUE =
+  'bg-[var(--color-danger-subtle)] hover:opacity-90 transition-opacity'
+const ROW_REVIEW =
+  'bg-[var(--color-warning-subtle)] hover:opacity-90 transition-opacity'
+const ROW_CLIENT =
+  'bg-[var(--color-surface-subtle)] hover:opacity-90 transition-opacity'
+
 const KIND_ROW_CLASS: Record<RowKind, string> = {
-  overdue:        'bg-[var(--color-danger-subtle)]  hover:bg-[var(--color-danger-subtle)]/70',
-  blocked:        'bg-[var(--color-danger-subtle)]  hover:bg-[var(--color-danger-subtle)]/70',
-  revision:       'bg-[var(--color-warning-subtle)] hover:bg-[var(--color-warning-subtle)]/70',
-  waiting_client: 'bg-[var(--color-surface-muted)]  hover:bg-[var(--color-surface-muted)]/70',
+  overdue:        ROW_OVERDUE,
+  blocked:        ROW_REVIEW,
+  revision:       ROW_REVIEW,
+  waiting_client: ROW_CLIENT,
 }
 
-const KIND_BADGE_CLASS: Record<RowKind, string> = {
+export const KIND_BADGE_CLASS: Record<RowKind, string> = {
   overdue:        'bg-[var(--color-danger)]/10  text-[var(--color-danger)]',
   blocked:        'bg-[var(--color-danger)]/10  text-[var(--color-danger)]',
   revision:       'bg-[var(--color-warning)]/10 text-[var(--color-warning)]',
@@ -136,7 +137,7 @@ export function AttentionQueue({
         </div>
 
         <div className="mt-4 border-t border-[var(--color-border)] pt-3">
-          <QuickLinks />
+          <AttentionQueueQuickLinks />
         </div>
       </div>
     )
@@ -144,13 +145,13 @@ export function AttentionQueue({
 
   return (
     <div>
-      <ul className="m-0 flex list-none flex-col gap-2 p-0">
+      <ul className="m-0 flex list-none flex-col gap-3 p-0">
         {shown.map((row) => (
           <li key={`${row.kind}-${row.id}`}>
             <Link
               href={row.href}
               className={cn(
-                'group flex items-center gap-3 rounded-[var(--radius-control)] p-3.5 text-inherit no-underline transition-colors',
+                'flex items-center gap-4 rounded-lg p-3 text-inherit no-underline',
                 KIND_ROW_CLASS[row.kind]
               )}
             >
@@ -183,10 +184,7 @@ export function AttentionQueue({
                 </p>
               </div>
 
-              <ChevronRight
-                className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform group-hover:translate-x-0.5"
-                aria-hidden
-              />
+              <ChevronRight size={16} className="ml-auto shrink-0 text-[var(--color-text-muted)]" aria-hidden />
             </Link>
           </li>
         ))}
@@ -199,13 +197,13 @@ export function AttentionQueue({
       )}
 
       <div className="mt-4 border-t border-[var(--color-border)] pt-3">
-        <QuickLinks />
+        <AttentionQueueQuickLinks />
       </div>
     </div>
   )
 }
 
-function QuickLinks() {
+export function AttentionQueueQuickLinks() {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-2">
       <Link href="/tasks"        className="text-[0.8125rem] font-semibold text-[var(--color-primary)] no-underline hover:underline">Open tasks →</Link>

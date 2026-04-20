@@ -4,7 +4,7 @@ import { SectionCard }     from '@/components/shared/SectionCard'
 import { TeamMemberForm }  from '@/components/modules/team/TeamMemberForm'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'Add Member — Engineering Agency OS' }
+export const metadata = { title: 'Add Member — ReKa Engineering OS' }
 
 export default async function NewTeamMemberPage() {
   const profile = await getSessionProfile()

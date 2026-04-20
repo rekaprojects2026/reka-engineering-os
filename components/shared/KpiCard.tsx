@@ -1,111 +1,142 @@
+import React, { type ReactNode } from 'react'
+import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { Card } from '@/components/ui/card'
-import type { ReactNode } from 'react'
 
-interface KpiCardProps {
-  label:        string
+export interface KpiCardTrend {
+  value:       number
+  label:       string
+  isPositive?: boolean
+}
+
+export interface KpiCardProps {
+  /** v0-ui naming (preferred) */
+  title?:       string
+  /** Legacy naming */
+  label?:       string
   value:        string | number
-  icon?:        ReactNode
+  subtitle?:    string
+  /** Legacy — same role as `subtitle` */
   description?: string
-  className?:   string
-  variant?:     'default' | 'dashboard'
+  icon?:        LucideIcon | ReactNode
+  trend?:       KpiCardTrend
+  /** v0-ui variant names */
+  variant?:     'default' | 'warning' | 'danger' | 'dashboard'
+  /** Legacy accent names */
   accent?:      'none' | 'primary' | 'urgent' | 'warning'
+  className?:  string
+}
+
+function resolveVisualTone(
+  variant: KpiCardProps['variant'],
+  accent: KpiCardProps['accent']
+) {
+  const v = variant === 'dashboard' ? 'default' : variant
+  if (v === 'danger' || accent === 'urgent') return 'danger' as const
+  if (v === 'warning' || accent === 'warning') return 'warning' as const
+  if (accent === 'primary') return 'primary' as const
+  return 'default' as const
 }
 
 /**
- * KpiCard — headline metric tile.
+ * KpiCard — headline metric tile, stripped to v0 discipline.
  *
- * Stage 3.6b composition:
- *   • Taller card (min-h-[156px]) so 4 tiles across carry real weight.
- *   • Label row at top, large value mid, meta line pinned at bottom —
- *     fills the card so no tile looks half-empty.
- *   • Value 2.125rem / 600 / tracking-[-0.025em] — a real headline.
- *   • Accented variants (primary/urgent/warning) carry subtle top→bottom
- *     tint gradient; neutral tiles stay clean porcelain.
- *   • Icon pill 10×10 rounded-xl with ringed token, anchored top-right.
+ *   • p-4 padding, compact tile.
+ *   • Supports `title` or legacy `label`, optional `trend`, `subtitle` / `description`.
+ *   • `variant` (v0) and `accent` (legacy) combine per resolve rules.
  */
 export function KpiCard({
+  title,
   label,
   value,
-  icon,
+  subtitle,
   description,
+  icon,
+  trend,
   className,
+  variant = 'default',
   accent = 'none',
 }: KpiCardProps) {
+  const heading = title ?? label ?? ''
+  const subline = subtitle ?? description
+
+  const tone = resolveVisualTone(variant, accent)
 
   const valueTone =
-    accent === 'urgent'  ? 'text-[var(--color-danger)]'  :
-    accent === 'warning' ? 'text-[var(--color-warning)]' :
+    tone === 'danger'  ? 'text-[var(--color-danger)]'  :
+    tone === 'warning' ? 'text-[var(--color-warning)]' :
     'text-[var(--color-text-primary)]'
 
-  const descTone =
-    accent === 'urgent'  ? 'text-[var(--color-danger)] font-medium'  :
-    accent === 'warning' ? 'text-[var(--color-warning)] font-medium' :
-    accent === 'primary' ? 'text-[var(--color-primary)] font-medium' :
-    'text-[var(--color-text-muted)]'
-
-  const iconTone =
-    accent === 'urgent'  ? 'bg-[var(--color-danger)]/10  text-[var(--color-danger)]  ring-1 ring-[var(--color-danger)]/15'  :
-    accent === 'warning' ? 'bg-[var(--color-warning)]/10 text-[var(--color-warning)] ring-1 ring-[var(--color-warning)]/15' :
-    accent === 'primary' ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] ring-1 ring-[var(--color-primary)]/15' :
-    'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)] ring-1 ring-[var(--color-border)]'
-
-  const surfaceTint =
-    accent === 'urgent'  ? 'bg-gradient-to-b from-[var(--color-danger-subtle)]/50  to-[var(--color-surface)]' :
-    accent === 'warning' ? 'bg-gradient-to-b from-[var(--color-warning-subtle)]/60 to-[var(--color-surface)]' :
-    accent === 'primary' ? 'bg-gradient-to-b from-[var(--color-primary-subtle)]/50 to-[var(--color-surface)]' :
-    ''
+  const iconPill =
+    tone === 'danger'  ? 'bg-[var(--color-danger-subtle)]  text-[var(--color-danger)]'  :
+    tone === 'warning' ? 'bg-[var(--color-warning-subtle)] text-[var(--color-warning)]' :
+    tone === 'primary' ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)]' :
+    'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'
 
   const accentBar =
-    accent === 'urgent'  ? 'border-l-[3px] border-l-[var(--color-danger)]'  :
-    accent === 'warning' ? 'border-l-[3px] border-l-[var(--color-warning)]' :
-    accent === 'primary' ? 'border-l-[3px] border-l-[var(--color-primary)]' :
+    tone === 'danger'  ? 'border-l-2 border-l-[var(--color-danger)]'  :
+    tone === 'warning' ? 'border-l-2 border-l-[var(--color-warning)]' :
+    tone === 'primary' ? 'border-l-2 border-l-[var(--color-primary)]' :
     ''
 
-  return (
-    <Card
-      className={cn(
-        'relative flex min-h-[156px] flex-col justify-between overflow-hidden p-6',
-        surfaceTint,
-        accentBar,
-        className
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-[0.6875rem] font-semibold uppercase leading-none tracking-[0.09em] text-[var(--color-text-muted)]">
-          {label}
-        </p>
+  const iconContent = icon
+    ? React.isValidElement(icon)
+      ? icon
+      : React.createElement(icon as React.ElementType, { className: 'h-4 w-4' })
+    : null
 
-        {icon && (
+  return (
+    <Card className={cn('kpi-card-hover p-4', accentBar, className)}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            {heading}
+          </p>
+          <p
+            className={cn(
+              'text-2xl font-semibold leading-tight tracking-tight tabular-nums',
+              valueTone
+            )}
+          >
+            {value}
+          </p>
+          {trend && (
+            <p
+              className={cn(
+                'mt-1 text-xs font-medium',
+                trend.isPositive ? 'text-[var(--success)]' : 'text-[var(--danger)]'
+              )}
+            >
+              {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
+            </p>
+          )}
+          {subline && (
+            <p className="text-[0.75rem] leading-snug text-[var(--color-text-muted)]">
+              {subline}
+            </p>
+          )}
+        </div>
+
+        {icon != null && (
           <div
             aria-hidden="true"
             className={cn(
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
-              iconTone
+              'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+              iconPill
             )}
           >
-            {icon}
+            {iconContent}
           </div>
         )}
       </div>
-
-      <p
-        className={cn(
-          'mt-4 text-[2.125rem] font-semibold leading-[1.02] tracking-[-0.025em] tabular-nums',
-          valueTone
-        )}
-      >
-        {value}
-      </p>
-
-      <p
-        className={cn(
-          'mt-3 text-[0.75rem] leading-snug',
-          description ? descTone : 'text-[var(--color-text-muted)]/50'
-        )}
-      >
-        {description ?? '—'}
-      </p>
     </Card>
+  )
+}
+
+export function KpiStrip({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cn('grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6', className)}>
+      {children}
+    </div>
   )
 }

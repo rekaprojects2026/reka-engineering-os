@@ -25,7 +25,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const member = await getMemberById(id)
-  return { title: member ? `${member.full_name} — Engineering Agency OS` : 'Member Not Found' }
+  return { title: member ? `${member.full_name} — ReKa Engineering OS` : 'Member not found — ReKa Engineering OS' }
 }
 
 // ── Lookup maps ───────────────────────────────────────────────

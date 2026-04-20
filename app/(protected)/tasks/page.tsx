@@ -22,7 +22,7 @@ const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-
 const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
 const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
-export const metadata = { title: 'Tasks — Engineering Agency OS' }
+export const metadata = { title: 'Tasks — ReKa Engineering OS' }
 
 interface PageProps {
   searchParams: Promise<{ search?: string; status?: string; priority?: string; project_id?: string }>

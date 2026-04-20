@@ -16,7 +16,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const f = await getFileById(id)
-  return { title: f ? `${f.file_name} — Engineering Agency OS` : 'File Not Found' }
+  return { title: f ? `${f.file_name} — ReKa Engineering OS` : 'File not found — ReKa Engineering OS' }
 }
 
 const categoryLabels: Record<string, string> = {

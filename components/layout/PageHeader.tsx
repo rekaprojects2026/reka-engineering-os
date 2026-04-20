@@ -2,6 +2,29 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
 import type { ReactNode } from 'react'
 
+export interface SectionHeaderProps {
+  title:        string
+  description?: string
+  children?:    ReactNode
+  className?:   string
+}
+
+export function SectionHeader({ title, description, children, className }: SectionHeaderProps) {
+  return (
+    <div className={cn('mb-4 flex items-center justify-between gap-4', className)}>
+      <div>
+        <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
+        {description && (
+          <p className="mt-0.5 text-[0.8125rem] text-[var(--color-text-muted)]">{description}</p>
+        )}
+      </div>
+      {children && (
+        <div className="flex shrink-0 items-center gap-2">{children}</div>
+      )}
+    </div>
+  )
+}
+
 interface PageHeaderProps {
   title:      string
   subtitle?:  string
@@ -13,8 +36,7 @@ interface PageHeaderProps {
 
 /**
  * PageHeader — top of every page. Premium typography:
- *   • Title: 1.625rem / 600 / tracking-tight  (feels like a product heading,
- *     not a form label)
+ *   • Title: text-2xl / semibold / tracking-tight
  *   • Subtitle: 0.875rem / muted, sits with a small top gap
  *   • Optional breadcrumb above the title, optional actions aligned right
  */
@@ -31,7 +53,7 @@ export function PageHeader({ title, subtitle, actions, className, breadcrumb }: 
             ← {breadcrumb.label}
           </Link>
         )}
-        <h1 className="text-[1.625rem] font-semibold leading-tight tracking-[-0.015em] text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">
           {title}
         </h1>
         {subtitle && (

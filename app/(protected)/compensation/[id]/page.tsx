@@ -18,7 +18,11 @@ interface PageProps { params: Promise<{ id: string }> }
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const record = await getCompensationById(id)
-  return { title: record ? `Compensation — ${record.member?.full_name ?? 'Record'}` : 'Not Found' }
+  return {
+    title: record
+      ? `Compensation — ${record.member?.full_name ?? 'Record'} — ReKa Engineering OS`
+      : `Not found — ReKa Engineering OS`,
+  }
 }
 
 async function handleDelete(id: string) {

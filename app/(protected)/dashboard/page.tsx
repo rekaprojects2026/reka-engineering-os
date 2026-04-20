@@ -7,17 +7,17 @@ import {
   FileText,
   CheckSquare,
   AlertTriangle,
-  ShieldAlert,
-  CheckCircle2,
+  CalendarClock,
   Activity,
+  ChevronRight,
+  CheckCircle2,
 } from 'lucide-react'
 
 import { getSessionProfile } from '@/lib/auth/session'
 import { effectiveRole } from '@/lib/auth/permissions'
-import { PageHeader } from '@/components/layout/PageHeader'
+import { PageHeader, SectionHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/card'
-import { KpiCard } from '@/components/shared/KpiCard'
-import { SectionCard } from '@/components/shared/SectionCard'
+import { KpiCard, KpiStrip } from '@/components/shared/KpiCard'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { PriorityBadge } from '@/components/shared/PriorityBadge'
 import { TaskStatusBadge } from '@/components/modules/tasks/TaskStatusBadge'
@@ -51,71 +51,40 @@ import {
 
 import { TaskStatusBarChart } from '@/components/modules/dashboard/TaskStatusBarChart'
 import { DeadlineBucketsChart } from '@/components/modules/dashboard/DeadlineBucketsChart'
-import { AttentionQueue } from '@/components/modules/dashboard/AttentionQueue'
+import {
+  AttentionQueue,
+  AttentionQueueQuickLinks,
+  KIND_BADGE_CLASS,
+  KIND_ICON,
+  KIND_LABEL,
+  mergeRows,
+} from '@/components/modules/dashboard/AttentionQueue'
 import { PaymentSnapshotCard } from '@/components/modules/dashboard/PaymentSnapshotCard'
 import { WorkloadBars } from '@/components/modules/dashboard/WorkloadBars'
 
 export const metadata = {
-  title: 'Dashboard — Engineering Agency OS',
+  title: 'Dashboard — ReKa Engineering OS',
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// DashSection — v0-style inline-header card framing for dashboard sections.
-// One continuous card surface (no muted header strip), title + description
-// inline with optional right-aligned actions, then the content body below.
+// SectionShell — Card + SectionHeader (Stage 2 v0 pattern)
 // ═════════════════════════════════════════════════════════════════════════════
 
-interface DashSectionProps {
+interface SectionShellProps {
   title:        string
   description?: string
   actions?:     ReactNode
   children:     ReactNode
   className?:   string
-  bodyClassName?: string
-  /**
-   * hero    — primary anchor panel (stronger border, subtle tinted surface, no hover lift).
-   * default — secondary panel (clean porcelain card).
-   * quiet   — supporting panel (compact padding, lighter weight title).
-   */
-  variant?:     'default' | 'hero' | 'quiet'
 }
 
-function DashSection({ title, description, actions, children, className, bodyClassName, variant = 'default' }: DashSectionProps) {
-  const isHero  = variant === 'hero'
-  const isQuiet = variant === 'quiet'
-
+function SectionShell({ title, description, actions, children, className }: SectionShellProps) {
   return (
-    <Card
-      className={cn(
-        isHero
-          ? 'border-[var(--color-border-strong)] bg-gradient-to-b from-[var(--color-surface)] to-[var(--color-surface-subtle)] p-6 shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-md)]'
-          : isQuiet
-            ? 'p-5'
-            : 'p-6',
-        className
-      )}
-    >
-      <div className={cn('flex items-start justify-between gap-4', isQuiet ? 'mb-3.5' : 'mb-5')}>
-        <div className="min-w-0">
-          <h2
-            className={cn(
-              'font-semibold leading-tight tracking-[-0.01em] text-[var(--color-text-primary)]',
-              isHero  ? 'text-[1.0625rem]' :
-              isQuiet ? 'text-[0.9375rem]' :
-              'text-[1rem]'
-            )}
-          >
-            {title}
-          </h2>
-          {description && (
-            <p className="mt-1.5 text-[0.8125rem] leading-snug text-[var(--color-text-muted)]">
-              {description}
-            </p>
-          )}
-        </div>
-        {actions && <div className="shrink-0">{actions}</div>}
-      </div>
-      <div className={bodyClassName}>{children}</div>
+    <Card className={cn('p-5', className)}>
+      <SectionHeader title={title} description={description}>
+        {actions}
+      </SectionHeader>
+      <div className="space-y-3">{children}</div>
     </Card>
   )
 }
@@ -133,29 +102,37 @@ const CODE_LINK_CLASS = 'text-xs font-medium text-[var(--color-primary)] no-unde
 
 function ScopedKpiRow({ kpis }: { kpis: ScopedKpis }) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
-      <KpiCard variant="dashboard" label="Active Projects" value={kpis.activeProjects} icon={<FolderKanban size={18} />} />
-      <KpiCard variant="dashboard" label="Open Tasks"      value={kpis.openTasks}      icon={<CheckSquare  size={18} />} />
+    <KpiStrip className="lg:grid-cols-5 xl:grid-cols-5">
+      <KpiCard title="Active Projects" value={kpis.activeProjects} icon={FolderKanban} />
+      <KpiCard title="Open Tasks" value={kpis.openTasks} icon={CheckSquare} />
       <KpiCard
-        variant="dashboard"
-        label="Overdue Tasks"
+        title="Overdue Tasks"
         value={kpis.overdueTasks}
-        icon={<AlertCircle size={18} />}
-        accent={kpis.overdueTasks > 0 ? 'urgent' : 'none'}
-        description={kpis.overdueTasks > 0 ? 'Needs action' : undefined}
+        icon={AlertCircle}
+        variant={kpis.overdueTasks > 0 ? 'danger' : 'default'}
       />
-      <KpiCard variant="dashboard" label="Due This Week" value={kpis.dueThisWeek} icon={<Clock size={18} />} />
-      {kpis.awaitingReview > 0 && (
-        <KpiCard variant="dashboard" label="Awaiting Review" value={kpis.awaitingReview} icon={<FileText size={18} />} accent="primary" />
-      )}
-    </div>
+      <KpiCard
+        title="Due This Week"
+        value={kpis.dueThisWeek}
+        icon={Clock}
+        variant={kpis.dueThisWeek > 0 ? 'warning' : 'default'}
+      />
+      <KpiCard
+        title="Awaiting Review"
+        value={kpis.awaitingReview}
+        icon={FileText}
+        accent={kpis.awaitingReview > 0 ? 'primary' : 'none'}
+      />
+    </KpiStrip>
   )
 }
 
 function ScopedTasksSection({ tasks, title }: { tasks: ScopedTask[]; title: string }) {
   const today = new Date().toISOString().split('T')[0]
   return (
-    <SectionCard title={title}>
+    <Card className="p-5">
+      <SectionHeader title={title} />
+      <div className="space-y-3">
       {tasks.length === 0 ? (
         <EmptyState icon={<CheckSquare size={20} />} title="No open tasks" description="You're all caught up." className="py-8" />
       ) : (
@@ -206,13 +183,16 @@ function ScopedTasksSection({ tasks, title }: { tasks: ScopedTask[]; title: stri
           </table>
         </div>
       )}
-    </SectionCard>
+      </div>
+    </Card>
   )
 }
 
 function ScopedDeliverablesSection({ deliverables, title }: { deliverables: ScopedDeliverable[]; title: string }) {
   return (
-    <SectionCard title={title}>
+    <Card className="p-5">
+      <SectionHeader title={title} />
+      <div className="space-y-3">
       {deliverables.length === 0 ? (
         <EmptyState icon={<FileText size={20} />} title="No active deliverables" description="Deliverables will appear here." className="py-8" />
       ) : (
@@ -245,7 +225,8 @@ function ScopedDeliverablesSection({ deliverables, title }: { deliverables: Scop
           </table>
         </div>
       )}
-    </SectionCard>
+      </div>
+    </Card>
   )
 }
 
@@ -257,7 +238,9 @@ function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] }) {
     paid:    'text-[var(--color-success)] bg-[var(--color-success-subtle)]',
   }
   return (
-    <SectionCard title="My Payments">
+    <Card className="p-5">
+      <SectionHeader title="My Payments" />
+      <div className="space-y-3">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
@@ -296,7 +279,8 @@ function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] }) {
           View all payments →
         </Link>
       </div>
-    </SectionCard>
+      </div>
+    </Card>
   )
 }
 
@@ -318,21 +302,16 @@ const ACTION_LABELS: Record<string, string> = {
 function RecentActivityFeed({ entries }: { entries: ActivityLogEntry[] }) {
   if (entries.length === 0) {
     return (
-      <div className="flex items-start gap-3 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface-subtle)] p-4">
+      <div className="flex items-center gap-3 py-2">
         <div
           aria-hidden="true"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface)] text-[var(--color-text-muted)] ring-1 ring-[var(--color-border)]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]"
         >
           <Activity className="h-4 w-4" />
         </div>
-        <div className="min-w-0">
-          <p className="m-0 text-[0.875rem] font-semibold text-[var(--color-text-primary)]">
-            No recent updates
-          </p>
-          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-muted)]">
-            Changes to projects, tasks, deliverables, and intakes will stream here as work moves through the pipeline.
-          </p>
-        </div>
+        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--color-text-muted)]">
+          No recent updates — activity across projects, tasks, and deliverables will stream here.
+        </p>
       </div>
     )
   }
@@ -343,87 +322,19 @@ function RecentActivityFeed({ entries }: { entries: ActivityLogEntry[] }) {
           entry.note ??
           `${ENTITY_LABELS[entry.entity_type] ?? entry.entity_type} ${ACTION_LABELS[entry.action_type] ?? entry.action_type}`
         return (
-          <div key={entry.id} className="flex items-start gap-3 py-3">
+          <div key={entry.id} className="flex items-start gap-3 py-2.5 first:pt-0 last:pb-0">
             <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)] opacity-60" />
             <div className="min-w-0 flex-1">
               <p className="m-0 text-[0.8125rem] leading-snug text-[var(--color-text-primary)]">
                 {description}
               </p>
-              <p className="mt-1 text-[0.6875rem] text-[var(--color-text-muted)]">
+              <p className="mt-0.5 text-[0.6875rem] text-[var(--color-text-muted)]">
                 {entry.actor?.full_name ?? 'System'} · {formatRelativeDate(entry.created_at)}
               </p>
             </div>
           </div>
         )
       })}
-    </div>
-  )
-}
-
-// ── Admin operational signal band ────────────────────────────────────────────
-
-interface SignalBandSummaryChip { label: string; value: number | string }
-
-function SignalBand({
-  riskCount,
-  summary,
-}: {
-  riskCount: number
-  summary?:  SignalBandSummaryChip[]
-}) {
-  const isClear = riskCount === 0
-  return (
-    <div
-      className={cn(
-        'flex flex-wrap items-center gap-4 rounded-[var(--radius-card)] border px-5 py-3.5',
-        isClear
-          ? 'border-[var(--color-success)]/25 bg-[var(--color-success-subtle)]/60'
-          : 'border-[var(--color-danger)]/25  bg-[var(--color-danger-subtle)]'
-      )}
-    >
-      <div
-        aria-hidden="true"
-        className={cn(
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-1',
-          isClear
-            ? 'bg-[var(--color-success)]/10 text-[var(--color-success)] ring-[var(--color-success)]/20'
-            : 'bg-[var(--color-danger)]/10  text-[var(--color-danger)]  ring-[var(--color-danger)]/20'
-        )}
-      >
-        {isClear ? <CheckCircle2 size={16} /> : <ShieldAlert size={16} />}
-      </div>
-
-      <div className="min-w-0">
-        <p
-          className={cn(
-            'm-0 text-[0.9375rem] font-semibold tracking-[-0.005em]',
-            isClear ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]'
-          )}
-        >
-          {isClear ? 'Pipeline clear' : `${riskCount} risk signal${riskCount === 1 ? '' : 's'}`}
-        </p>
-        <p className="mt-0.5 text-[0.75rem] leading-snug text-[var(--color-text-secondary)]">
-          {isClear
-            ? 'No critical blockers flagged in headline metrics.'
-            : 'Overdue work, client holds, and revision requests need triage.'}
-        </p>
-      </div>
-
-      {summary && summary.length > 0 && (
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          {summary.map((chip) => (
-            <span
-              key={chip.label}
-              className="inline-flex items-baseline gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-[0.6875rem] text-[var(--color-text-muted)]"
-            >
-              <span className="text-[0.875rem] font-semibold tabular-nums text-[var(--color-text-primary)]">
-                {chip.value}
-              </span>
-              <span className="uppercase tracking-[0.05em]">{chip.label}</span>
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   )
 }
@@ -501,60 +412,50 @@ export default async function DashboardPage() {
             subtitle="Operational view of your assigned projects — workload, deadlines, and blockers."
           />
           <ScopedKpiRow kpis={data.kpis} />
-          <DashSection title="Assignments">
+          <SectionShell title="Assignments">
             <p className="m-0 text-sm text-[var(--color-text-muted)]">
               No project assignments yet. When you are added to projects, this dashboard will populate.
             </p>
-          </DashSection>
+          </SectionShell>
         </div>
       )
     }
 
     return (
-      <div className="space-y-7">
+      <div className="space-y-6">
         <PageHeader
           title="Coordinator Dashboard"
           subtitle="Operational view of your assigned projects — workload, deadlines, and blockers."
         />
         <ScopedKpiRow kpis={data.kpis} />
 
-        <div className="grid grid-cols-12 gap-6">
-          {/* Left column (primary) */}
-          <div className="col-span-12 space-y-6 xl:col-span-8">
-            <DashSection
-              variant="hero"
-              title="Needs attention"
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+          <div className="space-y-6 xl:col-span-8">
+            <SectionShell
+              title="Needs Attention"
               description="Ranked queue for your portfolio."
-              actions={
-                attentionCount > 0 ? (
-                  <span className="rounded-full bg-[var(--color-danger-subtle)] px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-danger)]">
-                    {attentionCount} flagged
-                  </span>
-                ) : undefined
-              }
+              actions={<FlagCount count={attentionCount} />}
             >
               <AttentionQueue attention={attention} waitingClient={waiting} />
-            </DashSection>
+            </SectionShell>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <DashSection title="Operational health" description="Open tasks by status across your projects.">
-                <TaskStatusBarChart counts={pipeline} />
-              </DashSection>
-              <DashSection title="Deadline pressure" description="Due dates in the next two weeks.">
-                <DeadlineBucketsChart buckets={buckets} />
-              </DashSection>
-            </div>
+            <SectionShell title="Tasks by status">
+              <TaskStatusBarChart counts={pipeline} />
+            </SectionShell>
 
-            <DashSection title="Team workload" description="Open task load on your projects — highest first.">
+            <SectionShell title="Deadline pressure">
+              <DeadlineBucketsChart buckets={buckets} />
+            </SectionShell>
+
+            <SectionShell title="Team workload" description="Open task load — highest first.">
               <WorkloadBars users={workload} />
-            </DashSection>
+            </SectionShell>
           </div>
 
-          {/* Right column (supporting) */}
-          <div className="col-span-12 space-y-6 xl:col-span-4">
-            <DashSection variant="quiet" title="Recent activity" description="Latest changes in your projects.">
+          <div className="space-y-4 xl:col-span-4">
+            <SectionShell title="Recent activity">
               <RecentActivityFeed entries={activity} />
-            </DashSection>
+            </SectionShell>
             <ScopedTasksSection        tasks={data.tasks}               title="Open tasks"          />
             <ScopedDeliverablesSection deliverables={data.deliverables} title="Active deliverables" />
           </div>
@@ -576,124 +477,297 @@ export default async function DashboardPage() {
       getTeamWorkload(),
     ])
 
-  const queueSignals = kpis.overdueTasks + kpis.waitingClient + kpis.inRevision
-  const totalAttention =
-    attention.overdueTasks.length +
-    attention.blockedTasks.length +
-    attention.revisionDeliverables.length +
-    waitingClient.length
-
   return (
-    <div className="space-y-7">
+    <div className="space-y-6">
       <PageHeader
         title="Dashboard"
         subtitle="Owner / admin control center — pipeline health, deadlines, cash exposure, and team load."
       />
 
-      {/* A. Signal band — absorbs demoted KPIs (Waiting on Client / In Revision)
-           as persistent summary chips so no data is lost. */}
-      <SignalBand
-        riskCount={queueSignals}
-        summary={[
-          { label: 'Waiting on client', value: kpis.waitingClient },
-          { label: 'In revision',       value: kpis.inRevision },
-        ]}
-      />
-
-      {/* B. KPI strip — 4 primary headline tiles on xl.
-           Taller cards (min-h 156) with 2.125rem values read as real metrics. */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <KpiCard
-          variant="dashboard"
-          label="Active Projects"
-          value={kpis.activeProjects}
-          icon={<FolderKanban size={20} />}
-          accent="primary"
-        />
-        <KpiCard
-          variant="dashboard"
-          label="Open Tasks"
-          value={kpis.openTasks}
-          icon={<CheckSquare size={20} />}
-          accent={kpis.overdueTasks > 0 ? 'urgent' : 'none'}
-          description={kpis.overdueTasks > 0 ? `${kpis.overdueTasks} overdue` : undefined}
-        />
-        <KpiCard
-          variant="dashboard"
-          label="Due This Week"
-          value={kpis.dueThisWeek}
-          icon={<Clock size={20} />}
-          accent={kpis.dueThisWeek > 0 ? 'warning' : 'none'}
-        />
-        <KpiCard
-          variant="dashboard"
-          label="Awaiting Review"
-          value={kpis.awaitingReview}
-          icon={<FileText size={20} />}
-          accent={kpis.awaitingReview > 0 ? 'primary' : 'none'}
-        />
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            Active Projects
+          </p>
+          <p className="mt-1 text-2xl font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {kpis.activeProjects}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            Overdue Tasks
+          </p>
+          <p
+            className={cn(
+              'mt-1 text-2xl font-semibold tabular-nums',
+              kpis.overdueTasks > 0 ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-primary)]'
+            )}
+          >
+            {kpis.overdueTasks}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            In Review
+          </p>
+          <p className="mt-1 text-2xl font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {kpis.awaitingReview}
+          </p>
+          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-muted)]">Deliverables</p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            Revision Needed
+          </p>
+          <p
+            className={cn(
+              'mt-1 text-2xl font-semibold tabular-nums',
+              kpis.inRevision > 0 ? 'text-[var(--color-warning)]' : 'text-[var(--color-text-primary)]'
+            )}
+          >
+            {kpis.inRevision}
+          </p>
+          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-muted)]">Projects</p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            Waiting on Client
+          </p>
+          <p className="mt-1 text-2xl font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {kpis.waitingClient}
+          </p>
+          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-muted)]">Projects</p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            Pending Payments
+          </p>
+          <p
+            className={cn(
+              'mt-1 text-2xl font-semibold tabular-nums',
+              paymentSnapshot.unpaidCount > 0 ? 'text-[var(--color-warning)]' : 'text-[var(--color-text-primary)]'
+            )}
+          >
+            {formatIDR(paymentSnapshot.totalOutstanding)}
+          </p>
+          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-muted)]">
+            {paymentSnapshot.unpaidCount + paymentSnapshot.partialCount} payments
+          </p>
+        </Card>
       </div>
 
-      {/* C. Main 12-col grid — 8 / 4 split on xl+ laptops */}
-      <div className="grid grid-cols-12 gap-6">
-        {/* ── Left column (primary) ───────────────────────────────────── */}
-        <div className="col-span-12 space-y-6 xl:col-span-8">
-          <DashSection
-            variant="hero"
-            title="Needs attention"
-            description="Ranked queue — overdue, blocked, revision, and client holds."
-            actions={
-              totalAttention > 0 ? (
-                <span className="rounded-full bg-[var(--color-danger-subtle)] px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-danger)]">
-                  {totalAttention} flagged
-                </span>
-              ) : undefined
-            }
-          >
-            <AttentionQueue attention={attention} waitingClient={waitingClient} />
-          </DashSection>
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+        <div className="space-y-6 xl:col-span-8">
+          <Card className="p-5">
+            <SectionHeader title="Needs Attention" />
+            <div className="space-y-2">
+              {(() => {
+                const needsAttentionItems = mergeRows(attention, waitingClient)
+                if (needsAttentionItems.length === 0) {
+                  return (
+                    <div>
+                      <div className="flex items-start gap-3 rounded-[var(--radius-control)] border border-[var(--color-success)]/20 bg-[var(--color-success-subtle)] p-4">
+                        <div
+                          aria-hidden="true"
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-success)]/10 text-[var(--color-success)] ring-1 ring-[var(--color-success)]/20"
+                        >
+                          <CheckCircle2 className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="m-0 text-[0.875rem] font-semibold text-[var(--color-success)]">
+                            All clear — no items flagged
+                          </p>
+                          <p className="mt-1 text-[0.75rem] leading-snug text-[var(--color-text-secondary)]">
+                            Overdue tasks, blocked work, revision requests, and client holds will rank here as they
+                            arise.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 border-t border-[var(--color-border)] pt-3">
+                        <AttentionQueueQuickLinks />
+                      </div>
+                    </div>
+                  )
+                }
+                const shown = needsAttentionItems.slice(0, 8)
+                const hidden = needsAttentionItems.length - shown.length
+                return (
+                  <>
+                    {shown.map((row) => {
+                      const linkType =
+                        row.kind === 'waiting_client'
+                          ? 'waiting'
+                          : row.kind === 'revision' || row.kind === 'blocked'
+                            ? 'revision'
+                            : 'overdue'
+                      return (
+                        <Link
+                          key={`${row.kind}-${row.id}`}
+                          href={row.href}
+                          className={cn(
+                            'flex items-center gap-3 rounded-lg p-3 text-inherit no-underline transition-colors',
+                            linkType === 'overdue' &&
+                              'bg-[var(--color-danger-subtle)] hover:bg-[var(--color-danger-subtle)]/80',
+                            linkType === 'revision' &&
+                              'bg-[var(--color-warning-subtle)] hover:bg-[var(--color-warning-subtle)]/80',
+                            linkType === 'waiting' &&
+                              'bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-alt)]'
+                          )}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="mb-1.5 flex items-center gap-2">
+                              <span
+                                className={cn(
+                                  'inline-flex items-center gap-1 rounded-[var(--radius-pill)] px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-[0.06em]',
+                                  KIND_BADGE_CLASS[row.kind]
+                                )}
+                              >
+                                {KIND_ICON[row.kind]}
+                                {KIND_LABEL[row.kind]}
+                              </span>
+                              <span className="truncate font-mono text-[0.6875rem] text-[var(--color-text-muted)]">
+                                {row.project}
+                              </span>
+                            </div>
+                            <p className="truncate text-[0.875rem] font-medium leading-snug text-[var(--color-text-primary)]">
+                              {row.title}
+                            </p>
+                          </div>
+                          <div className="hidden shrink-0 text-right sm:block">
+                            <p className="text-[0.625rem] font-medium uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
+                              {row.detailLabel}
+                            </p>
+                            <p className="mt-0.5 truncate text-[0.8125rem] font-medium text-[var(--color-text-secondary)]">
+                              {row.detailValue}
+                            </p>
+                          </div>
+                          <ChevronRight size={16} className="shrink-0 text-[var(--color-text-muted)]" aria-hidden />
+                        </Link>
+                      )
+                    })}
+                    {hidden > 0 && (
+                      <p className="mt-3 pl-1 text-[0.75rem] text-[var(--color-text-muted)]">
+                        +{hidden} more — use the task and deliverable lists to triage.
+                      </p>
+                    )}
+                    <div className="mt-4 border-t border-[var(--color-border)] pt-3">
+                      <AttentionQueueQuickLinks />
+                    </div>
+                  </>
+                )
+              })()}
+            </div>
+          </Card>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <DashSection
-              title="Operational health"
-              description="Where open work sits — flow vs. friction."
-            >
-              <TaskStatusBarChart counts={pipeline} />
-            </DashSection>
-            <DashSection
-              title="Deadline pressure"
-              description="Target dates in the next 14 days."
-            >
-              <DeadlineBucketsChart buckets={buckets} />
-            </DashSection>
-          </div>
+          <Card className="p-5">
+            <SectionHeader title="Tasks by status" />
+            <TaskStatusBarChart counts={pipeline} />
+          </Card>
 
-          <DashSection
-            title="Team workload"
-            description="Open assignments by person — overload is obvious."
-          >
+          <Card className="p-5">
+            <SectionHeader title="Deadline pressure" />
+            <DeadlineBucketsChart buckets={buckets} />
+          </Card>
+
+          <Card className="p-5">
+            <SectionHeader title="Team workload" />
             <WorkloadBars users={workload} />
-          </DashSection>
+          </Card>
         </div>
 
-        {/* ── Right column (supporting) ───────────────────────────────── */}
-        <div className="col-span-12 space-y-6 xl:col-span-4">
-          <DashSection
-            variant="quiet"
-            title="Payment snapshot"
-            description="Balance still owed on open rows."
-          >
-            <PaymentSnapshotCard snapshot={paymentSnapshot} />
-          </DashSection>
-          <DashSection
-            variant="quiet"
-            title="Recent activity"
-            description="Latest changes across the workspace."
-          >
+        <div className="space-y-4 xl:col-span-4">
+          <PaymentSnapshotCard snapshot={paymentSnapshot} />
+
+          <Card className="p-5">
+            <SectionHeader title="Recent activity" />
             <RecentActivityFeed entries={activity} />
-          </DashSection>
+          </Card>
+
+          <Card className="p-5">
+            <SectionHeader title="Upcoming deadlines" />
+            <UpcomingDeadlinesList waitingClient={waitingClient} />
+          </Card>
         </div>
       </div>
+    </div>
+  )
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Supporting components
+// ═════════════════════════════════════════════════════════════════════════════
+
+function FlagCount({ count }: { count: number }) {
+  if (count === 0) {
+    return (
+      <span className="rounded-full bg-[var(--color-success-subtle)] px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-success)]">
+        Clear
+      </span>
+    )
+  }
+  return (
+    <span className="rounded-full bg-[var(--color-danger-subtle)] px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-danger)]">
+      {count} flagged
+    </span>
+  )
+}
+
+// Upcoming deadlines — small compact list for the right rail.
+// Uses the waiting-client projects as the closest truthful source of
+// dated project items. Sparse data collapses to a single quiet line.
+function UpcomingDeadlinesList({
+  waitingClient,
+}: {
+  waitingClient: Awaited<ReturnType<typeof getWaitingOnClientProjects>>
+}) {
+  const items = waitingClient.slice(0, 4)
+  if (items.length === 0) {
+    return (
+      <div className="flex items-center gap-3 py-2">
+        <div
+          aria-hidden="true"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]"
+        >
+          <CalendarClock className="h-4 w-4" />
+        </div>
+        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--color-text-muted)]">
+          No deadlines on hold — dated client-side holds will appear here.
+        </p>
+      </div>
+    )
+  }
+  const today = Date.now()
+  return (
+    <div className="space-y-2">
+      {items.map((p) => {
+        const due = new Date(p.target_due_date).getTime()
+        const days = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
+        const urgent = days <= 7
+        return (
+          <Link
+            key={p.id}
+            href={`/projects/${p.id}`}
+            className="flex items-center justify-between gap-3 rounded-[var(--radius-control)] bg-[var(--color-surface-muted)] px-3 py-2.5 text-inherit no-underline transition-colors hover:bg-[var(--color-surface-subtle)]"
+          >
+            <div className="min-w-0">
+              <p className="m-0 truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
+                {p.name}
+              </p>
+              <p className="mt-0.5 truncate text-[0.6875rem] text-[var(--color-text-muted)]">
+                {p.project_code} · {p.clients?.client_name ?? 'Client'}
+              </p>
+            </div>
+            <span
+              className={cn(
+                'shrink-0 text-[0.75rem] font-medium tabular-nums',
+                urgent ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
+              )}
+            >
+              {days <= 0 ? 'Due' : `${days}d`}
+            </span>
+          </Link>
+        )
+      })}
     </div>
   )
 }

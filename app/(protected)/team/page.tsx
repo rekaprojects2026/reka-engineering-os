@@ -18,7 +18,7 @@ import { formatDate, formatIDR } from '@/lib/utils/formatters'
 import { SYSTEM_ROLES, RATE_TYPE_OPTIONS } from '@/lib/constants/options'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'Team — Engineering Agency OS' }
+export const metadata = { title: 'Team — ReKa Engineering OS' }
 
 const SYSTEM_ROLE_LABEL = Object.fromEntries(SYSTEM_ROLES.map((r) => [r.value, r.label]))
 const RATE_LABEL = Object.fromEntries(RATE_TYPE_OPTIONS.map((r) => [r.value, r.label]))

@@ -14,7 +14,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const member = await getMemberById(id)
-  return { title: member ? `Edit ${member.full_name} — Engineering Agency OS` : 'Member Not Found' }
+  return { title: member ? `Edit ${member.full_name} — ReKa Engineering OS` : 'Member not found — ReKa Engineering OS' }
 }
 
 export default async function EditTeamMemberPage({ params }: PageProps) {

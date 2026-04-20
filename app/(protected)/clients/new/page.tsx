@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { ClientForm } from '@/components/modules/clients/ClientForm'
 
-export const metadata = { title: 'New Client — Engineering Agency OS' }
+export const metadata = { title: 'New Client — ReKa Engineering OS' }
 
 export default async function NewClientPage() {
   const _sp = await getSessionProfile()

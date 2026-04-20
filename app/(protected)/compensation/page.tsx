@@ -12,7 +12,7 @@ import { getCompensationRecords, type CompensationRow } from '@/lib/compensation
 import { formatDate, formatIDR } from '@/lib/utils/formatters'
 import { WORK_BASIS_OPTIONS } from '@/lib/constants/options'
 
-export const metadata = { title: 'Compensation — Engineering Agency OS' }
+export const metadata = { title: 'Compensation — ReKa Engineering OS' }
 
 const RATE_LABEL = Object.fromEntries(WORK_BASIS_OPTIONS.map((o) => [o.value, o.label]))
 

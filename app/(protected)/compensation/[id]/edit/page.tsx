@@ -13,7 +13,11 @@ interface PageProps { params: Promise<{ id: string }> }
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const record = await getCompensationById(id)
-  return { title: record ? `Edit Compensation — ${record.member?.full_name ?? 'Record'}` : 'Not Found' }
+  return {
+    title: record
+      ? `Edit Compensation — ${record.member?.full_name ?? 'Record'} — ReKa Engineering OS`
+      : `Not found — ReKa Engineering OS`,
+  }
 }
 
 export default async function EditCompensationPage({ params }: PageProps) {

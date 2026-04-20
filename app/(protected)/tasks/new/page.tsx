@@ -6,7 +6,7 @@ import { requireTasksDeliverablesFilesNewPageAccess } from '@/lib/auth/access-su
 import { projectOptionsForMutationForms, usersForAssignmentPickers } from '@/lib/auth/query-scope'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'New Task — Engineering Agency OS' }
+export const metadata = { title: 'New Task — ReKa Engineering OS' }
 
 interface PageProps {
   searchParams: Promise<{ project_id?: string }>

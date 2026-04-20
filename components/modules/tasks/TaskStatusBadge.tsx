@@ -24,6 +24,7 @@ export function TaskStatusBadge({ status }: { status: string }) {
     <StatusBadge
       label={LABEL[status] ?? status}
       variant={VARIANT[status] ?? 'neutral'}
+      dot
     />
   )
 }

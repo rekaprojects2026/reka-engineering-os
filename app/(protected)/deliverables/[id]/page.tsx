@@ -20,7 +20,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const d = await getDeliverableById(id)
-  return { title: d ? `${d.name} — Engineering Agency OS` : 'Deliverable Not Found' }
+  return { title: d ? `${d.name} — ReKa Engineering OS` : 'Deliverable not found — ReKa Engineering OS' }
 }
 
 const typeLabels: Record<string, string> = {

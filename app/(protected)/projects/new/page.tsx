@@ -7,7 +7,7 @@ import { getClientsForSelect } from '@/lib/clients/queries'
 import { getUsersForSelect } from '@/lib/users/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'New Project — Engineering Agency OS' }
+export const metadata = { title: 'New Project — ReKa Engineering OS' }
 
 export default async function NewProjectPage() {
   const profile = await getSessionProfile()
@@ -26,7 +26,7 @@ export default async function NewProjectPage() {
         title="New Project"
         subtitle="Create a new engineering project."
       />
-      <SectionCard>
+      <SectionCard className="overflow-visible">
         <ProjectForm mode="create" clients={clients} users={users} disciplineOptions={disciplineOptions} projectTypeOptions={projectTypeOptions} />
       </SectionCard>
     </div>

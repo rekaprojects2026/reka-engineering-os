@@ -1,35 +1,23 @@
 'use client'
 
-import { useState, useTransition, type FormEvent, type CSSProperties } from 'react'
+import { useState, useTransition, type FormEvent } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { activateInvite } from '@/lib/invites/actions'
 
-const inputStyle: CSSProperties = {
-  width:           '100%',
-  padding:         '9px 12px',
-  border:          '1px solid var(--color-border)',
-  borderRadius:    'var(--radius-control)',
-  fontSize:        '0.875rem',
-  color:           'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
-  outline:         'none',
-}
+const controlClass =
+  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
 
-const labelStyle: CSSProperties = {
-  display:      'block',
-  fontSize:     '0.8125rem',
-  fontWeight:   500,
-  color:        'var(--color-text-secondary)',
-  marginBottom: '6px',
-}
+const readOnlyControlClass =
+  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-subtle)] px-3 text-[0.875rem] text-[var(--color-text-muted)] outline-none'
 
 interface Props {
-  token:    string
-  email:    string
+  token: string
+  email: string
   fullName: string | null
 }
 
 export function ActivateForm({ token, email, fullName }: Props) {
-  const [error, setError]     = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -43,26 +31,36 @@ export function ActivateForm({ token, email, fullName }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-      {/* Email — readonly */}
-      <div>
-        <label style={labelStyle}>Email address</label>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-1.5">
+        <label
+          htmlFor="activate-email"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+        >
+          Email address
+        </label>
         <input
-          style={{ ...inputStyle, backgroundColor: 'var(--color-surface-subtle)', color: 'var(--color-text-muted)' }}
+          id="activate-email"
+          className={readOnlyControlClass}
           value={email}
           readOnly
           tabIndex={-1}
         />
       </div>
 
-      {/* Full name */}
-      <div>
-        <label style={labelStyle}>
-          Full name <span style={{ color: 'var(--color-danger)' }}>*</span>
+      <div className="space-y-1.5">
+        <label
+          htmlFor="activate-full-name"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+        >
+          Full name{' '}
+          <span className="text-[var(--color-danger)]" aria-hidden>
+            *
+          </span>
         </label>
         <input
-          style={inputStyle}
+          id="activate-full-name"
+          className={controlClass}
           name="full_name"
           required
           defaultValue={fullName ?? ''}
@@ -71,13 +69,19 @@ export function ActivateForm({ token, email, fullName }: Props) {
         />
       </div>
 
-      {/* Password */}
-      <div>
-        <label style={labelStyle}>
-          Password <span style={{ color: 'var(--color-danger)' }}>*</span>
+      <div className="space-y-1.5">
+        <label
+          htmlFor="activate-password"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+        >
+          Password{' '}
+          <span className="text-[var(--color-danger)]" aria-hidden>
+            *
+          </span>
         </label>
         <input
-          style={inputStyle}
+          id="activate-password"
+          className={controlClass}
           name="password"
           type="password"
           required
@@ -87,13 +91,19 @@ export function ActivateForm({ token, email, fullName }: Props) {
         />
       </div>
 
-      {/* Confirm password */}
-      <div>
-        <label style={labelStyle}>
-          Confirm password <span style={{ color: 'var(--color-danger)' }}>*</span>
+      <div className="space-y-1.5">
+        <label
+          htmlFor="activate-confirm"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+        >
+          Confirm password{' '}
+          <span className="text-[var(--color-danger)]" aria-hidden>
+            *
+          </span>
         </label>
         <input
-          style={inputStyle}
+          id="activate-confirm"
+          className={controlClass}
           name="confirm_password"
           type="password"
           required
@@ -105,34 +115,17 @@ export function ActivateForm({ token, email, fullName }: Props) {
       {error && (
         <div
           role="alert"
-          style={{
-            padding:         '10px 12px',
-            backgroundColor: 'var(--color-danger-subtle)',
-            border:          '1px solid var(--color-border-strong)',
-            borderRadius:    'var(--radius-control)',
-            color:           'var(--color-danger)',
-            fontSize:        '0.8125rem',
-          }}
+          className="flex items-center gap-2 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.8125rem] text-[var(--color-danger)]"
         >
-          {error}
+          <AlertCircle size={16} className="shrink-0" aria-hidden="true" />
+          <span>{error}</span>
         </div>
       )}
 
       <button
         type="submit"
         disabled={isPending}
-        style={{
-          width:           '100%',
-          padding:         '10px 16px',
-          backgroundColor: isPending ? 'var(--color-text-muted)' : 'var(--color-primary)',
-          color:           'var(--color-primary-fg)',
-          border:          'none',
-          borderRadius:    'var(--radius-control)',
-          fontSize:        '0.875rem',
-          fontWeight:      500,
-          cursor:          isPending ? 'not-allowed' : 'pointer',
-          marginTop:       '4px',
-        }}
+        className="btn-primary mt-2 h-10 w-full rounded-md px-4 text-[0.875rem] font-semibold disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isPending ? 'Activating…' : 'Activate account'}
       </button>

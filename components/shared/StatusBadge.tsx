@@ -6,6 +6,7 @@ interface StatusBadgeProps {
   label:      string
   variant?:   StatusVariant
   className?: string
+  dot?:       boolean
 }
 
 /**
@@ -21,12 +22,27 @@ interface StatusBadgeProps {
  *   success — completed, paid, approved, done
  *   danger  — overdue, blocked, cancelled, revision, urgent
  */
-export function StatusBadge({ label, variant = 'neutral', className }: StatusBadgeProps) {
+export function StatusBadge({ label, variant = 'neutral', className, dot }: StatusBadgeProps) {
   return (
     <Badge
       variant={variant}
-      className={cn('px-2.5 py-0.5 text-[0.6875rem] font-semibold tracking-[0.01em]', className)}
+      className={cn(
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[0.6875rem] font-semibold tracking-[0.01em]',
+        className
+      )}
     >
+      {dot && (
+        <span
+          className={cn(
+            'h-1.5 w-1.5 shrink-0 rounded-full',
+            variant === 'success' && 'bg-[var(--success)]',
+            variant === 'review' && 'bg-[var(--warning)]',
+            variant === 'danger' && 'bg-[var(--danger)]',
+            variant === 'active' && 'bg-[var(--color-primary)]',
+            variant === 'neutral' && 'bg-[var(--color-text-muted)]'
+          )}
+        />
+      )}
       {label}
     </Badge>
   )

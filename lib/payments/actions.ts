@@ -11,7 +11,7 @@ function moneyInt(n: number): number {
 }
 
 /** Derive status from due/paid; IDR amounts stored as whole numbers. */
-export function derivePaymentStatus(
+function derivePaymentStatus(
   total_due: number,
   total_paid: number,
 ): 'unpaid' | 'partial' | 'paid' {

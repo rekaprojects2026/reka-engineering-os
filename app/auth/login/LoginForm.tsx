@@ -2,10 +2,12 @@
 
 import { useState, useTransition } from 'react'
 import { login } from './actions'
+import { Eye, EyeOff, AlertCircle } from 'lucide-react'
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(formData: FormData) {
     setError(null)
@@ -15,30 +17,22 @@ export default function LoginForm() {
     })
   }
 
-  const inputStyle = {
-    width: '100%',
-    padding: '9px 12px',
-    border: '1px solid var(--color-border)',
-    borderRadius: '6px',
-    fontSize: '0.875rem',
-    color: 'var(--color-text-primary)',
-    backgroundColor: 'var(--color-surface)',
-    outline: 'none',
-    transition: 'border-color 0.15s',
-  } as React.CSSProperties
-
   return (
-    <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
+    <form action={handleSubmit} className="space-y-4">
+      {error && (
+        <div
+          role="alert"
+          className="flex items-center gap-2 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.875rem] text-[var(--color-danger)]"
+        >
+          <AlertCircle size={16} className="shrink-0" aria-hidden="true" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <div className="space-y-1.5">
         <label
           htmlFor="email"
-          style={{
-            display: 'block',
-            fontSize: '0.8125rem',
-            fontWeight: 500,
-            color: 'var(--color-text-secondary)',
-            marginBottom: '6px',
-          }}
+          className="block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
         >
           Email address
         </label>
@@ -49,68 +43,44 @@ export default function LoginForm() {
           required
           autoComplete="email"
           placeholder="you@agency.com"
-          style={inputStyle}
+          className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
         />
       </div>
 
-      <div>
+      <div className="space-y-1.5">
         <label
           htmlFor="password"
-          style={{
-            display: 'block',
-            fontSize: '0.8125rem',
-            fontWeight: 500,
-            color: 'var(--color-text-secondary)',
-            marginBottom: '6px',
-          }}
+          className="block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
         >
           Password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          placeholder="••••••••"
-          style={inputStyle}
-        />
-      </div>
-
-      {error && (
-        <div
-          role="alert"
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'var(--color-danger-subtle)',
-            border: '1px solid #FECACA',
-            borderRadius: '6px',
-            color: 'var(--color-danger)',
-            fontSize: '0.8125rem',
-          }}
-        >
-          {error}
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            required
+            autoComplete="current-password"
+            placeholder="••••••••"
+            className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 pr-10 text-[0.875rem] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
-      )}
+      </div>
 
       <button
         type="submit"
         disabled={isPending}
-        style={{
-          width: '100%',
-          padding: '10px 16px',
-          backgroundColor: isPending ? 'var(--color-primary-hover)' : 'var(--color-primary)',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '6px',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          cursor: isPending ? 'not-allowed' : 'pointer',
-          transition: 'background-color 0.15s',
-          marginTop: '4px',
-        }}
+        className="btn-primary mt-2 h-10 w-full rounded-md px-4 text-[0.875rem] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isPending ? 'Signing in…' : 'Sign in'}
+        {isPending ? 'Signing in...' : 'Sign in'}
       </button>
     </form>
   )

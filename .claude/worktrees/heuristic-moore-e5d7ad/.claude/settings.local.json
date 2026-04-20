@@ -3,7 +3,13 @@
     "allow": [
       "Bash(mkdir -p v0_extracted)",
       "Bash(powershell -Command \"Expand-Archive -Path 'Update Ui_dari v0_4.zip' -DestinationPath './v0_extracted' -Force\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Read(//d/Reka Projects/UI/v0_extracted/**)",
+      "Read(//d/Reka Projects/UI/v0_extracted/components/**)",
+      "Read(//d/Reka Projects/reka-engineering-os/**)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(echo \"exit=$?\")"
     ]
   }
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -16,12 +17,20 @@ import {
   Settings,
   LogOut,
   UserCircle,
+  ChevronDown,
 } from 'lucide-react'
 import { logout } from '@/app/auth/login/actions'
 import { getInitials } from '@/lib/utils/formatters'
 import { getNavPermissions } from '@/lib/auth/permissions'
 import { cn } from '@/lib/utils/cn'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { SystemRole } from '@/types/database'
 
 // ── Role display helpers ──────────────────────────────────────────────────
@@ -43,7 +52,8 @@ const ROLE_LABEL: Record<string, string> = {
 interface NavItem {
   label: string
   href:  string
-  icon:  React.ReactNode
+  icon:  ReactNode
+  badge?: number // red badge count, omit if 0
 }
 
 interface NavGroup {
@@ -121,7 +131,7 @@ export function AppSidebar({
           href={item.href}
           aria-current={active ? 'page' : undefined}
           className={cn(
-            'sidebar-nav-item flex items-center gap-3 rounded-md px-3 py-2 text-sm no-underline transition-colors duration-150',
+            'sidebar-nav-item flex items-center gap-3 rounded-md px-3 py-2.5 text-sm no-underline transition-colors duration-150',
             active
               ? 'bg-[var(--sidebar-active-bg)] font-semibold text-[var(--sidebar-active-text)]'
               : 'font-medium text-[var(--sidebar-text-muted)]'
@@ -137,12 +147,15 @@ export function AppSidebar({
             {item.icon}
           </span>
           <span className="truncate">{item.label}</span>
+          {item.badge !== undefined && item.badge > 0 && (
+            <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded bg-[#851E1E] px-1.5 text-[10px] font-semibold text-white">
+              {item.badge > 99 ? '99+' : item.badge}
+            </span>
+          )}
         </Link>
       </li>
     )
   }
-
-  const profileActive = pathname === '/my-profile'
 
   // ── Render ──────────────────────────────────────────────────
 
@@ -153,7 +166,7 @@ export function AppSidebar({
     >
       {/* ── Brand ─────────────────────────────────────────────── */}
       <div
-        className="flex shrink-0 items-center gap-2.5 border-b border-[var(--sidebar-border)] px-4"
+        className="flex shrink-0 items-center gap-3 border-b border-[var(--sidebar-border)] px-5"
         style={{ height: 'var(--topbar-height)' }}
       >
         <div
@@ -173,15 +186,15 @@ export function AppSidebar({
       </div>
 
       {/* ── Nav groups ────────────────────────────────────────── */}
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4" aria-label="Main navigation">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5" aria-label="Main navigation">
         {navGroups.map((group, gi) => (
           <div key={gi}>
             {group.label && (
-              <p className="mb-2 px-3 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--sidebar-label)]">
+              <p className="mb-3 px-3 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--sidebar-label)]">
                 {group.label}
               </p>
             )}
-            <ul role="list" className="flex flex-col gap-0.5">
+            <ul role="list" className="flex flex-col gap-1">
               {group.items.map(renderItem)}
             </ul>
           </div>
@@ -189,60 +202,50 @@ export function AppSidebar({
       </nav>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-3">
-        {/* My Profile */}
-        <Link
-          href="/my-profile"
-          aria-current={profileActive ? 'page' : undefined}
-          className={cn(
-            'sidebar-nav-item mb-2 flex items-center gap-3 rounded-md px-3 py-2 text-sm no-underline transition-colors duration-150',
-            profileActive
-              ? 'bg-[var(--sidebar-active-bg)] font-semibold text-[var(--sidebar-active-text)]'
-              : 'font-medium text-[var(--sidebar-text-muted)]'
-          )}
-        >
-          <span
-            aria-hidden="true"
-            className={cn(
-              'flex shrink-0',
-              profileActive ? 'text-[var(--sidebar-active-text)]' : 'text-[var(--sidebar-text-muted)]'
-            )}
-          >
-            <UserCircle size={16} />
-          </span>
-          My Profile
-        </Link>
-
-        {/* User card — quiet row, no inner border */}
-        <div className="flex items-center gap-2.5 rounded-md px-2 py-2 transition-colors hover:bg-[var(--sidebar-hover)]">
-          <Avatar className="h-8 w-8 shrink-0">
-            <AvatarFallback className="bg-[var(--color-primary)] text-[10px] text-white">
-              {getInitials(userFullName)}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="min-w-0 flex-1 leading-tight">
-            <p className="truncate text-[0.8125rem] font-semibold text-[var(--sidebar-text)]">
-              {userFullName}
-            </p>
-            {systemRole && (
-              <p className="mt-0.5 truncate text-[0.6875rem] font-medium text-[var(--sidebar-text-muted)] capitalize">
-                {ROLE_LABEL[systemRole] ?? systemRole}
-              </p>
-            )}
-          </div>
-
-          <form action={logout}>
+      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <button
-              type="submit"
-              title="Sign out"
-              aria-label="Sign out"
-              className="signout-btn flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--sidebar-text-muted)] transition-colors duration-150"
+              type="button"
+              className="flex w-full items-center gap-3 rounded-md px-2.5 py-2.5 text-left transition-colors hover:bg-[var(--sidebar-hover)] focus:outline-none"
             >
-              <LogOut size={14} aria-hidden="true" />
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarFallback className="bg-[var(--color-primary)] text-[10px] font-semibold text-white">
+                  {getInitials(userFullName)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1 leading-tight">
+                <p className="truncate text-[0.8125rem] font-semibold text-[var(--sidebar-text)]">
+                  {userFullName}
+                </p>
+                {systemRole && (
+                  <p className="mt-0.5 truncate text-[0.6875rem] font-medium capitalize text-[var(--sidebar-text-muted)]">
+                    {ROLE_LABEL[systemRole] ?? systemRole}
+                  </p>
+                )}
+              </div>
+              <ChevronDown size={14} className="shrink-0 text-[var(--sidebar-text-muted)]" />
             </button>
-          </form>
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" sideOffset={4} className="w-56">
+            <DropdownMenuItem asChild>
+              <Link href="/my-profile">
+                <UserCircle className="mr-2 h-4 w-4" />
+                My Profile
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-[var(--color-danger)] focus:text-[var(--color-danger)] focus:bg-[var(--color-danger-subtle)]"
+              onClick={async () => {
+                await logout()
+              }}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   )

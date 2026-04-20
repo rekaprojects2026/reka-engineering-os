@@ -21,7 +21,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const intake = await getIntakeById(id)
-  return { title: intake ? `${intake.title} — Engineering Agency OS` : 'Intake Not Found' }
+  return { title: intake ? `${intake.title} — ReKa Engineering OS` : 'Intake not found — ReKa Engineering OS' }
 }
 
 export default async function IntakeDetailPage({ params }: PageProps) {

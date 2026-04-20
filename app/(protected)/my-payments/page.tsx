@@ -13,7 +13,7 @@ import { getPaymentsByMember, type PaymentRow } from '@/lib/payments/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 import { formatDate, formatIDR } from '@/lib/utils/formatters'
 
-export const metadata = { title: 'My Payments — Engineering Agency OS' }
+export const metadata = { title: 'My Payments — ReKa Engineering OS' }
 
 function myPaymentColumns(METHOD_LABEL: Record<string, string>): Column<PaymentRow>[] {
   return [

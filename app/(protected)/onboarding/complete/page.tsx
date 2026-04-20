@@ -5,7 +5,7 @@ import { PageHeader }         from '@/components/layout/PageHeader'
 import { SectionCard }        from '@/components/shared/SectionCard'
 import { ProfileCompletionForm } from '@/components/modules/onboarding/ProfileCompletionForm'
 
-export const metadata = { title: 'Complete Your Profile — Engineering Agency OS' }
+export const metadata = { title: 'Complete Your Profile — ReKa Engineering OS' }
 
 export default async function ProfileCompletionPage() {
   const supabase = await createServerClient()

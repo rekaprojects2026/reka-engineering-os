@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ShieldOff } from 'lucide-react'
 
-export const metadata = { title: 'Access Denied — Engineering Agency OS' }
+export const metadata = { title: 'Access Denied — ReKa Engineering OS' }
 
 export default function AccessDeniedPage() {
   return (

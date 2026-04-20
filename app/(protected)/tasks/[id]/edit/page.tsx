@@ -16,7 +16,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const task = await getTaskById(id)
-  return { title: task ? `Edit ${task.title} — Engineering Agency OS` : 'Task Not Found' }
+  return { title: task ? `Edit ${task.title} — ReKa Engineering OS` : 'Task not found — ReKa Engineering OS' }
 }
 
 export default async function EditTaskPage({ params }: PageProps) {

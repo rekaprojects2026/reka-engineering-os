@@ -16,5 +16,5 @@ const STATUS_MAP: Record<string, { label: string; variant: StatusVariant }> = {
 
 export function IntakeStatusBadge({ status }: IntakeStatusBadgeProps) {
   const config = STATUS_MAP[status] ?? { label: status, variant: 'neutral' as StatusVariant }
-  return <StatusBadge label={config.label} variant={config.variant} />
+  return <StatusBadge label={config.label} variant={config.variant} dot />
 }

@@ -6,7 +6,7 @@ import { SectionCard }    from '@/components/shared/SectionCard'
 import { TeamMemberForm } from '@/components/modules/team/TeamMemberForm'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'My Profile — Engineering Agency OS' }
+export const metadata = { title: 'My Profile — ReKa Engineering OS' }
 
 export default async function MyProfilePage() {
   const supabase = await createServerClient()

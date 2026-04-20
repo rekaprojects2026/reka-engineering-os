@@ -12,7 +12,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const client = await getClientById(id)
-  return { title: client ? `Edit ${client.client_name} — Engineering Agency OS` : 'Client Not Found' }
+  return { title: client ? `Edit ${client.client_name} — ReKa Engineering OS` : 'Client not found — ReKa Engineering OS' }
 }
 
 export default async function EditClientPage({ params }: PageProps) {

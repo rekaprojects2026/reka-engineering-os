@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: PageProps) {
   const intake = await getIntakeById(id)
   return {
     title: intake
-      ? `Convert: ${intake.title} — Engineering Agency OS`
-      : 'Intake Not Found',
+      ? `Convert: ${intake.title} — ReKa Engineering OS`
+      : 'Intake not found — ReKa Engineering OS',
   }
 }
 

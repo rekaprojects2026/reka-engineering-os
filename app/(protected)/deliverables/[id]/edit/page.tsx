@@ -17,7 +17,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const d = await getDeliverableById(id)
-  return { title: d ? `Edit ${d.name} — Engineering Agency OS` : 'Deliverable Not Found' }
+  return { title: d ? `Edit ${d.name} — ReKa Engineering OS` : 'Deliverable not found — ReKa Engineering OS' }
 }
 
 export default async function EditDeliverablePage({ params }: PageProps) {

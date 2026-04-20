@@ -8,7 +8,7 @@ import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getDeliverablesByProjectId } from '@/lib/deliverables/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'Add File — Engineering Agency OS' }
+export const metadata = { title: 'Add File — ReKa Engineering OS' }
 
 interface PageProps {
   searchParams: Promise<{ project_id?: string }>

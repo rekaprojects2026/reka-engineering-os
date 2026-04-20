@@ -16,5 +16,5 @@ const STATUS_MAP: Record<string, { label: string; variant: 'neutral' | 'active' 
 
 export function ProjectStatusBadge({ status }: { status: string }) {
   const config = STATUS_MAP[status] ?? { label: status, variant: 'neutral' as const }
-  return <StatusBadge label={config.label} variant={config.variant} />
+  return <StatusBadge label={config.label} variant={config.variant} dot />
 }

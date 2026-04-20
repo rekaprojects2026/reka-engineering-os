@@ -48,47 +48,27 @@ export function EmptyState({ icon, title, description, action, emphasis, compact
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center px-6 text-center',
-        emphasis ? 'py-20' : 'py-16',
+        'flex flex-col items-center justify-center py-16 text-center',
+        emphasis && 'py-20',
         className
       )}
     >
       {icon && (
         <div
           className={cn(
-            'flex items-center justify-center rounded-[var(--radius-card)]',
-            emphasis
-              ? 'mb-5 h-14 w-14 border border-[var(--color-border)] bg-[var(--color-primary-subtle)] text-[var(--color-primary)] shadow-[var(--shadow-sm)]'
-              : 'mb-4 h-12 w-12 bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'
+            'mb-4 flex items-center justify-center rounded-full bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
+            emphasis ? 'mb-5 h-14 w-14' : 'h-12 w-12'
           )}
           aria-hidden="true"
         >
           {icon}
         </div>
       )}
-      <h3
-        className={cn(
-          'mb-1 font-semibold text-[var(--color-text-primary)]',
-          emphasis ? 'text-base' : 'text-[0.9375rem]'
-        )}
-      >
-        {title}
-      </h3>
+      <h3 className="text-[0.9375rem] font-semibold text-[var(--color-text-primary)]">{title}</h3>
       {description && (
-        <p
-          className={cn(
-            'max-w-sm text-[0.8125rem] leading-[1.65] text-[var(--color-text-muted)]',
-            emphasis ? 'mb-8' : 'mb-6'
-          )}
-        >
-          {description}
-        </p>
+        <p className="mt-1.5 max-w-sm text-[0.8125rem] text-[var(--color-text-muted)]">{description}</p>
       )}
-      {action && (
-        <div className={cn('flex w-full justify-center', emphasis ? 'mt-2' : '')}>
-          {action}
-        </div>
-      )}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   )
 }

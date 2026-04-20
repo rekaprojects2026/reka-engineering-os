@@ -23,7 +23,7 @@ export default async function ProtectedLayout({
       />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <AppTopbar left={<BreadcrumbNav />} right={<TopbarSearch />} />
+        <AppTopbar left={<BreadcrumbNav />} right={<TopbarSearch />} showSearch={true} />
 
         {/* Profile completion banner */}
         {profileIncomplete && (
@@ -41,7 +41,7 @@ export default async function ProtectedLayout({
         )}
 
         <main className="flex-1 overflow-y-auto bg-[var(--color-background)]">
-          <div className="mx-auto max-w-[var(--content-max-width)] px-10 py-10">
+          <div className="mx-auto max-w-[var(--content-max-width)] px-8 py-8 md:px-12 xl:px-14">
             {children}
           </div>
         </main>

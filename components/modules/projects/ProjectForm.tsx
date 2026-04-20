@@ -1,9 +1,9 @@
 'use client'
 
-import { useTransition, useState } from 'react'
+import { useTransition, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { createProject, updateProject } from '@/lib/projects/actions'
-import { FormSection } from '@/components/shared/FormSection'
+import { cn } from '@/lib/utils/cn'
 import {
   SOURCE_PLATFORMS,
   DISCIPLINES,
@@ -25,44 +25,58 @@ interface ProjectFormProps {
   projectTypeOptions?: OptionPair[]
 }
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '8px 11px',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-control)',
-  fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
-  outline: 'none',
+const controlClass =
+  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+
+const textareaClass =
+  'min-h-[5rem] w-full resize-y rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.875rem] leading-normal text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+
+function ProjectFormSection({
+  title,
+  description,
+  children,
+  first,
+}: {
+  title: string
+  description: string
+  children: ReactNode
+  first?: boolean
+}) {
+  return (
+    <section className={cn(!first && 'mt-10')}>
+      <div className="mb-6 border-b border-[var(--color-border)] pb-4">
+        <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
+        <p className="mt-0.5 text-[0.8125rem] text-[var(--color-text-muted)]">{description}</p>
+      </div>
+      {children}
+    </section>
+  )
 }
 
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontSize: '0.8125rem',
-  fontWeight: 500,
-  color: 'var(--color-text-secondary)',
-  marginBottom: '5px',
-}
-
-const fieldGroupStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: '16px',
-}
-
-
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
   return (
     <div>
-      <label style={labelStyle}>
-        {label}{required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+      <label className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]">
+        {label}{' '}
+        {required && (
+          <span className="text-[var(--color-danger)]" aria-hidden>
+            *
+          </span>
+        )}
       </label>
       {children}
     </div>
   )
 }
 
-export function ProjectForm({ mode, project, clients, users, disciplineOptions, projectTypeOptions }: ProjectFormProps) {
+export function ProjectForm({
+  mode,
+  project,
+  clients,
+  users,
+  disciplineOptions,
+  projectTypeOptions,
+}: ProjectFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -72,20 +86,22 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
   function handleSubmit(formData: FormData) {
     setError(null)
     startTransition(async () => {
-      const result = mode === 'create'
-        ? await createProject(formData)
-        : await updateProject(project!.id, formData)
+      const result =
+        mode === 'create' ? await createProject(formData) : await updateProject(project!.id, formData)
 
       if (result?.error) setError(result.error)
     })
   }
 
   return (
-    <form action={handleSubmit}>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-
-        <FormSection title="Project Information" first>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+    <form action={handleSubmit} className="flex flex-col">
+      <div className="flex flex-1 flex-col pb-4">
+        <ProjectFormSection
+          first
+          title="Project information"
+          description="Basic identifying information and scope for this project."
+        >
+          <div className="space-y-5">
             <Field label="Project Name" required>
               <input
                 name="name"
@@ -93,7 +109,7 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                 required
                 defaultValue={project?.name ?? ''}
                 placeholder="e.g. Steel Frame Design — Warehouse Phase 2"
-                style={inputStyle}
+                className={controlClass}
               />
             </Field>
             <Field label="Scope Summary">
@@ -102,22 +118,20 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                 rows={3}
                 defaultValue={project?.scope_summary ?? ''}
                 placeholder="High-level scope description for this project…"
-                style={{ ...inputStyle, resize: 'vertical', lineHeight: '1.5' }}
+                className={textareaClass}
               />
             </Field>
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        <FormSection title="Client & Intake">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={fieldGroupStyle}>
+        <ProjectFormSection
+          title="Client & intake"
+          description="Link this project to a client and optionally to an intake record."
+        >
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Client" required>
-                <select
-                  name="client_id"
-                  defaultValue={project?.client_id ?? ''}
-                  style={inputStyle}
-                  required
-                >
+                <select name="client_id" defaultValue={project?.client_id ?? ''} className={controlClass} required>
                   <option value="">Select a client…</option>
                   {clients.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -132,20 +146,25 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                   type="text"
                   defaultValue={project?.intake_id ?? ''}
                   placeholder="Intake ID (if converted from intake)"
-                  style={inputStyle}
+                  className={controlClass}
                 />
               </Field>
             </div>
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        <FormSection title="Source & Classification">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={fieldGroupStyle}>
+        <ProjectFormSection
+          title="Source & classification"
+          description="Where the work came from and how it is categorized."
+        >
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Source" required>
-                <select name="source" defaultValue={project?.source ?? 'direct'} style={inputStyle} required>
-                  {SOURCE_PLATFORMS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                <select name="source" defaultValue={project?.source ?? 'direct'} className={controlClass} required>
+                  {SOURCE_PLATFORMS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
               </Field>
@@ -155,39 +174,53 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                   type="url"
                   defaultValue={project?.external_reference_url ?? ''}
                   placeholder="https://www.upwork.com/jobs/…"
-                  style={inputStyle}
+                  className={controlClass}
                 />
               </Field>
             </div>
-            <div style={fieldGroupStyle}>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Discipline" required>
-                <select name="discipline" defaultValue={project?.discipline ?? 'mechanical'} style={inputStyle} required>
-                  {(disciplineOptions ?? DISCIPLINES).map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                <select
+                  name="discipline"
+                  defaultValue={project?.discipline ?? 'mechanical'}
+                  className={controlClass}
+                  required
+                >
+                  {(disciplineOptions ?? DISCIPLINES).map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
               </Field>
               <Field label="Project Type" required>
-                <select name="project_type" defaultValue={project?.project_type ?? 'design'} style={inputStyle} required>
-                  {(projectTypeOptions ?? PROJECT_TYPES).map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                <select
+                  name="project_type"
+                  defaultValue={project?.project_type ?? 'design'}
+                  className={controlClass}
+                  required
+                >
+                  {(projectTypeOptions ?? PROJECT_TYPES).map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
               </Field>
             </div>
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        <FormSection title="Timeline">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={fieldGroupStyle}>
+        <ProjectFormSection title="Timeline" description="Planned dates and optional actual completion.">
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Start Date" required>
                 <input
                   name="start_date"
                   type="date"
                   required
                   defaultValue={project?.start_date ?? todayString}
-                  style={inputStyle}
+                  className={controlClass}
                 />
               </Field>
               <Field label="Target Due Date" required>
@@ -196,82 +229,89 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                   type="date"
                   required
                   defaultValue={project?.target_due_date ?? ''}
-                  style={inputStyle}
+                  className={controlClass}
                 />
               </Field>
             </div>
             {mode === 'edit' && (
-              <div style={{ maxWidth: '50%' }}>
+              <div className="max-w-full sm:max-w-md">
                 <Field label="Actual Completion Date">
                   <input
                     name="actual_completion_date"
                     type="date"
                     defaultValue={project?.actual_completion_date ?? ''}
-                    style={inputStyle}
+                    className={controlClass}
                   />
                 </Field>
               </div>
             )}
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        <FormSection title="Assignment">
-          <div style={fieldGroupStyle}>
-            <Field label="Project Lead" required>
-              <select
-                name="project_lead_user_id"
-                defaultValue={project?.project_lead_user_id ?? ''}
-                style={inputStyle}
-                required
-              >
-                <option value="">Select lead…</option>
-                {users.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.full_name} ({u.email})
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Reviewer (optional)">
-              <select
-                name="reviewer_user_id"
-                defaultValue={project?.reviewer_user_id ?? ''}
-                style={inputStyle}
-              >
-                <option value="">No reviewer</option>
-                {users.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.full_name} ({u.email})
-                  </option>
-                ))}
-              </select>
-            </Field>
-          </div>
-        </FormSection>
-
-        <FormSection title="Status & Priority">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={fieldGroupStyle}>
-              <Field label="Status" required>
-                <select name="status" defaultValue={project?.status ?? 'new'} style={inputStyle} required>
-                  {PROJECT_STATUS_OPTIONS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+        <ProjectFormSection title="Assignment" description="Assign a project lead and optional reviewer.">
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <Field label="Project Lead" required>
+                <select
+                  name="project_lead_user_id"
+                  defaultValue={project?.project_lead_user_id ?? ''}
+                  className={controlClass}
+                  required
+                >
+                  <option value="">Select lead…</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.full_name} ({u.email})
+                    </option>
                   ))}
                 </select>
               </Field>
-              <Field label="Priority" required>
-                <select name="priority" defaultValue={project?.priority ?? 'medium'} style={inputStyle} required>
-                  {PRIORITY_OPTIONS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+              <Field label="Reviewer (optional)">
+                <select name="reviewer_user_id" defaultValue={project?.reviewer_user_id ?? ''} className={controlClass}>
+                  <option value="">No reviewer</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.full_name} ({u.email})
+                    </option>
                   ))}
                 </select>
               </Field>
             </div>
-            <div style={fieldGroupStyle}>
+          </div>
+        </ProjectFormSection>
+
+        <ProjectFormSection
+          title="Status & priority"
+          description="Track status, priority, waiting state, and progress."
+        >
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <Field label="Status" required>
+                <select name="status" defaultValue={project?.status ?? 'new'} className={controlClass} required>
+                  {PROJECT_STATUS_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Priority" required>
+                <select name="priority" defaultValue={project?.priority ?? 'medium'} className={controlClass} required>
+                  {PRIORITY_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Waiting On">
-                <select name="waiting_on" defaultValue={project?.waiting_on ?? 'none'} style={inputStyle}>
-                  {WAITING_ON_OPTIONS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                <select name="waiting_on" defaultValue={project?.waiting_on ?? 'none'} className={controlClass}>
+                  {WAITING_ON_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
               </Field>
@@ -282,22 +322,22 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                   min={0}
                   max={100}
                   defaultValue={project?.progress_percent ?? 0}
-                  style={inputStyle}
+                  className={controlClass}
                 />
               </Field>
             </div>
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        <FormSection title="Links & Notes">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <ProjectFormSection title="Links & notes" description="Drive folder and internal-only context.">
+          <div className="space-y-5">
             <Field label="Google Drive Folder Link">
               <input
                 name="google_drive_folder_link"
                 type="url"
                 defaultValue={project?.google_drive_folder_link ?? ''}
                 placeholder="https://drive.google.com/drive/folders/…"
-                style={inputStyle}
+                className={controlClass}
               />
             </Field>
             <Field label="Internal Notes">
@@ -306,62 +346,38 @@ export function ProjectForm({ mode, project, clients, users, disciplineOptions, 
                 rows={3}
                 defaultValue={project?.notes_internal ?? ''}
                 placeholder="Internal-only notes, context, risks…"
-                style={{ ...inputStyle, resize: 'vertical', lineHeight: '1.5' }}
+                className={textareaClass}
               />
             </Field>
           </div>
-        </FormSection>
+        </ProjectFormSection>
 
-        {/* Error */}
         {error && (
           <div
             role="alert"
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'var(--color-danger-subtle)',
-              border: '1px solid var(--color-border-strong)',
-              borderRadius: 'var(--radius-control)',
-              color: 'var(--color-danger)',
-              fontSize: '0.8125rem',
-            }}
+            className="mt-8 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.8125rem] text-[var(--color-danger)]"
           >
             {error}
           </div>
         )}
+      </div>
 
-        {/* Actions */}
-        <div style={{ display: 'flex', gap: '10px', paddingTop: '4px' }}>
-          <button
-            type="submit"
-            disabled={isPending}
-            style={{
-              padding: '9px 20px',
-              backgroundColor: isPending ? 'var(--color-primary-hover)' : 'var(--color-primary)',
-              color: 'var(--color-primary-fg)',
-              border: 'none',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              cursor: isPending ? 'not-allowed' : 'pointer',
-            }}
-          >
-            {isPending ? 'Saving…' : mode === 'create' ? 'Create Project' : 'Save Changes'}
-          </button>
+      <div className="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-4">
+        <div className="flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={() => router.back()}
             disabled={isPending}
-            style={{
-              padding: '9px 16px',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-secondary)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-control)',
-              fontSize: '0.8125rem',
-              cursor: 'pointer',
-            }}
+            className="btn-secondary rounded-md px-4 py-2 text-[0.875rem] font-medium disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="btn-primary rounded-md px-4 py-2 text-[0.875rem] font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isPending ? 'Saving…' : mode === 'create' ? 'Create Project' : 'Save Changes'}
           </button>
         </div>
       </div>

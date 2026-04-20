@@ -7,7 +7,7 @@ import { projectOptionsForMutationForms, usersForAssignmentPickers } from '@/lib
 import { getTasksByProjectId } from '@/lib/tasks/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'New Deliverable — Engineering Agency OS' }
+export const metadata = { title: 'New Deliverable — ReKa Engineering OS' }
 
 interface PageProps {
   searchParams: Promise<{ project_id?: string }>

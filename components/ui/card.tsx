@@ -6,7 +6,7 @@ function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     <div
       data-slot="card"
       className={cn(
-        "rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] transition-shadow duration-200 hover:shadow-[var(--shadow-md)]",
+        "rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)]",
         className
       )}
       {...props}
@@ -18,7 +18,7 @@ function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return (
     <div
       data-slot="card-header"
-      className={cn("flex flex-col gap-1 px-5 py-4", className)}
+      className={cn("flex flex-col gap-1 p-5", className)}
       {...props}
     />
   )
@@ -58,7 +58,7 @@ function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       data-slot="card-content"
-      className={cn("px-5 py-4", className)}
+      className={cn("p-5 pt-0", className)}
       {...props}
     />
   )
@@ -68,7 +68,7 @@ function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return (
     <div
       data-slot="card-footer"
-      className={cn("flex items-center px-5 py-3 border-t border-[var(--color-border)]", className)}
+      className={cn("flex items-center px-5 pb-5 border-t border-[var(--color-border)]", className)}
       {...props}
     />
   )

@@ -5,7 +5,7 @@ import { IntakeForm } from '@/components/modules/intakes/IntakeForm'
 import { getClientsForSelect } from '@/lib/clients/queries'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'New Intake — Engineering Agency OS' }
+export const metadata = { title: 'New Intake — ReKa Engineering OS' }
 
 export default async function NewIntakePage() {
   const _sp = await getSessionProfile()

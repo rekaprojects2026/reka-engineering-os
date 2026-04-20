@@ -3,9 +3,7 @@ import Link from 'next/link'
 import { getSessionProfile } from '@/lib/auth/session'
 import { isAdminOrCoordinator } from '@/lib/auth/permissions'
 import { requireProjectView, userCanEditProjectMetadata } from '@/lib/auth/access-surface'
-import { PageHeader } from '@/components/layout/PageHeader'
-import { SectionCard } from '@/components/shared/SectionCard'
-import { EntityStatusStrip } from '@/components/shared/EntityStatusStrip'
+import { SectionHeader } from '@/components/layout/PageHeader'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { ProjectStatusBadge } from '@/components/modules/projects/ProjectStatusBadge'
 import { PriorityBadge } from '@/components/shared/PriorityBadge'
@@ -22,6 +20,8 @@ import { getFilesByProjectId, type FileWithRelations } from '@/lib/files/queries
 import { getUsersForSelect } from '@/lib/users/queries'
 import { getProjectActivity, type ActivityLogEntry } from '@/lib/activity/queries'
 import { formatDate } from '@/lib/utils/formatters'
+import { cn } from '@/lib/utils/cn'
+import { Card } from '@/components/ui/card'
 import {
   Pencil,
   ExternalLink,
@@ -33,7 +33,6 @@ import {
   Activity,
   Plus,
   AlertTriangle,
-  ExternalLink as ExternalLinkIcon,
   HardDrive,
 } from 'lucide-react'
 
@@ -45,7 +44,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const project = await getProjectById(id)
-  return { title: project ? `${project.name} — Engineering Agency OS` : 'Project Not Found' }
+  return { title: project ? `${project.name} — ReKa Engineering OS` : 'Project not found — ReKa Engineering OS' }
 }
 
 export default async function ProjectDetailPage({ params, searchParams }: PageProps) {
@@ -65,26 +64,16 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
   const leadName = project.lead?.full_name ?? '—'
   const reviewerName = project.reviewer?.full_name ?? null
 
-  // Fetch tab-specific data
-  const [teamMembers, users] = activeTab === 'team'
-    ? await Promise.all([getTeamByProjectId(id), getUsersForSelect()])
-    : [[], []]
+  const [teamMembers, users] =
+    activeTab === 'team' ? await Promise.all([getTeamByProjectId(id), getUsersForSelect()]) : [[], []]
 
-  const projectTasks = activeTab === 'tasks'
-    ? await getTasksByProjectId(id)
-    : []
+  const projectTasks = activeTab === 'tasks' ? await getTasksByProjectId(id) : []
 
-  const projectDeliverables = activeTab === 'deliverables'
-    ? await getDeliverablesByProjectId(id)
-    : []
+  const projectDeliverables = activeTab === 'deliverables' ? await getDeliverablesByProjectId(id) : []
 
-  const projectFiles = activeTab === 'files'
-    ? await getFilesByProjectId(id)
-    : []
+  const projectFiles = activeTab === 'files' ? await getFilesByProjectId(id) : []
 
-  const projectActivity = activeTab === 'activity'
-    ? await getProjectActivity(id)
-    : []
+  const projectActivity = activeTab === 'activity' ? await getProjectActivity(id) : []
 
   const tabs = [
     { key: 'overview', label: 'Overview', icon: <ClipboardList size={13} /> },
@@ -95,78 +84,81 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
     { key: 'activity', label: 'Activity', icon: <Activity size={13} /> },
   ]
 
+  const subtitle = `${project.project_code} · ${project.discipline.charAt(0).toUpperCase() + project.discipline.slice(1)} · ${project.project_type.charAt(0).toUpperCase() + project.project_type.slice(1)}`
+  const today = new Date().toISOString().split('T')[0]
+  const isDueOverdue = project.target_due_date && project.target_due_date < today
+
   return (
     <div>
-      {/* Header */}
-      <PageHeader
-        title={project.name}
-        subtitle={`${project.project_code} · ${project.discipline.charAt(0).toUpperCase() + project.discipline.slice(1)} · ${project.project_type.charAt(0).toUpperCase() + project.project_type.slice(1)}`}
-        actions={
-          canEditProjectMeta ? (
+      <div className="mb-6 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <Link
-              href={`/projects/${project.id}/edit`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-control)',
-                fontSize: '0.8125rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
-                textDecoration: 'none',
-              }}
+              href="/projects"
+              className="shrink-0 text-[0.8125rem] text-[var(--color-text-muted)] no-underline transition-colors hover:text-[var(--color-text-secondary)]"
             >
-              <Pencil size={13} aria-hidden="true" />
-              Edit Project
+              ← Projects
             </Link>
-          ) : undefined
-        }
-      />
+            <span className="text-[var(--color-border)]">/</span>
+            <span className="max-w-[300px] truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)] sm:max-w-md">
+              {project.name}
+            </span>
+          </div>
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <ProjectStatusBadge status={project.status} />
+            <PriorityBadge priority={project.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />
+            {project.waiting_on !== 'none' ? (
+              <span className="rounded-full bg-[var(--color-warning-subtle)] px-2.5 py-0.5 text-[0.75rem] font-medium text-[var(--color-warning)]">
+                Waiting: {(project.waiting_on ?? 'none').charAt(0).toUpperCase() + (project.waiting_on ?? 'none').slice(1)}
+              </span>
+            ) : null}
+            {canEditProjectMeta ? (
+              <Link
+                href={`/projects/${project.id}/edit`}
+                className="btn-secondary inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.8125rem] font-medium no-underline"
+              >
+                <Pencil size={13} aria-hidden="true" />
+                Edit Project
+              </Link>
+            ) : null}
+          </div>
+        </div>
+        <p className="text-[0.8125rem] text-[var(--color-text-muted)]">{subtitle}</p>
+        {(project.target_due_date || project.progress_percent != null) && (
+          <div className="flex flex-wrap items-center gap-4 border-t border-[var(--color-border)] pt-3">
+            {project.target_due_date && (
+              <span
+                className={cn(
+                  'whitespace-nowrap text-xs',
+                  isDueOverdue ? 'font-semibold text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]',
+                )}
+              >
+                Due {formatDate(project.target_due_date)}
+              </span>
+            )}
+            {project.progress_percent != null && (
+              <div className="flex min-w-[110px] shrink-0 items-center gap-1.5">
+                <ProgressBar value={project.progress_percent} height={5} />
+                <span className="whitespace-nowrap text-[0.6875rem] text-[var(--color-text-muted)]">
+                  {project.progress_percent}%
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
-      <EntityStatusStrip
-        statusBadge={<ProjectStatusBadge status={project.status} />}
-        priorityBadge={<PriorityBadge priority={project.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />}
-        extraBadge={project.waiting_on !== 'none' ? (
-          <span style={{
-            fontSize: '0.75rem',
-            fontWeight: 500,
-            color: 'var(--color-warning)',
-            backgroundColor: 'var(--color-warning-subtle)',
-            padding: '2px 10px',
-            borderRadius: '12px',
-          }}>
-            Waiting: {(project.waiting_on ?? 'none').charAt(0).toUpperCase() + (project.waiting_on ?? 'none').slice(1)}
-          </span>
-        ) : undefined}
-        dueDate={project.target_due_date}
-        progress={project.progress_percent}
-      />
-
-      {/* Tabs */}
-      <div style={{
-        display: 'flex',
-        borderBottom: '2px solid var(--color-border)',
-        marginBottom: '20px',
-      }}>
+      <div className="mb-6 flex flex-wrap gap-1 border-b-2 border-[var(--color-border)]">
         {tabs.map((t) => (
           <Link
             key={t.key}
             href={`/projects/${project.id}${t.key === 'overview' ? '' : `?tab=${t.key}`}`}
-            style={{
-              padding: '10px 16px',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              color: activeTab === t.key ? 'var(--color-primary)' : 'var(--color-text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              textDecoration: 'none',
-              borderBottom: activeTab === t.key ? '2px solid var(--color-primary)' : '2px solid transparent',
-              marginBottom: '-2px',
-            }}
+            className={cn(
+              '-mb-0.5 flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-[0.8125rem] font-medium no-underline transition-colors',
+              activeTab === t.key
+                ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]',
+            )}
           >
             {t.icon}
             {t.label}
@@ -174,7 +166,6 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         ))}
       </div>
 
-      {/* Tab content */}
       {activeTab === 'overview' && (
         <OverviewTab
           project={project}
@@ -208,9 +199,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           showAddFile={canEditProjectMeta}
         />
       )}
-      {activeTab === 'activity' && (
-        <ActivityTab logs={projectActivity} />
-      )}
+      {activeTab === 'activity' && <ActivityTab logs={projectActivity} />}
     </div>
   )
 }
@@ -232,168 +221,103 @@ function OverviewTab({
   if (!project) return null
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'start' }}>
-      {/* Left column */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Overview */}
-        <SectionCard title="Overview">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <DetailRow label="Client">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="space-y-6 lg:col-span-2">
+        <Card className="p-6">
+          <SectionHeader title="Project details" />
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <DetailField label="Client">
               {project.clients && showClientIntakeLinks ? (
                 <Link
                   href={`/clients/${project.clients.id}`}
-                  style={{
-                    color: 'var(--color-primary)',
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    fontSize: '0.8125rem',
-                  }}
+                  className="font-medium text-[var(--color-primary)] no-underline hover:underline"
                 >
                   {clientName}
                 </Link>
               ) : (
-                <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{clientName}</span>
+                <span className="font-medium">{clientName}</span>
               )}
-            </DetailRow>
-            <DetailRow label="Source">
-              <span style={{ textTransform: 'capitalize' }}>{project.source}</span>
-            </DetailRow>
-            <DetailRow label="Discipline">
-              <span style={{ textTransform: 'capitalize' }}>{project.discipline}</span>
-            </DetailRow>
-            <DetailRow label="Project Type">
-              <span style={{ textTransform: 'capitalize' }}>{project.project_type}</span>
-            </DetailRow>
-            <DetailRow label="Start Date">
-              {formatDate(project.start_date)}
-            </DetailRow>
-            <DetailRow label="Target Due Date">
-              {formatDate(project.target_due_date)}
-            </DetailRow>
+            </DetailField>
+            <DetailField label="Source">
+              <span className="capitalize">{project.source}</span>
+            </DetailField>
+            <DetailField label="Discipline">
+              <span className="capitalize">{project.discipline}</span>
+            </DetailField>
+            <DetailField label="Project type">
+              <span className="capitalize">{project.project_type}</span>
+            </DetailField>
+            <DetailField label="Start date">{formatDate(project.start_date)}</DetailField>
+            <DetailField label="Target due date">{formatDate(project.target_due_date)}</DetailField>
             {project.actual_completion_date && (
-              <DetailRow label="Completed">
-                {formatDate(project.actual_completion_date)}
-              </DetailRow>
+              <DetailField label="Completed">{formatDate(project.actual_completion_date)}</DetailField>
             )}
-            <DetailRow label="Waiting On">
-              <span style={{ textTransform: 'capitalize' }}>
-                {project.waiting_on === 'none' ? '—' : project.waiting_on}
-              </span>
-            </DetailRow>
-          </div>
-        </SectionCard>
+            <DetailField label="Waiting on">
+              <span className="capitalize">{project.waiting_on === 'none' ? '—' : project.waiting_on}</span>
+            </DetailField>
+          </dl>
+        </Card>
 
-        {/* Scope */}
         {project.scope_summary && (
-          <SectionCard title="Scope Summary">
-            <p style={{
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-secondary)',
-              lineHeight: '1.7',
-              whiteSpace: 'pre-wrap',
-            }}>
+          <Card className="p-6">
+            <SectionHeader title="Scope summary" />
+            <p className="whitespace-pre-wrap text-[0.875rem] leading-relaxed text-[var(--color-text-secondary)]">
               {project.scope_summary}
             </p>
-          </SectionCard>
+          </Card>
         )}
 
-        {/* Internal Notes */}
         {project.notes_internal && (
-          <SectionCard title="Internal Notes">
-            <p style={{
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-secondary)',
-              lineHeight: '1.7',
-              whiteSpace: 'pre-wrap',
-            }}>
+          <Card className="p-6">
+            <SectionHeader title="Internal notes" />
+            <p className="whitespace-pre-wrap text-[0.875rem] leading-relaxed text-[var(--color-text-secondary)]">
               {project.notes_internal}
             </p>
-          </SectionCard>
+          </Card>
         )}
       </div>
 
-      {/* Right column */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Assignment */}
-        <SectionCard title="Assignment">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <DetailRow label="Project Lead">{leadName}</DetailRow>
-            <DetailRow label="Reviewer">
-              {reviewerName ?? <span style={{ color: 'var(--color-text-muted)' }}>Not assigned</span>}
-            </DetailRow>
-          </div>
-        </SectionCard>
+      <div className="space-y-4">
+        <Card className="p-5">
+          <SectionHeader title="Assignment" />
+          <dl className="space-y-4">
+            <DetailField label="Project lead">{leadName}</DetailField>
+            <DetailField label="Reviewer">
+              {reviewerName ?? <span className="text-[var(--color-text-muted)]">Not assigned</span>}
+            </DetailField>
+          </dl>
+        </Card>
 
-        {/* Linked Intake */}
         {project.intakes && (
-          <SectionCard title="Linked Intake">
+          <Card className="p-5">
+            <SectionHeader title="Linked intake" />
             {showClientIntakeLinks ? (
-              <Link
-                href={`/intakes/${project.intakes.id}`}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '2px',
-                  textDecoration: 'none',
-                }}
-              >
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  color: 'var(--color-text-muted)',
-                }}>
-                  {project.intakes.intake_code}
-                </span>
-                <span style={{
-                  fontSize: '0.8125rem',
-                  color: 'var(--color-primary)',
-                  fontWeight: 500,
-                }}>
-                  {project.intakes.title}
-                </span>
+              <Link href={`/intakes/${project.intakes.id}`} className="flex flex-col gap-0.5 no-underline">
+                <span className="font-mono text-[0.75rem] text-[var(--color-text-muted)]">{project.intakes.intake_code}</span>
+                <span className="text-[0.875rem] font-medium text-[var(--color-primary)]">{project.intakes.title}</span>
               </Link>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  color: 'var(--color-text-muted)',
-                }}>
-                  {project.intakes.intake_code}
-                </span>
-                <span style={{
-                  fontSize: '0.8125rem',
-                  color: 'var(--color-text-primary)',
-                  fontWeight: 500,
-                }}>
-                  {project.intakes.title}
-                </span>
+              <div className="flex flex-col gap-0.5">
+                <span className="font-mono text-[0.75rem] text-[var(--color-text-muted)]">{project.intakes.intake_code}</span>
+                <span className="text-[0.875rem] font-medium text-[var(--color-text-primary)]">{project.intakes.title}</span>
               </div>
             )}
-          </SectionCard>
+          </Card>
         )}
 
-        {/* External Links */}
         {(project.external_reference_url || project.google_drive_folder_link) && (
-          <SectionCard title="Links">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <Card className="p-5">
+            <SectionHeader title="Links" />
+            <div className="flex flex-col gap-2.5">
               {project.external_reference_url && (
                 <a
                   href={project.external_reference_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--color-primary)',
-                    textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    wordBreak: 'break-all',
-                  }}
+                  className="inline-flex items-center gap-1 break-all text-[0.875rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
                 >
                   <ExternalLink size={13} aria-hidden="true" />
-                  External Reference
+                  External reference
                 </a>
               )}
               {project.google_drive_folder_link && (
@@ -401,30 +325,23 @@ function OverviewTab({
                   href={project.google_drive_folder_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--color-primary)',
-                    textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                  }}
+                  className="inline-flex items-center gap-1 text-[0.875rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
                 >
                   <FolderOpen size={13} aria-hidden="true" />
-                  Google Drive Folder
+                  Google Drive folder
                 </a>
               )}
             </div>
-          </SectionCard>
+          </Card>
         )}
 
-        {/* Record Info */}
-        <SectionCard title="Record Info">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <DetailRow label="Created">{formatDate(project.created_at)}</DetailRow>
-            <DetailRow label="Last Updated">{formatDate(project.updated_at)}</DetailRow>
-          </div>
-        </SectionCard>
+        <Card className="p-5">
+          <SectionHeader title="Record info" />
+          <dl className="space-y-4">
+            <DetailField label="Created">{formatDate(project.created_at)}</DetailField>
+            <DetailField label="Last updated">{formatDate(project.updated_at)}</DetailField>
+          </dl>
+        </Card>
       </div>
     </div>
   )
@@ -449,42 +366,40 @@ function TeamTab({
   const assignedUserIds = teamMembers.map((m) => m.user_id)
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'start' }}>
-      {/* Left — team members table */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <SectionCard
-          title="Team Members"
-          actions={
-            <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-              {teamMembers.length} member{teamMembers.length !== 1 ? 's' : ''}
-            </span>
-          }
-          noPadding
-        >
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="space-y-6 lg:col-span-2">
+        <Card className="overflow-hidden p-0">
+          <div className="border-b border-[var(--color-border)] p-6 pb-4">
+            <SectionHeader
+              title="Team members"
+              className="mb-0"
+            >
+              <span className="text-[0.75rem] text-[var(--color-text-muted)]">
+                {teamMembers.length} member{teamMembers.length !== 1 ? 's' : ''}
+              </span>
+            </SectionHeader>
+          </div>
           <TeamMemberList members={teamMembers} projectId={projectId} allowRemove={canManageTeam} />
-        </SectionCard>
+        </Card>
 
         {canManageTeam && (
-          <SectionCard title="Add Team Member">
-            <AddTeamMemberForm
-              projectId={projectId}
-              users={users}
-              assignedUserIds={assignedUserIds}
-            />
-          </SectionCard>
+          <Card className="p-6">
+            <SectionHeader title="Add team member" />
+            <AddTeamMemberForm projectId={projectId} users={users} assignedUserIds={assignedUserIds} />
+          </Card>
         )}
       </div>
 
-      {/* Right — assignment summary */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <SectionCard title="Project Assignment">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <DetailRow label="Project Lead">{leadName}</DetailRow>
-            <DetailRow label="Reviewer">
-              {reviewerName ?? <span style={{ color: 'var(--color-text-muted)' }}>Not assigned</span>}
-            </DetailRow>
-          </div>
-        </SectionCard>
+      <div className="space-y-4">
+        <Card className="p-5">
+          <SectionHeader title="Project assignment" />
+          <dl className="space-y-4">
+            <DetailField label="Project lead">{leadName}</DetailField>
+            <DetailField label="Reviewer">
+              {reviewerName ?? <span className="text-[var(--color-text-muted)]">Not assigned</span>}
+            </DetailField>
+          </dl>
+        </Card>
       </div>
     </div>
   )
@@ -502,119 +417,93 @@ function TasksTab({
 }) {
   const today = new Date().toISOString().split('T')[0]
   const headers = ['Task', 'Category', 'Assigned To', 'Due Date', 'Priority', 'Status', 'Progress']
+  const thClass =
+    'whitespace-nowrap bg-[var(--color-surface-subtle)] px-3.5 py-2 text-left text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]'
+  const tdClass = 'px-3.5 py-2 text-[0.8125rem]'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <SectionCard
-        title="Project Tasks"
-        actions={
-          showAddTask ? (
-            <Link
-              href={`/tasks/new?project_id=${projectId}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '0.75rem',
-                color: 'var(--color-primary)',
-                textDecoration: 'none',
-                fontWeight: 500,
-              }}
-            >
-              <Plus size={12} aria-hidden="true" />
-              Add Task
-            </Link>
-          ) : undefined
-        }
-        noPadding
-      >
-        {tasks.length === 0 ? (
-          <div style={{ padding: '16px' }}>
-            <EmptyState compact icon={<CheckSquare size={16} />} title="No tasks created for this project yet." />
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  {headers.map(h => (
-                    <th
-                      key={h}
-                      style={{
-                        padding: '8px 14px',
-                        textAlign: 'left',
-                        fontSize: '0.6875rem',
-                        fontWeight: 600,
-                        color: 'var(--color-text-muted)',
-                        backgroundColor: 'var(--color-surface-subtle)',
-                        letterSpacing: '0.02em',
-                        textTransform: 'uppercase',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tasks.map((task, idx) => {
-                  const isOverdue = task.due_date && task.due_date < today && task.status !== 'done'
-                  const isBlocked = task.status === 'blocked'
+    <Card className="overflow-hidden p-0">
+      <div className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] p-6 pb-4">
+        <SectionHeader title="Project tasks" className="mb-0" />
+        {showAddTask ? (
+          <Link
+            href={`/tasks/new?project_id=${projectId}`}
+            className="inline-flex shrink-0 items-center gap-1 text-[0.75rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
+          >
+            <Plus size={12} aria-hidden="true" />
+            Add task
+          </Link>
+        ) : null}
+      </div>
+      {tasks.length === 0 ? (
+        <div className="p-4">
+          <EmptyState compact icon={<CheckSquare size={16} />} title="No tasks created for this project yet." />
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--color-border)]">
+                {headers.map((h) => (
+                  <th key={h} className={thClass}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map((task) => {
+                const isOverdue = task.due_date && task.due_date < today && task.status !== 'done'
+                const isBlocked = task.status === 'blocked'
 
-                  return (
-                    <tr
-                      key={task.id}
-                      style={{
-                        borderBottom: idx < tasks.length - 1 ? '1px solid var(--color-border)' : undefined,
-                        backgroundColor: isBlocked ? 'var(--color-danger-subtle)' : isOverdue ? 'var(--color-warning-subtle)' : undefined,
-                        cursor: 'pointer',
-                      }}
+                return (
+                  <tr
+                    key={task.id}
+                    className={cn(
+                      'cursor-pointer border-b border-[var(--color-border)] last:border-b-0',
+                      isBlocked && 'bg-[var(--color-danger-subtle)]',
+                      isOverdue && !isBlocked && 'bg-[var(--color-warning-subtle)]',
+                    )}
+                  >
+                    <td className={cn(tdClass, 'max-w-[250px]')}>
+                      <Link href={`/tasks/${task.id}`} className="flex items-center gap-1 no-underline">
+                        {isOverdue && <AlertTriangle size={12} className="shrink-0 text-[var(--color-warning)]" />}
+                        <span className="truncate font-medium text-[var(--color-text-primary)]">{task.title}</span>
+                      </Link>
+                    </td>
+                    <td className={cn(tdClass, 'capitalize text-[var(--color-text-secondary)]')}>
+                      {task.category?.replace(/_/g, ' ') ?? '—'}
+                    </td>
+                    <td className={cn(tdClass, 'text-[var(--color-text-secondary)]')}>{task.assignee?.full_name ?? '—'}</td>
+                    <td
+                      className={cn(
+                        tdClass,
+                        'whitespace-nowrap text-[0.75rem]',
+                        isOverdue ? 'font-semibold text-[var(--color-warning)]' : 'text-[var(--color-text-muted)]',
+                      )}
                     >
-                      <td style={{ padding: '8px 14px', maxWidth: '250px' }}>
-                        <Link href={`/tasks/${task.id}`} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          {isOverdue && <AlertTriangle size={12} style={{ color: 'var(--color-warning)', flexShrink: 0 }} />}
-                          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.8125rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {task.title}
-                          </span>
-                        </Link>
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', textTransform: 'capitalize' }}>
-                        {task.category?.replace(/_/g, ' ') ?? '—'}
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                        {task.assignee?.full_name ?? '—'}
-                      </td>
-                      <td style={{
-                        padding: '8px 14px',
-                        fontSize: '0.75rem',
-                        color: isOverdue ? 'var(--color-warning)' : 'var(--color-text-muted)',
-                        fontWeight: isOverdue ? 600 : 400,
-                        whiteSpace: 'nowrap',
-                      }}>
-                        {formatDate(task.due_date)}
-                      </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        <PriorityBadge priority={task.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />
-                      </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        <TaskStatusBadge status={task.status} />
-                      </td>
-                      <td style={{ padding: '8px 14px', minWidth: '80px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          <ProgressBar value={task.progress_percent} height={5} />
-                          <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>{task.progress_percent}%</span>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </SectionCard>
-    </div>
+                      {formatDate(task.due_date)}
+                    </td>
+                    <td className={tdClass}>
+                      <PriorityBadge priority={task.priority.toUpperCase() as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'} />
+                    </td>
+                    <td className={tdClass}>
+                      <TaskStatusBadge status={task.status} />
+                    </td>
+                    <td className={cn(tdClass, 'min-w-[5rem]')}>
+                      <div className="flex items-center gap-1">
+                        <ProgressBar value={task.progress_percent} height={5} />
+                        <span className="text-[0.6875rem] text-[var(--color-text-muted)]">{task.progress_percent}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
   )
 }
 
@@ -631,129 +520,101 @@ function DeliverablesTab({
   const headers = ['Deliverable', 'Type', 'Rev', 'Prepared By', 'Status', 'Submitted', 'File']
 
   const typeLabels: Record<string, string> = {
-    drawing: 'Drawing', '3d_model': '3D Model', report: 'Report', boq: 'BOQ',
-    calculation_sheet: 'Calc Sheet', presentation: 'Presentation', specification: 'Specification',
-    revision_package: 'Rev Package', submission_package: 'Sub Package',
+    drawing: 'Drawing',
+    '3d_model': '3D Model',
+    report: 'Report',
+    boq: 'BOQ',
+    calculation_sheet: 'Calc Sheet',
+    presentation: 'Presentation',
+    specification: 'Specification',
+    revision_package: 'Rev Package',
+    submission_package: 'Sub Package',
   }
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <SectionCard
-        title="Project Deliverables"
-        actions={
-          showAddDeliverable ? (
-            <Link
-              href={`/deliverables/new?project_id=${projectId}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '0.75rem',
-                color: 'var(--color-primary)',
-                textDecoration: 'none',
-                fontWeight: 500,
-              }}
-            >
-              <Plus size={12} aria-hidden="true" />
-              Add Deliverable
-            </Link>
-          ) : undefined
-        }
-        noPadding
-      >
-        {deliverables.length === 0 ? (
-          <div style={{ padding: '16px' }}>
-            <EmptyState compact icon={<FileText size={16} />} title="No deliverables created for this project yet." />
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  {headers.map(h => (
-                    <th
-                      key={h}
-                      style={{
-                        padding: '8px 14px',
-                        textAlign: 'left',
-                        fontSize: '0.6875rem',
-                        fontWeight: 600,
-                        color: 'var(--color-text-muted)',
-                        backgroundColor: 'var(--color-surface-subtle)',
-                        letterSpacing: '0.02em',
-                        textTransform: 'uppercase',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {deliverables.map((d, idx) => {
-                  const isRevisionRequested = d.status === 'revision_requested'
+  const thClass =
+    'whitespace-nowrap bg-[var(--color-surface-subtle)] px-3.5 py-2 text-left text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]'
+  const tdClass = 'px-3.5 py-2 text-[0.8125rem]'
 
-                  return (
-                    <tr
-                      key={d.id}
-                      style={{
-                        borderBottom: idx < deliverables.length - 1 ? '1px solid var(--color-border)' : undefined,
-                        backgroundColor: isRevisionRequested ? 'var(--color-danger-subtle)' : undefined,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <td style={{ padding: '8px 14px', maxWidth: '220px' }}>
-                        <Link href={`/deliverables/${d.id}`} style={{ textDecoration: 'none' }}>
-                          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.8125rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                            {d.name}
-                          </span>
-                        </Link>
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                        {typeLabels[d.type] ?? d.type}
-                      </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        <span style={{
-                          fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600,
-                          color: 'var(--color-text-primary)', backgroundColor: 'var(--color-surface-subtle)',
-                          padding: '1px 6px', borderRadius: '4px',
-                        }}>
-                          R{d.revision_number}
-                        </span>
-                        {d.version_label && (
-                          <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginLeft: '4px' }}>
-                            {d.version_label}
-                          </span>
-                        )}
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                        {d.preparer?.full_name ?? '—'}
-                      </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        <DeliverableStatusBadge status={d.status} />
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.75rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
-                        {formatDate(d.submitted_to_client_date)}
-                      </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        {d.file_link ? (
-                          <a href={d.file_link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)' }}>
-                            <ExternalLinkIcon size={13} />
-                          </a>
-                        ) : (
-                          <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </SectionCard>
-    </div>
+  return (
+    <Card className="overflow-hidden p-0">
+      <div className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] p-6 pb-4">
+        <SectionHeader title="Project deliverables" className="mb-0" />
+        {showAddDeliverable ? (
+          <Link
+            href={`/deliverables/new?project_id=${projectId}`}
+            className="inline-flex shrink-0 items-center gap-1 text-[0.75rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
+          >
+            <Plus size={12} aria-hidden="true" />
+            Add deliverable
+          </Link>
+        ) : null}
+      </div>
+      {deliverables.length === 0 ? (
+        <div className="p-4">
+          <EmptyState compact icon={<FileText size={16} />} title="No deliverables created for this project yet." />
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--color-border)]">
+                {headers.map((h) => (
+                  <th key={h} className={thClass}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {deliverables.map((d) => {
+                const isRevisionRequested = d.status === 'revision_requested'
+
+                return (
+                  <tr
+                    key={d.id}
+                    className={cn(
+                      'cursor-pointer border-b border-[var(--color-border)] last:border-b-0',
+                      isRevisionRequested && 'bg-[var(--color-danger-subtle)]',
+                    )}
+                  >
+                    <td className={cn(tdClass, 'max-w-[220px]')}>
+                      <Link href={`/deliverables/${d.id}`} className="no-underline">
+                        <span className="block truncate font-medium text-[var(--color-text-primary)]">{d.name}</span>
+                      </Link>
+                    </td>
+                    <td className={cn(tdClass, 'text-[var(--color-text-secondary)]')}>{typeLabels[d.type] ?? d.type}</td>
+                    <td className={tdClass}>
+                      <span className="rounded bg-[var(--color-surface-subtle)] px-1.5 py-0.5 font-mono text-[0.75rem] font-semibold text-[var(--color-text-primary)]">
+                        R{d.revision_number}
+                      </span>
+                      {d.version_label && (
+                        <span className="ml-1 text-[0.6875rem] text-[var(--color-text-muted)]">{d.version_label}</span>
+                      )}
+                    </td>
+                    <td className={cn(tdClass, 'text-[var(--color-text-secondary)]')}>{d.preparer?.full_name ?? '—'}</td>
+                    <td className={tdClass}>
+                      <DeliverableStatusBadge status={d.status} />
+                    </td>
+                    <td className={cn(tdClass, 'whitespace-nowrap text-[0.75rem] text-[var(--color-text-muted)]')}>
+                      {formatDate(d.submitted_to_client_date)}
+                    </td>
+                    <td className={tdClass}>
+                      {d.file_link ? (
+                        <a href={d.file_link} target="_blank" rel="noopener noreferrer" className="text-[var(--color-primary)]">
+                          <ExternalLink size={13} />
+                        </a>
+                      ) : (
+                        <span className="text-[0.75rem] text-[var(--color-text-muted)]">—</span>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
   )
 }
 
@@ -770,122 +631,118 @@ function FilesTab({
   showAddFile: boolean
 }) {
   const categoryLabels: Record<string, string> = {
-    reference: 'Reference', draft: 'Draft', working_file: 'Working File',
-    review_copy: 'Review Copy', final: 'Final', submission: 'Submission',
+    reference: 'Reference',
+    draft: 'Draft',
+    working_file: 'Working File',
+    review_copy: 'Review Copy',
+    final: 'Final',
+    submission: 'Submission',
     supporting_document: 'Supporting Doc',
   }
   const headers = ['File', 'Category', 'Provider', 'Rev', 'Uploaded By', 'Added', 'Link']
 
+  const thClass =
+    'whitespace-nowrap bg-[var(--color-surface-subtle)] px-3.5 py-2 text-left text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]'
+  const tdClass = 'px-3.5 py-2 text-[0.8125rem]'
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      {/* Drive folder link */}
+    <div className="space-y-6">
       {driveFolderLink && (
-        <SectionCard title="Project Drive Folder">
+        <Card className="p-6">
+          <SectionHeader title="Project Drive folder" />
           <a
             href={driveFolderLink}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              fontSize: '0.8125rem', color: 'var(--color-primary)', textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', gap: '5px',
-            }}
+            className="inline-flex items-center gap-1.5 text-[0.875rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
           >
             <FolderOpen size={14} />
             Open project folder in Google Drive
           </a>
-        </SectionCard>
+        </Card>
       )}
 
-      <SectionCard
-        title="Attached Files"
-        actions={
-          showAddFile ? (
+      <Card className="overflow-hidden p-0">
+        <div className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] p-6 pb-4">
+          <SectionHeader title="Attached files" className="mb-0" />
+          {showAddFile ? (
             <Link
               href={`/files/new?project_id=${projectId}`}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '4px',
-                fontSize: '0.75rem', color: 'var(--color-primary)',
-                textDecoration: 'none', fontWeight: 500,
-              }}
+              className="inline-flex shrink-0 items-center gap-1 text-[0.75rem] font-medium text-[var(--color-primary)] no-underline hover:underline"
             >
               <Plus size={12} aria-hidden="true" />
-              Add File
+              Add file
             </Link>
-          ) : undefined
-        }
-        noPadding
-      >
+          ) : null}
+        </div>
         {files.length === 0 ? (
-          <div style={{ padding: '16px' }}>
+          <div className="p-4">
             <EmptyState compact icon={<FolderOpen size={16} />} title="No files attached to this project yet." />
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  {headers.map(h => (
-                    <th key={h} style={{
-                      padding: '8px 14px', textAlign: 'left', fontSize: '0.6875rem', fontWeight: 600,
-                      color: 'var(--color-text-muted)', backgroundColor: 'var(--color-surface-subtle)',
-                      letterSpacing: '0.02em', textTransform: 'uppercase', whiteSpace: 'nowrap',
-                    }}>
+                <tr className="border-b border-[var(--color-border)]">
+                  {headers.map((h) => (
+                    <th key={h} className={thClass}>
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {files.map((f, idx) => {
+                {files.map((f) => {
                   const link = f.manual_link || f.google_web_view_link
                   return (
-                    <tr key={f.id} style={{ borderBottom: idx < files.length - 1 ? '1px solid var(--color-border)' : undefined }}>
-                      <td style={{ padding: '8px 14px', maxWidth: '220px' }}>
-                        <Link href={`/files/${f.id}`} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.8125rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {f.file_name}
-                          </span>
+                    <tr key={f.id} className="border-b border-[var(--color-border)] last:border-b-0">
+                      <td className={cn(tdClass, 'max-w-[220px]')}>
+                        <Link href={`/files/${f.id}`} className="flex items-center gap-1 no-underline">
+                          <span className="truncate font-medium text-[var(--color-text-primary)]">{f.file_name}</span>
                           {f.extension && (
-                            <span style={{ fontSize: '0.625rem', color: 'var(--color-text-muted)', backgroundColor: 'var(--color-surface-subtle)', padding: '0 4px', borderRadius: '3px', fontWeight: 600, textTransform: 'uppercase', flexShrink: 0 }}>
+                            <span className="shrink-0 rounded bg-[var(--color-surface-subtle)] px-1 py-0 text-[0.625rem] font-semibold uppercase text-[var(--color-text-muted)]">
                               {f.extension}
                             </span>
                           )}
                         </Link>
                       </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                      <td className={cn(tdClass, 'text-[var(--color-text-secondary)]')}>
                         {categoryLabels[f.file_category] ?? f.file_category}
                       </td>
-                      <td style={{ padding: '8px 14px' }}>
-                        <span style={{
-                          display: 'inline-flex', alignItems: 'center', gap: '3px',
-                          fontSize: '0.6875rem', fontWeight: 500,
-                          color: f.provider === 'google_drive' ? 'var(--color-primary)' : 'var(--color-neutral)',
-                          backgroundColor: f.provider === 'google_drive' ? 'var(--color-primary-subtle)' : 'var(--color-neutral-subtle)',
-                          padding: '2px 8px', borderRadius: '10px',
-                        }}>
+                      <td className={tdClass}>
+                        <span
+                          className={cn(
+                            'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[0.6875rem] font-medium',
+                            f.provider === 'google_drive'
+                              ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)]'
+                              : 'bg-[var(--color-neutral-subtle)] text-[var(--color-neutral)]',
+                          )}
+                        >
                           {f.provider === 'google_drive' ? <HardDrive size={10} /> : null}
                           {f.provider === 'google_drive' ? 'Drive' : 'Manual'}
                         </span>
                       </td>
-                      <td style={{ padding: '8px 14px' }}>
+                      <td className={tdClass}>
                         {f.revision_number != null ? (
-                          <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-primary)', backgroundColor: 'var(--color-surface-subtle)', padding: '1px 6px', borderRadius: '4px' }}>
+                          <span className="rounded bg-[var(--color-surface-subtle)] px-1.5 py-0.5 font-mono text-[0.75rem] font-semibold text-[var(--color-text-primary)]">
                             R{f.revision_number}
                           </span>
-                        ) : <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>}
+                        ) : (
+                          <span className="text-[0.75rem] text-[var(--color-text-muted)]">—</span>
+                        )}
                       </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                        {f.uploader?.full_name ?? '—'}
-                      </td>
-                      <td style={{ padding: '8px 14px', fontSize: '0.75rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+                      <td className={cn(tdClass, 'text-[var(--color-text-secondary)]')}>{f.uploader?.full_name ?? '—'}</td>
+                      <td className={cn(tdClass, 'whitespace-nowrap text-[0.75rem] text-[var(--color-text-muted)]')}>
                         {formatDate(f.created_at)}
                       </td>
-                      <td style={{ padding: '8px 14px' }}>
+                      <td className={tdClass}>
                         {link ? (
-                          <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)' }}>
-                            <ExternalLinkIcon size={13} />
+                          <a href={link} target="_blank" rel="noopener noreferrer" className="text-[var(--color-primary)]">
+                            <ExternalLink size={13} />
                           </a>
-                        ) : <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>—</span>}
+                        ) : (
+                          <span className="text-[0.75rem] text-[var(--color-text-muted)]">—</span>
+                        )}
                       </td>
                     </tr>
                   )
@@ -894,70 +751,62 @@ function FilesTab({
             </table>
           </div>
         )}
-      </SectionCard>
+      </Card>
     </div>
   )
 }
 
 /* ─── Activity Tab ─────────────────────────────────────────────── */
 const ACTION_LABELS: Record<string, string> = {
-  created:        'Project created',
+  created: 'Project created',
   status_updated: 'Status updated',
-  converted:      'Converted from intake',
+  converted: 'Converted from intake',
 }
 
 function ActivityTab({ logs }: { logs: ActivityLogEntry[] }) {
   if (logs.length === 0) {
     return (
-      <SectionCard title="Activity">
+      <Card className="p-6">
+        <SectionHeader title="Activity" />
         <EmptyState compact icon={<Activity size={16} />} title="No activity recorded for this project yet." />
-      </SectionCard>
+      </Card>
     )
   }
 
   return (
-    <SectionCard title="Activity" noPadding>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {logs.map((log, idx) => (
+    <Card className="overflow-hidden p-0">
+      <div className="border-b border-[var(--color-border)] p-6 pb-4">
+        <SectionHeader title="Activity" className="mb-0" />
+      </div>
+      <div className="flex flex-col">
+        {logs.map((log) => (
           <div
             key={log.id}
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '10px',
-              padding: '10px 16px',
-              borderBottom: idx < logs.length - 1 ? '1px solid var(--color-border)' : undefined,
-            }}
+            className="flex flex-wrap items-baseline gap-2.5 border-b border-[var(--color-border)] px-4 py-2.5 last:border-b-0 sm:flex-nowrap sm:gap-2.5"
           >
-            <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-primary)', fontWeight: 500, flex: 1, minWidth: 0 }}>
+            <span className="min-w-0 flex-1 text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
               {ACTION_LABELS[log.action_type] ?? log.action_type.replace(/_/g, ' ')}
-              {log.note && (
-                <span style={{ fontWeight: 400, color: 'var(--color-text-secondary)' }}>
-                  {' — '}{log.note}
-                </span>
-              )}
+              {log.note && <span className="font-normal text-[var(--color-text-secondary)]"> — {log.note}</span>}
             </span>
-            <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            <span className="shrink-0 whitespace-nowrap text-[0.6875rem] text-[var(--color-text-muted)]">
               {log.actor?.full_name ?? 'System'}
             </span>
-            <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', flexShrink: 0, minWidth: '80px', textAlign: 'right' }}>
+            <span className="min-w-[5rem] shrink-0 whitespace-nowrap text-right text-[0.6875rem] text-[var(--color-text-muted)]">
               {formatDate(log.created_at)}
             </span>
           </div>
         ))}
       </div>
-    </SectionCard>
+    </Card>
   )
 }
 
-/* ─── Shared Detail Row ────────────────────────────────────────── */
-function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+/* ─── Shared detail field (dl dt/dd) ───────────────────────────── */
+function DetailField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '3px', fontWeight: 500 }}>
-        {label}
-      </p>
-      <div style={{ fontSize: '0.8125rem', color: 'var(--color-text-primary)' }}>{children}</div>
+      <dt className="text-[0.75rem] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">{label}</dt>
+      <dd className="mt-1 text-[0.875rem] text-[var(--color-text-primary)] [&>a]:text-[var(--color-primary)]">{children}</dd>
     </div>
   )
 }

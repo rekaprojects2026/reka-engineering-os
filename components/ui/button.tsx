@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils/cn'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] text-[0.8125rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] text-[0.8125rem] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -13,7 +13,7 @@ const buttonVariants = cva(
         destructive:
           "bg-[var(--color-danger)] text-[var(--color-danger-fg)] hover:bg-[var(--color-danger-hover)]",
         outline:
-          "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)]",
+          "border border-[var(--color-border-strong)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)]",
         secondary:
           "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-alt)]",
         ghost:
@@ -22,12 +22,12 @@ const buttonVariants = cva(
           "text-[var(--color-primary)] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-8 px-3.5 py-1.5",
-        sm:      "h-7 px-2.5 py-1 text-xs",
-        lg:      "h-9 px-5",
-        icon:    "h-8 w-8",
+        default: "h-9 px-4 py-2 text-sm",
+        sm:      "h-7 px-3 text-xs",
+        lg:      "h-10 px-6 text-sm",
+        icon:    "h-9 w-9",
         "icon-sm": "h-7 w-7",
-        "icon-lg": "h-9 w-9",
+        "icon-lg": "h-10 w-10",
       },
     },
     defaultVariants: {

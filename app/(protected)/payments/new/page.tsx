@@ -6,7 +6,7 @@ import { getMemberOptions } from '@/lib/compensation/helpers'
 import { createPayment } from '@/lib/payments/actions'
 import { getSettingOptions } from '@/lib/settings/queries'
 
-export const metadata = { title: 'New Payment — Engineering Agency OS' }
+export const metadata = { title: 'New Payment — ReKa Engineering OS' }
 
 export default async function NewPaymentPage() {
   const _sp = await getSessionProfile()

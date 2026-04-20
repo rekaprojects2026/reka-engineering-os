@@ -5,7 +5,7 @@ import { CompensationForm } from '@/components/modules/compensation/Compensation
 import { getMemberOptions, getProjectOptions } from '@/lib/compensation/helpers'
 import { createCompensation } from '@/lib/compensation/actions'
 
-export const metadata = { title: 'New Compensation Record — Engineering Agency OS' }
+export const metadata = { title: 'New Compensation Record — ReKa Engineering OS' }
 
 export default async function NewCompensationPage() {
   const _sp = await getSessionProfile()
