@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react'
 import { login } from './actions'
-import { Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null)
@@ -22,55 +23,62 @@ export default function LoginForm() {
       {error && (
         <div
           role="alert"
-          className="flex items-center gap-2 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.875rem] text-[var(--color-danger)]"
+          className="rounded-lg px-3.5 py-2.5 text-sm"
+          style={{
+            backgroundColor: 'var(--color-danger-subtle)',
+            color: 'var(--color-danger)',
+            border: '1px solid rgba(133,30,30,0.2)',
+          }}
         >
-          <AlertCircle size={16} className="shrink-0" aria-hidden="true" />
-          <span>{error}</span>
+          {error}
         </div>
       )}
 
       <div className="space-y-1.5">
         <label
           htmlFor="email"
-          className="block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="block text-xs font-medium mb-1.5"
+          style={{ color: 'var(--color-text-secondary)' }}
         >
           Email address
         </label>
-        <input
+        <Input
           id="email"
           name="email"
           type="email"
           required
           autoComplete="email"
           placeholder="you@agency.com"
-          className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
         />
       </div>
 
       <div className="space-y-1.5">
         <label
           htmlFor="password"
-          className="block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="block text-xs font-medium mb-1.5"
+          style={{ color: 'var(--color-text-secondary)' }}
         >
           Password
         </label>
         <div className="relative">
-          <input
+          <Input
             id="password"
             name="password"
             type={showPassword ? 'text' : 'password'}
             required
             autoComplete="current-password"
             placeholder="••••••••"
-            className="h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 pr-10 text-[0.875rem] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
+            className="pr-10"
           />
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+            onClick={() => setShowPassword(prev => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+            style={{ color: 'var(--color-text-muted)' }}
+            tabIndex={-1}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
         </div>
       </div>
@@ -78,9 +86,23 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="btn-primary mt-2 h-10 w-full rounded-md px-4 text-[0.875rem] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        className="mt-6 w-full h-10 rounded-[var(--radius-control)] text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+        style={{
+          backgroundColor: 'var(--color-primary)',
+          color: 'var(--color-primary-fg)',
+        }}
       >
-        {isPending ? 'Signing in...' : 'Sign in'}
+        {isPending ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Signing in...
+          </span>
+        ) : (
+          'Sign in'
+        )}
       </button>
     </form>
   )
