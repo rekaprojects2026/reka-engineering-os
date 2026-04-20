@@ -63,9 +63,14 @@ export function DataTable<T extends { id: string }>({
     return (
       <div
         className={cn(
-          'rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden',
+          'overflow-hidden rounded-[var(--radius-card)] border',
           className
         )}
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+          boxShadow: 'var(--shadow-sm)',
+        }}
       >
         {body}
       </div>
@@ -75,13 +80,21 @@ export function DataTable<T extends { id: string }>({
   return (
     <div
       className={cn(
-        'rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden',
+        'overflow-hidden rounded-[var(--radius-card)] border',
         className
       )}
+      style={{
+        backgroundColor: 'var(--color-surface)',
+        borderColor: 'var(--color-border)',
+        boxShadow: 'var(--shadow-sm)',
+      }}
     >
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent">
+          <TableRow
+            className="border-none hover:bg-transparent"
+            style={{ backgroundColor: 'var(--color-surface-subtle)' }}
+          >
             {columns.map((col) => {
               const active = sortKey === col.key
               const sortControl = sortable && onSort

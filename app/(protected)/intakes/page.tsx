@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 import { getSessionProfile, requireRole } from '@/lib/auth/session'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
@@ -12,11 +11,6 @@ import { getIntakes } from '@/lib/intakes/queries'
 import type { IntakeWithClient } from '@/lib/intakes/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { ClipboardList, Plus } from 'lucide-react'
-
-const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
-const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
-const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
-const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Intakes — ReKa Engineering OS' }
 
@@ -163,8 +157,8 @@ export default async function IntakesPage({ searchParams }: PageProps) {
 
       <form method="GET">
         <FilterBar>
-          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search intakes…" style={FI} />
-          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search intakes…" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors min-w-[200px]" />
+          <select name="status" defaultValue={params.status ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Statuses</option>
             <option value="new">New</option>
             <option value="awaiting_info">Awaiting Info</option>
@@ -172,7 +166,7 @@ export default async function IntakesPage({ searchParams }: PageProps) {
             <option value="rejected">Rejected</option>
             <option value="converted">Converted</option>
           </select>
-          <select name="source" defaultValue={params.source ?? ''} style={FS}>
+          <select name="source" defaultValue={params.source ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Sources</option>
             <option value="upwork">Upwork</option>
             <option value="fiverr">Fiverr</option>
@@ -180,7 +174,7 @@ export default async function IntakesPage({ searchParams }: PageProps) {
             <option value="referral">Referral</option>
             <option value="other">Other</option>
           </select>
-          <select name="discipline" defaultValue={params.discipline ?? ''} style={FS}>
+          <select name="discipline" defaultValue={params.discipline ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Disciplines</option>
             <option value="mechanical">Mechanical</option>
             <option value="civil">Civil</option>
@@ -188,9 +182,9 @@ export default async function IntakesPage({ searchParams }: PageProps) {
             <option value="electrical">Electrical</option>
             <option value="other">Other</option>
           </select>
-          <button type="submit" style={FB}>Filter</button>
+          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors whitespace-nowrap cursor-pointer">Filter</button>
           {hasActiveFilters && (
-            <Link href="/intakes" style={FC}>Clear filters</Link>
+            <Link href="/intakes" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>
           )}
         </FilterBar>
       </form>
@@ -211,7 +205,7 @@ function IntakesTable({ intakes, hasActiveFilters }: { intakes: IntakeWithClient
           icon={<ClipboardList size={16} aria-hidden="true" />}
           title="No intakes match your filters"
           description="Try different criteria or clear filters to see all intakes."
-          action={<Link href="/intakes" style={{ ...FC, display: 'inline-flex', alignItems: 'center' }}>Clear filters</Link>}
+          action={<Link href="/intakes" className="inline-flex items-center px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>}
         />
       )
     }

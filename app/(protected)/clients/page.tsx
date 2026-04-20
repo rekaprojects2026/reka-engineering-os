@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 import { getSessionProfile, requireRole } from '@/lib/auth/session'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
@@ -12,11 +11,6 @@ import { getClients } from '@/lib/clients/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { Users, Plus } from 'lucide-react'
 import type { Client } from '@/types/database'
-
-const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
-const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
-const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
-const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Clients — ReKa Engineering OS' }
 
@@ -143,15 +137,15 @@ export default async function ClientsPage({ searchParams }: PageProps) {
 
       <form method="GET">
         <FilterBar>
-          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search clients…" style={FI} />
-          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search clients…" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors min-w-[200px]" />
+          <select name="status" defaultValue={params.status ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Statuses</option>
             <option value="lead">Lead</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
             <option value="archived">Archived</option>
           </select>
-          <select name="source" defaultValue={params.source ?? ''} style={FS}>
+          <select name="source" defaultValue={params.source ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Sources</option>
             <option value="upwork">Upwork</option>
             <option value="fiverr">Fiverr</option>
@@ -159,9 +153,9 @@ export default async function ClientsPage({ searchParams }: PageProps) {
             <option value="referral">Referral</option>
             <option value="other">Other</option>
           </select>
-          <button type="submit" style={FB}>Filter</button>
+          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors whitespace-nowrap cursor-pointer">Filter</button>
           {hasActiveFilters && (
-            <Link href="/clients" style={FC}>Clear filters</Link>
+            <Link href="/clients" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>
           )}
         </FilterBar>
       </form>
@@ -182,7 +176,7 @@ function ClientsTable({ clients, hasActiveFilters }: { clients: Client[]; hasAct
           icon={<Users size={16} aria-hidden="true" />}
           title="No clients match your filters"
           description="Try different criteria or clear filters to see all clients."
-          action={<Link href="/clients" style={{ ...FC, display: 'inline-flex', alignItems: 'center' }}>Clear filters</Link>}
+          action={<Link href="/clients" className="inline-flex items-center px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>}
         />
       )
     }

@@ -56,7 +56,7 @@ export function EmptyState({ icon, title, description, action, emphasis, compact
       {icon && (
         <div
           className={cn(
-            'mb-4 flex items-center justify-center rounded-full bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
+            'mb-4 flex items-center justify-center rounded-2xl bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
             emphasis ? 'mb-5 h-14 w-14' : 'h-12 w-12'
           )}
           aria-hidden="true"

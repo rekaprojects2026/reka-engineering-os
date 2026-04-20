@@ -17,11 +17,6 @@ import type { TaskWithRelations } from '@/lib/tasks/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { CheckSquare, Plus, AlertTriangle } from 'lucide-react'
 
-const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
-const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
-const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
-const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
-
 export const metadata = { title: 'Tasks — ReKa Engineering OS' }
 
 interface PageProps {
@@ -194,8 +189,8 @@ export default async function TasksPage({ searchParams }: PageProps) {
 
       <form method="GET">
         <FilterBar>
-          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search tasks…" style={FI} />
-          <select name="status" defaultValue={params.status ?? ''} style={FS}>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search tasks…" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors min-w-[200px]" />
+          <select name="status" defaultValue={params.status ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Statuses</option>
             <option value="to_do">To Do</option>
             <option value="in_progress">In Progress</option>
@@ -204,16 +199,16 @@ export default async function TasksPage({ searchParams }: PageProps) {
             <option value="blocked">Blocked</option>
             <option value="done">Done</option>
           </select>
-          <select name="priority" defaultValue={params.priority ?? ''} style={FS}>
+          <select name="priority" defaultValue={params.priority ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Priorities</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
             <option value="urgent">Urgent</option>
           </select>
-          <button type="submit" style={FB}>Filter</button>
+          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors whitespace-nowrap cursor-pointer">Filter</button>
           {hasActiveFilters && (
-            <Link href="/tasks" style={FC}>Clear filters</Link>
+            <Link href="/tasks" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>
           )}
         </FilterBar>
       </form>
@@ -249,7 +244,7 @@ function TasksTable({
           icon={<CheckSquare size={16} aria-hidden="true" />}
           title="No tasks match your filters"
           description="Try different criteria or clear filters to see all tasks in scope."
-          action={<Link href="/tasks" style={{ ...FC, display: 'inline-flex', alignItems: 'center' }}>Clear filters</Link>}
+          action={<Link href="/tasks" className="inline-flex items-center px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>}
         />
       )
     }

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 import { getSessionProfile } from '@/lib/auth/session'
 import { canShowFilesAddButton, effectiveRole } from '@/lib/auth/permissions'
 import { getViewableProjectIdsForUser } from '@/lib/projects/queries'
@@ -12,11 +11,6 @@ import type { Column } from '@/components/shared/DataTable'
 import { getFiles, type FileWithRelations } from '@/lib/files/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { FolderOpen, Plus, ExternalLink, HardDrive } from 'lucide-react'
-
-const FI: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', minWidth: '200px' }
-const FS: CSSProperties = { padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', cursor: 'pointer' }
-const FB: CSSProperties = { padding: '7px 14px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' as const }
-const FC: CSSProperties = { padding: '7px 10px', fontSize: '0.8125rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' as const }
 
 export const metadata = { title: 'Files — ReKa Engineering OS' }
 
@@ -180,8 +174,8 @@ export default async function FilesPage({ searchParams }: PageProps) {
 
       <form method="GET">
         <FilterBar>
-          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search files…" style={FI} />
-          <select name="file_category" defaultValue={params.file_category ?? ''} style={FS}>
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search files…" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors min-w-[200px]" />
+          <select name="file_category" defaultValue={params.file_category ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Categories</option>
             <option value="reference">Reference</option>
             <option value="draft">Draft</option>
@@ -191,14 +185,14 @@ export default async function FilesPage({ searchParams }: PageProps) {
             <option value="submission">Submission</option>
             <option value="supporting_document">Supporting Doc</option>
           </select>
-          <select name="provider" defaultValue={params.provider ?? ''} style={FS}>
+          <select name="provider" defaultValue={params.provider ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
             <option value="">All Providers</option>
             <option value="manual">Manual</option>
             <option value="google_drive">Google Drive</option>
           </select>
-          <button type="submit" style={FB}>Filter</button>
+          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors whitespace-nowrap cursor-pointer">Filter</button>
           {hasActiveFilters && (
-            <Link href="/files" style={FC}>Clear filters</Link>
+            <Link href="/files" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>
           )}
         </FilterBar>
       </form>
@@ -227,7 +221,7 @@ function FilesTable({
           icon={<FolderOpen size={16} strokeWidth={1.5} aria-hidden="true" />}
           title="No files match your filters"
           description="Try different criteria or clear filters to see all files you can access."
-          action={<Link href="/files" style={{ ...FC, display: 'inline-flex', alignItems: 'center' }}>Clear filters</Link>}
+          action={<Link href="/files" className="inline-flex items-center px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>}
         />
       )
     }
