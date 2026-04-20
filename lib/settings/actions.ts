@@ -18,10 +18,6 @@ async function adminGuard() {
   return profile
 }
 
-function refresh() {
-  revalidatePath('/settings', 'page')
-}
-
 // ── Actions ──────────────────────────────────────────────────
 
 export async function upsertSettingOption(formData: FormData) {
@@ -56,7 +52,7 @@ export async function upsertSettingOption(formData: FormData) {
     if (error) return { error: error.message }
   }
 
-  refresh()
+  revalidatePath('/settings', 'page')
   return { error: null }
 }
 
@@ -71,7 +67,7 @@ export async function deleteSettingOption(id: string) {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/settings', 'page')
   return { error: null }
 }
 
@@ -86,6 +82,6 @@ export async function toggleSettingOption(id: string, is_active: boolean) {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/settings', 'page')
   return { error: null }
 }

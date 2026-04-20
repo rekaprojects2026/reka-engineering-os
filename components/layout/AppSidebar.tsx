@@ -169,7 +169,7 @@ export function AppSidebar({
       >
         <div
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ring-1"
-          style={{ backgroundColor: 'rgba(255,255,255,0.08)', ringColor: 'rgba(255,255,255,0.12)' }}
+          style={{ backgroundColor: 'rgba(255,255,255,0.08)', '--tw-ring-color': 'rgba(255,255,255,0.12)' } as React.CSSProperties}
         >
           <span className="text-xs font-bold" style={{ color: 'var(--sidebar-text)' }}>R</span>
         </div>
