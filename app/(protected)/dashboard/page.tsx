@@ -491,9 +491,8 @@ export default async function DashboardPage({
 
   // ── Admin / Owner ────────────────────────────────────────────────────────────
   const pnlPeriod = parsePnlPeriodParam(pnlParams.pnl_period)
-  const fxRate = await getUsdToIdrRate().catch(() => 16400)
 
-  const [kpis, attention, pipeline, buckets, paymentSnapshot, waitingClient, activity, workload, invoiceSummary, pnl, accountReceive] =
+  const [kpis, attention, pipeline, buckets, paymentSnapshot, waitingClient, activity, workload, invoiceSummary, pnl, accountReceive, fxRate] =
     await Promise.all([
       getDashboardKpis(),
       getNeedsAttention(),
@@ -504,7 +503,7 @@ export default async function DashboardPage({
       getRecentActivity(18),
       getTeamWorkload(),
       getInvoiceSummary().catch(() => ({ totalGross: 0, totalNet: 0, outstanding: 0, paid: 0, byStatus: {} })),
-      getPnlSummary(pnlPeriod, fxRate).catch(() => ({
+      getPnlSummary(pnlPeriod).catch(() => ({
         revenue: 0,
         revenueCurrency: 'USD' as const,
         platformFees: 0,
@@ -514,6 +513,7 @@ export default async function DashboardPage({
         periodLabel: '',
       })),
       getAccountReceiveSummary().catch(() => [] as AccountSummary[]),
+      getUsdToIdrRate().catch(() => 16400),
     ])
 
   const attentionCount =

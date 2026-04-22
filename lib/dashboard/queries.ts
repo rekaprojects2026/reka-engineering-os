@@ -341,18 +341,16 @@ export type OpenTaskStatusCounts = Record<TaskPipelineStatus, number>
 
 export async function getOpenTaskStatusCounts(): Promise<OpenTaskStatusCounts> {
   const supabase = await createServerClient()
-  const results = await Promise.all(
-    PIPELINE_STATUSES.map((status) =>
-      supabase
-        .from('tasks')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', status),
-    ),
-  )
-  const out = {} as OpenTaskStatusCounts
-  PIPELINE_STATUSES.forEach((s, i) => {
-    out[s] = results[i].count ?? 0
-  })
+  const { data } = await supabase
+    .from('tasks')
+    .select('status')
+    .in('status', PIPELINE_STATUSES as unknown as string[])
+
+  const out = { to_do: 0, in_progress: 0, review: 0, revision: 0, blocked: 0 } as OpenTaskStatusCounts
+  for (const row of data ?? []) {
+    const s = row.status as TaskPipelineStatus
+    if (s in out) out[s]++
+  }
   return out
 }
 
@@ -362,19 +360,17 @@ export async function getOpenTaskStatusCountsForProjects(projectIds: string[]): 
     return { to_do: 0, in_progress: 0, review: 0, revision: 0, blocked: 0 }
   }
   const supabase = await createServerClient()
-  const results = await Promise.all(
-    PIPELINE_STATUSES.map((status) =>
-      supabase
-        .from('tasks')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', status)
-        .in('project_id', projectIds),
-    ),
-  )
-  const out = {} as OpenTaskStatusCounts
-  PIPELINE_STATUSES.forEach((s, i) => {
-    out[s] = results[i].count ?? 0
-  })
+  const { data } = await supabase
+    .from('tasks')
+    .select('status')
+    .in('status', PIPELINE_STATUSES as unknown as string[])
+    .in('project_id', projectIds)
+
+  const out = { to_do: 0, in_progress: 0, review: 0, revision: 0, blocked: 0 } as OpenTaskStatusCounts
+  for (const row of data ?? []) {
+    const s = row.status as TaskPipelineStatus
+    if (s in out) out[s]++
+  }
   return out
 }
 
@@ -387,43 +383,38 @@ export type DeadlineBuckets = {
 
 export async function getDeadlineBuckets(): Promise<DeadlineBuckets> {
   const supabase = await createServerClient()
-  const today = todayStr()
-  const w1End = daysFromNow(7)
-  const w2Start = daysFromNow(8)
-  const w2End = daysFromNow(14)
+  const today   = todayStr()
+  const w2End   = daysFromNow(14)
+  const w1End   = daysFromNow(7)
 
-  const [w1Tasks, w2Tasks, w1Proj, w2Proj] = await Promise.all([
+  const [tasksRes, projectsRes] = await Promise.all([
     supabase
       .from('tasks')
-      .select('*', { count: 'exact', head: true })
+      .select('due_date')
       .gte('due_date', today)
-      .lte('due_date', w1End)
-      .neq('status', 'done'),
-    supabase
-      .from('tasks')
-      .select('*', { count: 'exact', head: true })
-      .gte('due_date', w2Start)
       .lte('due_date', w2End)
       .neq('status', 'done'),
     supabase
       .from('projects')
-      .select('*', { count: 'exact', head: true })
+      .select('target_due_date')
       .gte('target_due_date', today)
-      .lte('target_due_date', w1End)
-      .neq('status', 'completed')
-      .neq('status', 'cancelled'),
-    supabase
-      .from('projects')
-      .select('*', { count: 'exact', head: true })
-      .gte('target_due_date', w2Start)
       .lte('target_due_date', w2End)
       .neq('status', 'completed')
       .neq('status', 'cancelled'),
   ])
 
+  let w1Tasks = 0, w2Tasks = 0
+  for (const t of tasksRes.data ?? []) {
+    if (t.due_date <= w1End) w1Tasks++; else w2Tasks++
+  }
+  let w1Proj = 0, w2Proj = 0
+  for (const p of projectsRes.data ?? []) {
+    if (p.target_due_date <= w1End) w1Proj++; else w2Proj++
+  }
+
   return {
-    week1: { tasks: w1Tasks.count ?? 0, projects: w1Proj.count ?? 0 },
-    week2: { tasks: w2Tasks.count ?? 0, projects: w2Proj.count ?? 0 },
+    week1: { tasks: w1Tasks, projects: w1Proj },
+    week2: { tasks: w2Tasks, projects: w2Proj },
   }
 }
 
@@ -435,47 +426,40 @@ export async function getDeadlineBucketsForProjects(projectIds: string[]): Promi
     }
   }
   const supabase = await createServerClient()
-  const today = todayStr()
-  const w1End = daysFromNow(7)
-  const w2Start = daysFromNow(8)
-  const w2End = daysFromNow(14)
+  const today  = todayStr()
+  const w2End  = daysFromNow(14)
+  const w1End  = daysFromNow(7)
 
-  const [w1Tasks, w2Tasks, w1Proj, w2Proj] = await Promise.all([
+  const [tasksRes, projectsRes] = await Promise.all([
     supabase
       .from('tasks')
-      .select('*', { count: 'exact', head: true })
+      .select('due_date')
       .in('project_id', projectIds)
       .gte('due_date', today)
-      .lte('due_date', w1End)
-      .neq('status', 'done'),
-    supabase
-      .from('tasks')
-      .select('*', { count: 'exact', head: true })
-      .in('project_id', projectIds)
-      .gte('due_date', w2Start)
       .lte('due_date', w2End)
       .neq('status', 'done'),
     supabase
       .from('projects')
-      .select('*', { count: 'exact', head: true })
+      .select('target_due_date')
       .in('id', projectIds)
       .gte('target_due_date', today)
-      .lte('target_due_date', w1End)
-      .neq('status', 'completed')
-      .neq('status', 'cancelled'),
-    supabase
-      .from('projects')
-      .select('*', { count: 'exact', head: true })
-      .in('id', projectIds)
-      .gte('target_due_date', w2Start)
       .lte('target_due_date', w2End)
       .neq('status', 'completed')
       .neq('status', 'cancelled'),
   ])
 
+  let w1Tasks = 0, w2Tasks = 0
+  for (const t of tasksRes.data ?? []) {
+    if (t.due_date <= w1End) w1Tasks++; else w2Tasks++
+  }
+  let w1Proj = 0, w2Proj = 0
+  for (const p of projectsRes.data ?? []) {
+    if (p.target_due_date <= w1End) w1Proj++; else w2Proj++
+  }
+
   return {
-    week1: { tasks: w1Tasks.count ?? 0, projects: w1Proj.count ?? 0 },
-    week2: { tasks: w2Tasks.count ?? 0, projects: w2Proj.count ?? 0 },
+    week1: { tasks: w1Tasks, projects: w1Proj },
+    week2: { tasks: w2Tasks, projects: w2Proj },
   }
 }
 
