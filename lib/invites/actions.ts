@@ -6,6 +6,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient }  from '@/lib/supabase/admin'
 import { AVAILABILITY_STATUS_OPTIONS } from '@/lib/constants/options'
 import { loadMutationProfile, ensureTD } from '@/lib/auth/mutation-policy'
+import { sendInviteEmail } from '@/lib/email/send-invite'
 
 // ── Create invite (admin) ─────────────────────────────────────
 
@@ -46,10 +47,36 @@ export async function createInvite(formData: FormData) {
       worker_type,
       invited_by: user.id,
     })
-    .select('token')
+    .select('token, expires_at')
     .single()
 
   if (error) return { error: error.message }
+
+  if (
+    !data ||
+    typeof data.token !== 'string' ||
+    typeof data.expires_at !== 'string'
+  ) {
+    return { error: 'Failed to create invite.' }
+  }
+
+  // Look up inviter's name for the email
+  const { data: inviterProfile } = await admin
+    .from('profiles')
+    .select('full_name')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  const inviterName = inviterProfile?.full_name ?? 'Tim ReKa'
+
+  // Fire-and-forget — do not await, do not block redirect on email failure
+  void sendInviteEmail({
+    toEmail: email,
+    recipientName: full_name,
+    inviterName,
+    token: data.token,
+    expiresAt: data.expires_at,
+  })
 
   revalidatePath('/team')
   redirect(`/team?invited=${data.token}`)

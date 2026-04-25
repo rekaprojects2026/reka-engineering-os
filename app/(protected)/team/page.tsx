@@ -436,7 +436,7 @@ export default async function TeamPage({
               gap: '10px',
             }}>
               <span style={{ fontSize: '0.8125rem', color: 'var(--color-info)', fontWeight: 500 }}>
-                Invite created. Copy the link below and share it with the invited person.
+                Undangan terkirim ke email. Link di bawah tersedia sebagai backup jika email tidak masuk.
               </span>
             </div>
           )}
