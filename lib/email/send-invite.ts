@@ -12,10 +12,12 @@ export interface SendInviteEmailParams {
 }
 
 /**
- * Fire-and-forget invite email. Errors are logged but NOT rethrown —
- * the invite is already saved to DB at this point and must not be rolled back.
+ * Sends invite email after DB insert. Errors are logged and reported via `{ ok }` —
+ * callers should not throw; invite row must stay valid.
  */
-export async function sendInviteEmail(params: SendInviteEmailParams): Promise<void> {
+export async function sendInviteEmail(
+  params: SendInviteEmailParams
+): Promise<{ ok: boolean }> {
   const inviteUrl = `${APP_URL}/onboarding/${params.token}`
 
   const { subject, html } = buildInviteEmail({
@@ -26,17 +28,28 @@ export async function sendInviteEmail(params: SendInviteEmailParams): Promise<vo
   })
 
   try {
-    const { error } = await getResend().emails.send({
+    const result = await getResend().emails.send({
       from: FROM_ADDRESS,
       to: params.toEmail,
       subject,
       html,
     })
 
-    if (error) {
-      console.error('[sendInviteEmail] Resend error:', error)
+    if (result.error) {
+      console.error(
+        '[sendInviteEmail] Resend error:',
+        result.error.name,
+        result.error.message,
+        'from:',
+        FROM_ADDRESS,
+        'to:',
+        params.toEmail
+      )
+      return { ok: false }
     }
+    return { ok: true }
   } catch (err) {
     console.error('[sendInviteEmail] Unexpected error:', err)
+    return { ok: false }
   }
 }

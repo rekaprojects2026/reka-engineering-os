@@ -69,9 +69,8 @@ export async function createInvite(formData: FormData) {
 
   const inviterName = inviterProfile?.full_name ?? 'Tim ReKa'
 
-  // Await so the send finishes on serverless (Vercel); void + redirect often drops the work.
-  // sendInviteEmail never throws — errors are logged inside.
-  await sendInviteEmail({
+  // Await so the send finishes on serverless (Vercel).
+  const { ok: emailSent } = await sendInviteEmail({
     toEmail: email,
     recipientName: full_name,
     inviterName,
@@ -80,7 +79,8 @@ export async function createInvite(formData: FormData) {
   })
 
   revalidatePath('/team')
-  redirect(`/team?invited=${data.token}`)
+  const emailQs = emailSent ? '' : '&emailFailed=1'
+  redirect(`/team?invited=${data.token}${emailQs}`)
 }
 
 // ── Revoke invite (admin) ─────────────────────────────────────

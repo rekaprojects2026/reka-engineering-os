@@ -288,7 +288,7 @@ function inviteColumns(WORKER_TYPE_LABEL: Record<string, string>): Column<Invite
 export default async function TeamPage({
   searchParams,
 }: {
-  searchParams: Promise<{ invited?: string }>
+  searchParams: Promise<{ invited?: string; emailFailed?: string }>
 }) {
   const profile = await getSessionProfile()
   if (!canAccessTeam(profile.system_role) && !canViewTeamAvailability(profile.system_role)) {
@@ -325,7 +325,7 @@ export default async function TeamPage({
 
   requireRole(profile.system_role, ['direktur', 'technical_director', 'finance'])
 
-  const { invited } = await searchParams
+  const { invited, emailFailed } = await searchParams
   const [members, pendingInvites, funcOpts, wtOpts, metricsMap] = await Promise.all([
     getTeamMembers(),
     getPendingInvites(),
@@ -426,7 +426,22 @@ export default async function TeamPage({
           }
           noPadding
         >
-          {invited && (
+          {invited && emailFailed && (
+            <div style={{
+              padding: '10px 16px',
+              borderBottom: '1px solid var(--color-border)',
+              backgroundColor: 'var(--color-warning-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--color-warning)', fontWeight: 500, lineHeight: 1.5 }}>
+                Invite tersimpan, tapi Resend gagal mengirim email. Pakai link di bawah. Periksa Vercel env RESEND_API_KEY dan
+                RESEND_FROM (alamat/domain harus verified di Resend), lalu Deployment Logs. Cek folder Spam.
+              </span>
+            </div>
+          )}
+          {invited && !emailFailed && (
             <div style={{
               padding: '10px 16px',
               borderBottom: '1px solid var(--color-border)',
