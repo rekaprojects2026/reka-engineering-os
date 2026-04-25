@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
+import { markProjectPendingApprovalNotificationsRead } from '@/lib/notifications/helpers'
 import { logActivity } from '@/lib/activity/actions'
 import {
   loadMutationProfile,
@@ -341,6 +342,8 @@ export async function approveProject(projectId: string, formData?: FormData): Pr
 
   if (error) return { error: error.message }
 
+  await markProjectPendingApprovalNotificationsRead(supabase, profile.id, projectId)
+
   const { data: fresh, error: selErr } = await supabase
     .from('projects')
     .select('id, source_type, status, contract_value, contract_currency, has_retention, retention_percentage')
@@ -391,6 +394,8 @@ export async function rejectProject(projectId: string, rejectionNote: string): P
     .eq('status', 'pending_approval')
 
   if (error) return { error: error.message }
+
+  await markProjectPendingApprovalNotificationsRead(supabase, profile.id, projectId)
 
   await logActivity({
     entity_type: 'project',

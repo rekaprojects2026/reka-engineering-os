@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   canAccessCompensation,
+  canAccessExpenses,
+  canAccessWorkLogs,
   canProposeCompensation,
   canAccessTeam,
   canViewTeamAvailability,
@@ -81,5 +83,23 @@ describe('permissions predicates', () => {
   it('getNavPermissions showTeam for manajer', () => {
     expect(getNavPermissions('manajer').showTeam).toBe(true)
     expect(getNavPermissions('bd').showTeam).toBe(false)
+  })
+
+  it('canAccessWorkLogs and showWorkLogs', () => {
+    expect(canAccessWorkLogs('member')).toBe(true)
+    expect(canAccessWorkLogs('freelancer')).toBe(true)
+    expect(canAccessWorkLogs('technical_director')).toBe(true)
+    expect(canAccessWorkLogs('finance')).toBe(true)
+    expect(canAccessWorkLogs('manajer')).toBe(false)
+    expect(getNavPermissions('member').showWorkLogs).toBe(true)
+    expect(getNavPermissions('manajer').showWorkLogs).toBe(false)
+  })
+
+  it('canAccessExpenses excludes freelancer only', () => {
+    expect(canAccessExpenses('freelancer')).toBe(false)
+    expect(canAccessExpenses('member')).toBe(true)
+    expect(canAccessExpenses('manajer')).toBe(true)
+    expect(getNavPermissions('freelancer').showExpenses).toBe(false)
+    expect(getNavPermissions('member').showExpenses).toBe(true)
   })
 })

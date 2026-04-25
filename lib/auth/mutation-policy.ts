@@ -5,13 +5,16 @@
 
 import { getSessionProfile, type SessionProfile } from '@/lib/auth/session'
 import {
+  canAccessExpenses,
   canOperateFinance,
   canProposeCompensation,
   isBD,
   isDirektur,
   isFinance,
+  isFreelancer,
   isManajer,
   isManagement,
+  isMember,
   isOpsLead,
   isTD,
 } from '@/lib/auth/permissions'
@@ -56,6 +59,23 @@ export function ensureOpsLead(profile: SessionProfile): string | null {
 export function ensureManagement(profile: SessionProfile): string | null {
   if (!isManagement(profile.system_role)) return MUTATION_FORBIDDEN
   return null
+}
+
+export function ensureWorkLogMutation(profile: SessionProfile): string | null {
+  const r = profile.system_role
+  if (isMember(r) || isFreelancer(r) || isTD(r) || isDirektur(r) || isFinance(r)) return null
+  return MUTATION_FORBIDDEN
+}
+
+export function ensureExpenseSubmitMutation(profile: SessionProfile): string | null {
+  if (!canAccessExpenses(profile.system_role)) return MUTATION_FORBIDDEN
+  return null
+}
+
+export function ensureExpenseReviewMutation(profile: SessionProfile): string | null {
+  const r = profile.system_role
+  if (isDirektur(r) || isTD(r) || isFinance(r)) return null
+  return MUTATION_FORBIDDEN
 }
 
 export function ensureCanProposeCompensation(profile: SessionProfile): string | null {

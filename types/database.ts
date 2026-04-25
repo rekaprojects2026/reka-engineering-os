@@ -313,6 +313,50 @@ export interface ActivityLog {
   created_at: string
 }
 
+/** Daily time logged per member per task (time tracking). */
+export interface WorkLog {
+  id: string
+  task_id: string
+  project_id: string
+  member_id: string
+  log_date: string
+  hours_logged: number
+  description: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type ProjectExpenseCategory =
+  | 'printing'
+  | 'survey'
+  | 'transport'
+  | 'accommodation'
+  | 'materials'
+  | 'software'
+  | 'meals'
+  | 'other'
+
+export type ProjectExpenseStatus = 'pending' | 'approved' | 'rejected'
+
+export interface ProjectExpense {
+  id: string
+  project_id: string
+  task_id: string | null
+  category: ProjectExpenseCategory
+  description: string
+  amount: number
+  currency_code: string
+  expense_date: string
+  receipt_url: string | null
+  submitted_by: string
+  status: ProjectExpenseStatus
+  approved_by: string | null
+  rejection_note: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface CompensationRecord {
   id: string
   member_id: string

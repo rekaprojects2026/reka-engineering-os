@@ -78,6 +78,13 @@ export const canAccessOutreachReadOnly = (r?: SystemRole | null) =>
   ['direktur', 'technical_director'].includes(effectiveRole(r))
 export const canAccessFxRates = (r?: SystemRole | null) => isDirektur(r) || isFinance(r)
 export const canAccessPaymentAccounts = (r?: SystemRole | null) => isDirektur(r) || isFinance(r)
+
+/** Member, freelancer, TD, direktur, finance — time logs & utilization visibility. */
+export const canAccessWorkLogs = (r?: SystemRole | null) =>
+  isMember(r) || isFreelancer(r) || isTD(r) || isDirektur(r) || isFinance(r)
+
+/** Internal roles (exclude isolated freelancer) — project expenses. */
+export const canAccessExpenses = (r?: SystemRole | null) => !isFreelancer(r)
 export const canAccessLeads = (r?: SystemRole | null) =>
   ['direktur', 'technical_director', 'manajer', 'bd'].includes(effectiveRole(r))
 
@@ -123,6 +130,8 @@ export type NavPermissions = {
   showFinance: boolean
   showPaymentAccounts: boolean
   showFxRates: boolean
+  showWorkLogs: boolean
+  showExpenses: boolean
   showProjectsNav: boolean
   labelProjects: string
   labelTasks: string
@@ -148,6 +157,8 @@ export function getNavPermissions(role: SystemRole | null | undefined): NavPermi
     showFinance: canAccessInvoices(role) || canAccessPayslips(role),
     showPaymentAccounts: canAccessPaymentAccounts(role),
     showFxRates: canAccessFxRates(role),
+    showWorkLogs: canAccessWorkLogs(role),
+    showExpenses: canAccessExpenses(role),
     showProjectsNav: !(isMember(role) || isFreelancer(role)),
 
     labelDashboard: personal ? 'My Dashboard' : 'Dashboard',

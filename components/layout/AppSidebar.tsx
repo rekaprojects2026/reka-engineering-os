@@ -20,6 +20,7 @@ import {
   Megaphone,
   DollarSign,
   CreditCard,
+  Clock,
 } from 'lucide-react'
 import { logout } from '@/app/auth/login/actions'
 import { getInitials } from '@/lib/utils/formatters'
@@ -83,7 +84,13 @@ export function SidebarContent({
     : [{ label: perms.labelDashboard, href: '/dashboard', icon: <LayoutDashboard size={16} /> }]
 
   const operationsItems: NavItem[] = isolated
-    ? [{ label: perms.labelTasks, href: '/tasks', icon: <CheckSquare size={16} /> }]
+    ? [
+        { label: perms.labelTasks, href: '/tasks', icon: <CheckSquare size={16} /> },
+        ...(perms.showWorkLogs
+          ? [{ label: 'Work Logs', href: '/work-logs', icon: <Clock size={16} /> }]
+          : []),
+        ...(perms.showExpenses ? [{ label: 'Expenses', href: '/expenses', icon: <Receipt size={16} /> }] : []),
+      ]
     : [
         ...(perms.showLeads ? [{ label: 'Leads', href: '/leads', icon: <Target size={16} /> }] : []),
         ...(perms.showOutreach ? [{ label: 'Outreach', href: '/outreach', icon: <Megaphone size={16} /> }] : []),
@@ -92,6 +99,10 @@ export function SidebarContent({
           ? [{ label: perms.labelProjects, href: '/projects', icon: <FolderKanban size={16} /> }]
           : []),
         { label: perms.labelTasks, href: '/tasks', icon: <CheckSquare size={16} /> },
+        ...(perms.showWorkLogs
+          ? [{ label: 'Work Logs', href: '/work-logs', icon: <Clock size={16} /> }]
+          : []),
+        ...(perms.showExpenses ? [{ label: 'Expenses', href: '/expenses', icon: <Receipt size={16} /> }] : []),
       ]
 
   const financeItems: NavItem[] = isolated
