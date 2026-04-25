@@ -1,4 +1,4 @@
-import { resend, FROM_ADDRESS } from '@/lib/email/client'
+import { getResend, FROM_ADDRESS } from '@/lib/email/client'
 import { buildNotificationEmail } from '@/lib/email/templates/notification'
 
 export interface SendNotificationEmailParams {
@@ -26,7 +26,7 @@ export async function sendNotificationEmail(
   })
 
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: FROM_ADDRESS,
       to: params.toEmail,
       subject,

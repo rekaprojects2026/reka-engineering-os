@@ -1,4 +1,4 @@
-import { resend, FROM_ADDRESS } from '@/lib/email/client'
+import { getResend, FROM_ADDRESS } from '@/lib/email/client'
 import { buildInviteEmail } from '@/lib/email/templates/invite'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
@@ -26,7 +26,7 @@ export async function sendInviteEmail(params: SendInviteEmailParams): Promise<vo
   })
 
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: FROM_ADDRESS,
       to: params.toEmail,
       subject,
