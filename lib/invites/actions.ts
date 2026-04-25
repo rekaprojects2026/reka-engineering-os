@@ -69,8 +69,9 @@ export async function createInvite(formData: FormData) {
 
   const inviterName = inviterProfile?.full_name ?? 'Tim ReKa'
 
-  // Fire-and-forget — do not await, do not block redirect on email failure
-  void sendInviteEmail({
+  // Await so the send finishes on serverless (Vercel); void + redirect often drops the work.
+  // sendInviteEmail never throws — errors are logged inside.
+  await sendInviteEmail({
     toEmail: email,
     recipientName: full_name,
     inviterName,
