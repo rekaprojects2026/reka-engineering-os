@@ -6,7 +6,11 @@ import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient }  from '@/lib/supabase/admin'
 import { AVAILABILITY_STATUS_OPTIONS } from '@/lib/constants/options'
 import { loadMutationProfile, ensureTD } from '@/lib/auth/mutation-policy'
+import { isOwner } from '@/lib/auth/permissions'
 import { sendInviteEmail } from '@/lib/email/send-invite'
+import type { SystemRole } from '@/types/database'
+
+const RESTRICTED_INVITE_ROLES: SystemRole[] = ['owner']
 
 // ── Create invite (admin) ─────────────────────────────────────
 
@@ -21,10 +25,16 @@ export async function createInvite(formData: FormData) {
 
   const email     = (formData.get('email') as string)?.trim().toLowerCase()
   const full_name = (formData.get('full_name') as string)?.trim() || null
-  const system_role = (formData.get('system_role') as string) || null
+  const system_role = ((formData.get('system_role') as string) || '').trim() || null
   const worker_type = (formData.get('worker_type') as string) || null
 
   if (!email) return { error: 'Email is required.' }
+  if (system_role && RESTRICTED_INVITE_ROLES.includes(system_role as SystemRole)) {
+    return { error: 'Owner role must be assigned manually via Supabase.' }
+  }
+  if (system_role === 'direktur' && !isOwner(profile.system_role)) {
+    return { error: 'Only owner can invite Direktur.' }
+  }
 
   const admin = createAdminClient()
 

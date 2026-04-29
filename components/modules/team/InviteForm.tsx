@@ -6,8 +6,6 @@ import { createInvite } from '@/lib/invites/actions'
 import { SYSTEM_ROLES, WORKER_TYPES } from '@/lib/constants/options'
 import { FormSection } from '@/components/shared/FormSection'
 
-const ASSIGNABLE_SYSTEM_ROLES = SYSTEM_ROLES.filter((r) => r.value !== 'owner')
-
 const inputStyle: CSSProperties = {
   width:           '100%',
   padding:         '8px 11px',
@@ -41,9 +39,18 @@ function Field({ label, required, children }: { label: string; required?: boolea
 
 type OptionPair = { value: string; label: string }
 
-export function InviteForm({ workerTypeOptions }: { workerTypeOptions?: OptionPair[] } = {}) {
+export function InviteForm({
+  workerTypeOptions,
+  canInviteDirektur = false,
+}: {
+  workerTypeOptions?: OptionPair[]
+  canInviteDirektur?: boolean
+} = {}) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const assignableSystemRoles = SYSTEM_ROLES.filter(
+    (r) => r.value !== 'owner' && (canInviteDirektur || r.value !== 'direktur')
+  )
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -85,7 +92,7 @@ export function InviteForm({ workerTypeOptions }: { workerTypeOptions?: OptionPa
             <Field label="System Role">
               <select style={inputStyle} name="system_role" defaultValue="member">
                 <option value="">— Select —</option>
-                {ASSIGNABLE_SYSTEM_ROLES.map((r) => (
+                {assignableSystemRoles.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
                 ))}
               </select>
