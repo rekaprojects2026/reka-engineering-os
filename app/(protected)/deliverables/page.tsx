@@ -157,7 +157,7 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
       ? { scopePreparerId: profile.id }
       : isSenior(role)
         ? { scopeReviewerId: profile.id }
-        : isManajer(role)
+        : role === 'manajer'
           ? { scopeProjectIds: (await getViewableProjectIdsForUser(profile.id, profile.system_role)) ?? [] }
           : {}
 
@@ -175,7 +175,7 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
       ? 'Deliverables you prepared.'
       : isSenior(role)
         ? 'Deliverables assigned to you for review.'
-        : isManajer(role)
+        : role === 'manajer'
           ? 'Deliverables in your assigned projects.'
           : 'Project outputs tracked through review, revision, and final issuance.'
   const canCreate = canAccessTasksDeliverablesFilesNewRoute(profile.system_role)

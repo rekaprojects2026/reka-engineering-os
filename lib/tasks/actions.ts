@@ -228,7 +228,7 @@ export async function updateTask(id: string, formData: FormData) {
     return { error: MUTATION_FORBIDDEN }
   }
 
-  if (isManajer(role)) {
+  if (role === 'manajer') {
     const project = await getProjectById(task.project_id)
     if (!project || !(await userCanEditProjectMetadata(profile, project))) {
       return { error: MUTATION_FORBIDDEN }
@@ -243,7 +243,7 @@ export async function updateTask(id: string, formData: FormData) {
   if (!projectId) return { error: 'Project is required.' }
   if (!assignedTo) return { error: 'Assignee is required.' }
 
-  if (isManajer(role)) {
+  if (role === 'manajer') {
     const dest = await ensureProjectOperationalMutation(profile, projectId)
     if ('error' in dest) return { error: dest.error }
   }

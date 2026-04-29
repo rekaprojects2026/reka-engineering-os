@@ -6,7 +6,6 @@ import {
   effectiveRole,
   isDirektur,
   isFreelancer,
-  isManajer,
   isSenior,
 } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -42,9 +41,9 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
   const { page, pageSize } = parsePagination(params)
 
   const scopeOpts =
-    role === 'member' || isFreelancer(role) ? { assignedUserId: profile.id } :
-    isManajer(role) ? { assignedUserId: profile.id } :
-    isSenior(role) ? { reviewerUserId: profile.id } :
+    role === 'member' || role === 'freelancer' ? { assignedUserId: profile.id } :
+    role === 'manajer' ? { assignedUserId: profile.id } :
+    role === 'senior' ? { reviewerUserId: profile.id } :
     {}
 
   const [projectList, disciplineFilterOptions] = await Promise.all([
@@ -71,7 +70,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
   const pageSubtitle =
     role === 'member' || isFreelancer(role) ? 'Projects you are assigned to.' :
     isSenior(role) ? 'Projects where you are assigned as reviewer.' :
-    isManajer(role) ? 'Projects in your operational scope.' :
+    role === 'manajer' ? 'Projects in your operational scope.' :
     'Active and historical engineering project work.'
 
   const hasActiveFilters = Boolean(params.search || params.status || params.discipline || params.priority)

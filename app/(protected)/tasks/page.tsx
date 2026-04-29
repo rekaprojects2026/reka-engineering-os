@@ -58,7 +58,7 @@ export default async function TasksPage({ searchParams }: PageProps) {
       ? { scopeAssignedTo: profile.id }
       : isSenior(role)
         ? { scopeReviewerId: profile.id }
-        : isManajer(role)
+        : role === 'manajer'
           ? { scopeProjectIds: (await getViewableProjectIdsForUser(profile.id, profile.system_role)) ?? [] }
           : {}
 
@@ -83,7 +83,7 @@ export default async function TasksPage({ searchParams }: PageProps) {
   const pageSubtitle =
     role === 'member' || isFreelancer(role) ? 'Tasks assigned to you.' :
     isSenior(role) ? 'Tasks where you are the reviewer.' :
-    isManajer(role) ? 'Tasks in your assigned projects.' :
+    role === 'manajer' ? 'Tasks in your assigned projects.' :
     'All executable work items across projects.'
 
   const canCreate       = canAccessTasksDeliverablesFilesNewRoute(profile.system_role)

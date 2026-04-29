@@ -191,7 +191,7 @@ export async function updateDeliverable(id: string, formData: FormData) {
   if (!type) return { error: 'Deliverable type is required.' }
   if (!preparedBy) return { error: 'Prepared by is required.' }
 
-  if (isManajer(role)) {
+  if (role === 'manajer') {
     const dest = await ensureProjectOperationalMutation(profile, projectId)
     if ('error' in dest) return { error: dest.error }
   }

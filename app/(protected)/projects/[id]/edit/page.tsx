@@ -5,7 +5,7 @@ import { ProjectForm } from '@/components/modules/projects/ProjectForm'
 import { getSessionProfile } from '@/lib/auth/session'
 import { requireProjectMetadataEdit, requireProjectView } from '@/lib/auth/access-surface'
 import { getProjectById } from '@/lib/projects/queries'
-import { effectiveRole, isDirektur, isManajer, isOpsLead } from '@/lib/auth/permissions'
+import { effectiveRole, isDirektur, isOpsLead } from '@/lib/auth/permissions'
 import { getClientsForCoordinatorScopedSelect, getClientsForSelect } from '@/lib/clients/queries'
 import { getUsersForProjectAssignment, getUsersForSelect } from '@/lib/users/queries'
 import { getSettingOptions, isGoogleWorkspaceDriveConnected } from '@/lib/settings/queries'
@@ -30,8 +30,8 @@ export default async function EditProjectPage({ params, searchParams }: PageProp
   const [project, clients, users, disciplineOptions, projectTypeOptions, fxRateToIDR, driveConnected] =
     await Promise.all([
       getProjectById(id),
-      isManajer(r) ? getClientsForCoordinatorScopedSelect(profile.id) : getClientsForSelect(),
-      isManajer(r) ? getUsersForProjectAssignment(id) : getUsersForSelect(),
+      r === 'manajer' ? getClientsForCoordinatorScopedSelect(profile.id) : getClientsForSelect(),
+      r === 'manajer' ? getUsersForProjectAssignment(id) : getUsersForSelect(),
       getSettingOptions('discipline'),
       getSettingOptions('project_type'),
       getUsdToIdrRate().catch(() => null as number | null),

@@ -216,7 +216,7 @@ export async function updateFile(id: string, formData: FormData) {
   if (!fileName) return { error: 'File name is required.' }
   if (!projectId) return { error: 'Project is required.' }
 
-  if (isManajer(role)) {
+  if (role === 'manajer') {
     const dest = await ensureProjectOperationalMutation(profile, projectId)
     if ('error' in dest) return { error: dest.error }
   }
