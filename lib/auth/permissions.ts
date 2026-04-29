@@ -67,7 +67,7 @@ export const canAccessTeam = (r?: SystemRole | null) =>
 
 /** Manajer — can see team member availability only (no rates, no banking) */
 export const canViewTeamAvailability = (r?: SystemRole | null) =>
-  isOwner(r) || effectiveRole(r) === 'manajer'
+  effectiveRole(r) === 'manajer'
 export const canAccessSettings = (r?: SystemRole | null) =>
   isTD(r) || isDirektur(r)
 export const canAccessClients = (r?: SystemRole | null) =>
