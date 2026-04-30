@@ -1,0 +1,442 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap');
+@import "../node_modules/frappe-gantt/dist/frappe-gantt.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ─── @theme inline — bridge brand CSS vars to TW utility names ──
+   This tells Tailwind v4's build step what CSS expression each
+   utility class should emit.  No new CSS variables are created;
+   the browser resolves everything back to the :root declarations
+   below.  No circular references.
+   ─────────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Backgrounds / surfaces */
+  --color-background:      var(--color-background);
+  --color-surface:         var(--color-surface);
+  --color-surface-alt:     var(--color-surface-alt);
+  --color-surface-subtle:  var(--color-surface-subtle);
+  --color-surface-muted:   var(--color-surface-muted);
+
+  /* shadcn-compatible aliases */
+  --color-card:            var(--color-surface);
+  --color-card-foreground: var(--color-text-primary);
+  --color-popover:         var(--color-surface);
+  --color-popover-foreground: var(--color-text-primary);
+  --color-muted:           var(--color-surface-muted);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent:          var(--color-surface-alt);
+  --color-accent-foreground: var(--color-text-secondary);
+
+  /* Borders */
+  --color-border:          var(--color-border);
+  --color-border-strong:   var(--color-border-strong);
+  --color-input:           var(--color-border);
+  --color-ring:            var(--color-primary);
+
+  /* Typography */
+  --color-foreground:      var(--color-text-primary);
+
+  /* Primary */
+  --color-primary:         var(--color-primary);
+  --color-primary-foreground: var(--color-primary-fg);
+
+  /* Destructive / Danger */
+  --color-destructive:     var(--color-danger);
+  --color-destructive-foreground: var(--color-danger-fg);
+
+  /* Secondary */
+  --color-secondary:       var(--color-surface-muted);
+  --color-secondary-foreground: var(--color-text-secondary);
+
+  /* Sidebar */
+  --color-sidebar:         var(--sidebar-bg);
+  --color-sidebar-foreground: var(--sidebar-text);
+  --color-sidebar-border:  var(--sidebar-border);
+  --color-sidebar-accent:  var(--sidebar-active-bg);
+
+  /* Radius */
+  --radius-sm:   calc(var(--radius-control) - 2px);
+  --radius-md:   var(--radius-control);
+  --radius-lg:   var(--radius-card);
+  --radius-xl:   calc(var(--radius-card) + 4px);
+  --radius-full: var(--radius-pill);
+
+  /* Chart palette (Recharts + ChartContainer cells) */
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --color-chart-4: var(--color-chart-4);
+  --color-chart-5: var(--color-chart-5);
+
+  /* v0-ui aliases — forwarded to Tailwind */
+  --color-danger:        var(--danger);
+  --color-success:       var(--success);
+  --color-warning:       var(--warning);
+}
+
+/* ─── Design Tokens — derived from brand palette ────────────────
+   Carbon Black  #1D1F1E
+   Porcelain     #FFFDF7
+   Dark Wine     #851E1E
+   Twilight Indigo #142D50
+   Graphite      #454040
+   Parchment     #F4F3EE
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds — canvas pushed deeper so Porcelain cards actually lift */
+  --color-background:      #F0EDE3;   /* Soft parchment — page canvas */
+  --color-surface:         #FFFDF7;   /* Porcelain — card / panel surface */
+  --color-surface-alt:     #F5F3EC;
+  --color-surface-subtle:  #F2EFE7;
+  --color-surface-muted:   #E7E3D8;
+
+  /* Borders — soft; edges should whisper, not outline. */
+  --color-border:          #E5E1D4;
+  --color-border-strong:   #BEB8A9;
+
+  /* Typography */
+  --color-text-primary:    #1D1F1E;   /* Carbon Black */
+  --color-text-secondary:  #454040;   /* Graphite */
+  --color-text-muted:      #7A7673;
+  --color-text-inverse:    #FFFDF7;   /* Porcelain */
+
+  /* Primary — Twilight Indigo */
+  --color-primary:         #142D50;
+  --color-primary-hover:   #0F2240;
+  --color-primary-subtle:  #E6EDF7;
+  --color-primary-fg:      #FFFDF7;
+
+  /* Danger — Dark Wine */
+  --color-danger:          #851E1E;
+  --color-danger-hover:    #6F1717;
+  --color-danger-subtle:   #F5E8E8;
+  --color-danger-fg:       #FFFDF7;
+
+  /* Success */
+  --color-success:         #1A6340;
+  --color-success-subtle:  #E8F5EE;
+
+  /* Warning */
+  --color-warning:         #8A4A08;
+  --color-warning-subtle:  #FDF3E7;
+
+  /* Info (alias primary) */
+  --color-info:            #142D50;
+  --color-info-subtle:     #E6EDF7;
+
+  /* Neutral */
+  --color-neutral:         #7A7673;
+  --color-neutral-subtle:  #EEECEA;
+
+  /* Active alias */
+  --color-active:          #142D50;
+  --color-active-subtle:   #E6EDF7;
+
+  /* ── Chart palette (recharts Cell fills) ──────────────────── */
+  --color-chart-1: #142D50;   /* Twilight Indigo — primary / in-progress */
+  --color-chart-2: #1A6340;   /* Success green — completed / paid */
+  --color-chart-3: #3A6490;   /* Mid-blue — review */
+  --color-chart-4: #B8B3A8;   /* Neutral gray — to-do / unassigned */
+  --color-chart-5: #851E1E;   /* Dark Wine — revision / blocked / danger */
+
+  /* ── Sidebar — dark Carbon Black, premium enterprise shell ── */
+  --sidebar-bg:            #1D1F1E;   /* Carbon Black */
+  --sidebar-border:        #2A2C2B;   /* dark carbon border */
+  --sidebar-hover:         #272928;   /* subtle hover on dark */
+  --sidebar-text:          #FFFDF7;   /* Porcelain — text on dark bg */
+  --sidebar-text-muted:    #8A96A4;   /* muted on dark */
+  --sidebar-active-bg:     #142D50;   /* Twilight Indigo */
+  --sidebar-active-text:   #FFFDF7;   /* Porcelain */
+  --sidebar-label:         #606C7A;   /* group labels on dark */
+
+  /* ── Badge variant tokens ─────────────────────────────────── */
+  /* Used by StatusBadge and all module badge components.        */
+  /* Centralised here so badge colors can be updated in one place. */
+  --badge-neutral-text:  #6A6666;
+  --badge-neutral-bg:    #F1EFE8;
+  --badge-active-text:   #142D50;   /* = --color-primary */
+  --badge-active-bg:     #E8EEF8;
+  --badge-review-text:   #B45309;
+  --badge-review-bg:     #FFFBEB;
+  --badge-success-text:  #166534;
+  --badge-success-bg:    #ECFDF3;
+  --badge-danger-text:   #851E1E;   /* = --color-danger */
+  --badge-danger-bg:     #F8E9E8;
+
+  /* Shadows — softer, more premium */
+  --shadow-sm:             0 1px 2px rgba(29,31,30,0.04), 0 1px 1px rgba(29,31,30,0.02);
+  --shadow-md:             0 6px 20px rgba(29,31,30,0.08), 0 1px 2px rgba(29,31,30,0.04);
+
+  /* Radius */
+  --radius-card:           10px;
+  --radius-control:        6px;
+  --radius-pill:           999px;
+  --radius:                6px;
+
+  /* Layout */
+  --sidebar-width:         248px;
+  --topbar-height:         56px;
+  --content-max-width:     1320px;
+
+  /* ── v0-ui alias tokens (map to existing brand tokens) ────── */
+  --danger:              var(--color-danger);
+  --danger-soft:         var(--color-danger-subtle);
+  --warning:             var(--color-warning);
+  --warning-soft:        var(--color-warning-subtle);
+  --success:             var(--color-success);
+  --success-soft:        var(--color-success-subtle);
+  --info:                var(--color-info);
+  --info-soft:           var(--color-info-subtle);
+  --sidebar-muted:       var(--sidebar-text-muted);
+  --sidebar-accent:      var(--sidebar-active-bg);
+  --sidebar-accent-foreground: var(--sidebar-active-text);
+  --sidebar-hover-bg:    var(--sidebar-hover);
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ─── Focus ─────────────────────────────────────────────────── */
+:focus-visible {
+  outline:        2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─── Selection ─────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+h1 { font-size: 1.375rem; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; }
+h2 { font-size: 1.125rem; font-weight: 600; line-height: 1.3;  }
+h3 { font-size: 1rem;     font-weight: 600; line-height: 1.35; }
+h4 { font-size: 0.875rem; font-weight: 600; }
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ─── Sidebar nav interactions ──────────────────────────────── */
+.sidebar-nav-item:hover {
+  background-color: var(--sidebar-hover);
+  opacity: 1;
+}
+.sidebar-nav-item:hover span {
+  color:   var(--sidebar-text);
+  opacity: 1;
+}
+
+/* ─── Signout button (inside dark sidebar) ──────────────────── */
+.signout-btn:hover {
+  background-color: rgba(133, 30, 30, 0.20) !important;
+  border-color:     rgba(133, 30, 30, 0.55) !important;
+  color:            #D44848 !important;
+}
+
+/* ─── Button base interactions ──────────────────────────────── */
+.btn-primary {
+  background-color: var(--color-primary);
+  color:            var(--color-primary-fg);
+  border:           none;
+  transition:       background-color 0.15s, box-shadow 0.15s;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow:       0 2px 8px rgba(20,45,80,0.22);
+}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background-color: var(--color-surface);
+  color:            var(--color-text-secondary);
+  border:           1px solid var(--color-border);
+  transition:       background-color 0.15s, border-color 0.15s;
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-surface-muted);
+  border-color:     var(--color-border-strong);
+}
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color:            var(--color-danger-fg);
+  border:           none;
+  transition:       background-color 0.15s;
+}
+.btn-danger:hover:not(:disabled) { background-color: var(--color-danger-hover); }
+.btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── Input focus ring ──────────────────────────────────────── */
+input:focus,
+select:focus,
+textarea:focus {
+  outline:      none;
+  border-color: var(--color-primary) !important;
+  box-shadow:   0 0 0 3px rgba(20, 45, 80, 0.1);
+}
+
+/* ─── Table row hover ───────────────────────────────────────── */
+.tbl-row {
+  transition: background-color 0.1s;
+}
+.tbl-row:hover {
+  background-color: var(--color-surface-subtle);
+}
+
+/* ─── Link inside table rows ────────────────────────────────── */
+.link-row {
+  color:           var(--color-text-primary);
+  text-decoration: none;
+  font-weight:     500;
+  transition:      color 0.1s;
+}
+.link-row:hover {
+  color: var(--color-primary);
+}
+
+/* ── FilterTab active item ── */
+.filter-tab-active {
+  box-shadow: 0 1px 3px rgba(29, 31, 30, 0.08), 0 1px 1px rgba(29, 31, 30, 0.04);
+}
+
+/* ── KPI cards get a subtle lift on hover ── */
+.kpi-card-hover {
+  transition: box-shadow 150ms ease, transform 150ms ease;
+}
+.kpi-card-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* ─── Utility Layer ─────────────────────────────────────────────── */
+
+/* Focus ring */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Surface card — base style for all cards */
+.surface-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+/* Sidebar nav item */
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sidebar-text);
+  opacity: 0.75;
+  text-decoration: none;
+  transition: background-color 120ms ease, opacity 120ms ease;
+  cursor: pointer;
+}
+.sidebar-nav-item.active {
+  background-color: var(--sidebar-active-bg);
+  opacity: 1;
+  color: var(--sidebar-active-text);
+}
+
+/* Page content container */
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Section divider */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
+
+/* Monospace code/id tag */
+.mono-tag {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* Subtle animation for spinners/loading */
+@keyframes spin-smooth {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-smooth {
+  animation: spin-smooth 0.8s linear infinite;
+}
+
+/* Fade in */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 200ms ease forwards;
+}
+
+/* frappe-gantt (Phase 02) — library CSS imported from GanttChart.tsx */
+.gantt-os-root .gantt .bar {
+  fill: var(--color-primary);
+}
+.gantt-os-root .gantt .bar-progress {
+  fill: var(--color-primary);
+  opacity: 0.55;
+}
+.gantt-os-root .gantt .bar-label {
+  fill: var(--color-text-primary);
+}
+.gantt-os-root .gantt .grid-header {
+  fill: var(--color-surface-muted);
+}
+.gantt-os-root .gantt .tick {
+  stroke: var(--color-border);
+}

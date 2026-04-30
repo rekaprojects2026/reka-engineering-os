@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(grep -n \"STATUS_CONFIG\\\\|LOAD_COLOR\\\\|STATUS_PILL\\\\|WeekRow\\\\|KIND_COLORS\" components/modules/dashboard/*.tsx)",
+      "Bash(grep \"\\\\.tsx$\")",
+      "Bash(npm install *)",
+      "Bash(exist \"D:\\\\Reka Projects\\\\reka-engineering-os\\\\.claire\" rmdir /s /q \"D:\\\\Reka Projects\\\\reka-engineering-os\\\\.claire\")"
+    ]
+  }
+}

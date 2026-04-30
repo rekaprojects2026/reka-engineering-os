@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reka Engineering OS — UI Mockup v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:          #1B3A6B;
+  --navy-dark:     #0F2240;
+  --navy-mid:      #234B8A;
+  --navy-light:    #EBF1FA;
+  --navy-subtle:   #F2F6FD;
+
+  --crimson:       #8B1A1A;
+  --crimson-dark:  #6F1212;
+  --crimson-light: #FBF0F0;
+
+  --charcoal:      #141414;
+  --warm-brown:    #4A3F3A;
+  --warm-brown-lt: #7A6E68;
+
+  --cream:         #FDFAF5;
+  --cream-mid:     #F5F0E8;
+  --cream-dark:    #EDE6D8;
+  --cream-border:  #E2D9CC;
+  --white:         #FFFFFF;
+
+  --green:         #1A6340;
+  --green-bg:      #EDFAF3;
+  --amber:         #8A4A08;
+  --amber-bg:      #FDF4E7;
+  --purple:        #5B4BAD;
+  --purple-bg:     #F0EEF9;
+
+  /* Sidebar */
+  --sb-bg:       #141414;
+  --sb-hover:    rgba(255,255,255,0.055);
+  --sb-active:   rgba(27,58,107,0.45);
+  --sb-text:     rgba(255,255,255,0.80);
+  --sb-muted:    rgba(255,255,255,0.36);
+  --sb-border:   rgba(255,255,255,0.065);
+
+  --shadow-xs: 0 1px 2px rgba(20,20,20,0.06);
+  --shadow-sm: 0 1px 3px rgba(20,20,20,0.07), 0 1px 2px rgba(20,20,20,0.04);
+  --shadow-md: 0 4px 16px rgba(20,20,20,0.09), 0 1px 4px rgba(20,20,20,0.05);
+  --shadow-lg: 0 8px 32px rgba(20,20,20,0.12), 0 2px 8px rgba(20,20,20,0.06);
+
+  --radius-card: 10px;
+  --radius-btn:  6px;
+  --radius-pill: 999px;
+
+  --sidebar-w: 242px;
+  --topbar-h:  56px;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  background: var(--cream-mid);
+  color: var(--charcoal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════ LAYOUT ══════════ */
+.shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* ══════════ SIDEBAR ══════════ */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--sb-bg);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  border-right: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Crimson signature line at top */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, var(--crimson) 0%, #C0392B 60%, transparent 100%);
+  z-index: 10;
+}
+
+/* Subtle navy glow at top */
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(27,58,107,0.1) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: var(--topbar-h);
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+  margin-top: 2.5px;
+}
+
+.sb-logo-mark {
+  width: 29px;
+  height: 29px;
+  background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy-dark) 100%);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(27,58,107,0.5), 0 2px 6px rgba(0,0,0,0.35);
+}
+
+.sb-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+.sb-logo-name { font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.93); letter-spacing: -0.2px; }
+.sb-logo-sub  { font-size: 10px; color: var(--sb-muted); font-weight: 500; letter-spacing: 0.03em; }
+
+.sb-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sb-group { margin-top: 10px; }
+.sb-group:first-child { margin-top: 0; }
+
+.sb-group-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--sb-muted);
+  text-transform: uppercase;
+  padding: 0 10px;
+  margin-bottom: 3px;
+  margin-top: 2px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6.5px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sb-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease;
+  position: relative;
+}
+
+.sb-item:hover { background: var(--sb-hover); }
+
+.sb-item.active {
+  background: var(--sb-active);
+  color: white;
+  font-weight: 600;
+}
+
+.sb-item.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: var(--navy-mid);
+  border-radius: 0 3px 3px 0;
+}
+
+.sb-icon { width: 15px; height: 15px; opacity: 0.75; flex-shrink: 0; }
+.sb-item.active .sb-icon { opacity: 1; }
+
+.sb-badge {
+  margin-left: auto;
+  background: var(--crimson);
+  color: white;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  min-width: 17px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(139,26,26,0.45);
+}
+
+.sb-divider { border: none; border-top: 1px solid var(--sb-border); margin: 6px 8px; }
+
+.sb-footer {
+  padding: 10px 8px;
+  border-top: 1px solid var(--sb-border);
+  flex-shrink: 0;
+}
+
+.sb-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 120ms;
+}
+.sb-user:hover { background: var(--sb-hover); }
+
+.sb-avatar-wrap { position: relative; flex-shrink: 0; }
+
+.sb-avatar {
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2A4A80 0%, var(--navy-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.1);
+}
+
+.sb-online-dot {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 8px; height: 8px;
+  background: #22C55E;
+  border-radius: 50%;
+  border: 1.5px solid var(--sb-bg);
+}
+
+.sb-user-info { flex: 1; min-width: 0; }
+.sb-user-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.88); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-user-role { font-size: 10.5px; color: var(--sb-muted); }
+.sb-user-chevron { color: var(--sb-muted); font-size: 10px; }
+
+/* ══════════ MAIN ══════════ */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+/* ══════════ TOPBAR ══════════ */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--cream-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.topbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--warm-brown-lt);
+}
+.topbar-breadcrumb strong { color: var(--charcoal); font-weight: 600; }
+.topbar-sep { opacity: 0.4; font-size: 11px; }
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--cream-mid);
+  border: 1px solid var(--cream-border);
+  border-radius: 7px;
+  padding: 0 11px;
+  height: 33px;
+  width: 230px;
+  color: var(--warm-brown-lt);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+.topbar-search:hover { border-color: var(--cream-dark); box-shadow: var(--shadow-xs); }
+
+.topbar-kbd {
+  margin-left: auto;
+  font-size: 9.5px;
+  background: var(--cream-border);
+  color: var(--warm-brown-lt);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.topbar-spacer { flex: 1; }
+
+.topbar-actions { display: flex; align-items: center; gap: 6px; }
+
+.topbar-icon-btn {
+  width: 33px; height: 33px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: none; cursor: pointer;
+  color: var(--warm-brown);
+  transition: background 120ms;
+  position: relative;
+  font-size: 15px;
+}
+.topbar-icon-btn:hover { background: var(--cream-mid); }
+
+.topbar-notif-dot {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 8px; height: 8px;
+  background: var(--crimson);
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+.topbar-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2A4A80 0%, var(--navy-dark) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+  cursor: pointer;
+  border: 2px solid var(--cream-border);
+  box-shadow: 0 1px 4px rgba(27,58,107,0.2);
+}
+
+.topbar-divider {
+  width: 1px; height: 20px;
+  background: var(--cream-border);
+  margin: 0 2px;
+}
+
+/* ══════════ CONTENT ══════════ */
+.content { flex: 1; overflow-y: auto; padding: 24px 26px; }
+
+/* ══════════ PAGE HEADER ══════════ */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.page-title { font-size: 19px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.4px; }
+.page-sub   { font-size: 12.5px; color: var(--warm-brown-lt); margin-top: 2px; }
+.page-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ══════════ BUTTONS ══════════ */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 14px; height: 34px;
+  border-radius: var(--radius-btn);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: all 140ms ease;
+  letter-spacing: -0.1px;
+  text-decoration: none; white-space: nowrap;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--navy);
+  color: white;
+  box-shadow: 0 1px 3px rgba(27,58,107,0.3);
+}
+.btn-primary:hover { background: var(--navy-dark); box-shadow: 0 3px 10px rgba(27,58,107,0.35); transform: translateY(-1px); }
+
+.btn-outline {
+  background: white; color: var(--warm-brown);
+  border: 1px solid var(--cream-border);
+  box-shadow: var(--shadow-xs);
+}
+.btn-outline:hover { background: var(--cream-mid); border-color: var(--cream-dark); }
+
+.btn-ghost {
+  background: transparent; color: var(--warm-brown);
+  border: none; padding: 0 10px; font-size: 12.5px;
+}
+.btn-ghost:hover { background: var(--cream-mid); color: var(--navy); }
+
+.btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.btn-xs { height: 24px; padding: 0 8px; font-size: 11.5px; border-radius: 5px; }
+
+/* ══════════ KPI CARDS ══════════ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--cream-border);
+  border-radius: var(--radius-card);
+  padding: 16px 18px 14px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 150ms ease, transform 150ms ease;
+  cursor: default;
+}
+.kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.kpi-accent {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: 10px 10px 0 0;
+}
+.kpi-accent.navy    { background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%); }
+.kpi-accent.crimson { background: linear-gradient(90deg, var(--crimson) 0%, #C0392B 100%); }
+.kpi-accent.green   { background: linear-gradient(90deg, var(--green) 0%, #22A06B 100%); }
+.kpi-accent.amber   { background: linear-gradient(90deg, var(--amber) 0%, #D97706 100%); }
+
+.kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+
+.kpi-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--warm-brown-lt); }
+
+.kpi-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+.kpi-icon.navy    { background: var(--navy-light);   color: var(--navy); }
+.kpi-icon.crimson { background: var(--crimson-light); color: var(--crimson); }
+.kpi-icon.green   { background: var(--green-bg);      color: var(--green); }
+.kpi-icon.amber   { background: var(--amber-bg);      color: var(--amber); }
+
+.kpi-value { font-size: 24px; font-weight: 800; color: var(--charcoal); letter-spacing: -0.8px; line-height: 1; margin-bottom: 8px; }
+
+.kpi-footer { display: flex; align-items: flex-end; justify-content: space-between; }
+
+.kpi-trend { font-size: 11.5px; color: var(--warm-brown-lt); display: flex; align-items: center; gap: 4px; }
+.trend-up   { color: var(--green); font-weight: 700; }
+.trend-down { color: var(--crimson); font-weight: 700; }
+
+/* Sparkline */
+.sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+}
+.sparkline-bar {
+  width: 4px;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.6;
+  transition: opacity 150ms;
+}
+.kpi-card:hover .sparkline-bar { opacity: 1; }
+
+/* ══════════ SECTION CARD ══════════ */
+.section-card {
+  background: var(--white);
+  border: 1px solid var(--cream-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.section-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--cream-border);
+}
+.section-card-title { font-size: 13.5px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.1px; }
+.section-card-sub   { font-size: 11.5px; color: var(--warm-brown-lt); margin-top: 1px; }
+.section-card-actions { display: flex; align-items: center; gap: 6px; }
+
+/* ══════════ FILTER TABS ══════════ */
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--cream-border);
+  background: var(--white);
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.filter-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px; font-weight: 500;
+  color: var(--warm-brown-lt);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 120ms, border-color 120ms;
+  white-space: nowrap;
+  border: none; background: none; font-family: inherit;
+}
+
+.filter-tab:hover { color: var(--charcoal); }
+
+.filter-tab.active {
+  color: var(--navy);
+  font-weight: 600;
+  border-bottom-color: var(--navy);
+}
+
+.filter-tab-count {
+  font-size: 10.5px; font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--cream-mid);
+  color: var(--warm-brown);
+  transition: background 120ms, color 120ms;
+}
+
+.filter-tab.active .filter-tab-count {
+  background: var(--navy-light);
+  color: var(--navy);
+}
+
+.filter-tab-count.danger {
+  background: var(--crimson-light);
+  color: var(--crimson);
+}
+
+/* ══════════ FILTER BAR ══════════ */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  background: var(--cream-mid);
+  border-bottom: 1px solid var(--cream-border);
+}
+
+.filter-input {
+  display: flex; align-items: center; gap: 7px;
+  background: white; border: 1px solid var(--cream-border);
+  border-radius: 6px; padding: 0 10px; height: 30px;
+  font-size: 12.5px; color: var(--warm-brown-lt);
+  flex: 1; max-width: 200px;
+}
+
+.filter-select {
+  height: 30px; background: white;
+  border: 1px solid var(--cream-border); border-radius: 6px;
+  padding: 0 9px; font-size: 12.5px; color: var(--warm-brown);
+  cursor: pointer; font-family: inherit;
+}
+
+.filter-spacer { flex: 1; }
+.result-count { font-size: 11.5px; color: var(--warm-brown-lt); }
+
+/* ══════════ TABLE ══════════ */
+.data-table { width: 100%; border-collapse: collapse; }
+
+.data-table th {
+  text-align: left;
+  padding: 9px 16px;
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--warm-brown-lt);
+  background: var(--cream-mid);
+  border-bottom: 1px solid var(--cream-border);
+  white-space: nowrap;
+}
+
+.data-table th.sortable { cursor: pointer; user-select: none; }
+.data-table th.sortable:hover { color: var(--charcoal); }
+.sort-icon { opacity: 0.4; font-size: 9px; margin-left: 3px; }
+.sorted .sort-icon { opacity: 1; color: var(--navy); }
+
+.data-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid #F0EAE0;
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background 100ms;
+  cursor: pointer;
+  position: relative;
+}
+.data-table tbody tr:hover { background: var(--cream-mid); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr.overdue-row { background: #FFF8F8; }
+.data-table tbody tr.overdue-row:hover { background: #FFEFEF; }
+
+/* Row actions — appear on hover */
+.row-actions {
+  display: flex; align-items: center; gap: 4px;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+.data-table tbody tr:hover .row-actions { opacity: 1; }
+
+.row-action-btn {
+  height: 24px; padding: 0 8px;
+  border-radius: 5px; font-size: 11px; font-weight: 600;
+  cursor: pointer; border: none; font-family: inherit;
+  transition: background 100ms;
+  display: flex; align-items: center; gap: 4px;
+}
+
+.row-action-btn.view {
+  background: var(--navy-light); color: var(--navy);
+}
+.row-action-btn.view:hover { background: var(--navy); color: white; }
+
+.row-action-btn.more {
+  background: var(--cream-mid); color: var(--warm-brown);
+  width: 24px; padding: 0; justify-content: center;
+}
+.row-action-btn.more:hover { background: var(--cream-dark); }
+
+/* ══════════ BADGES ══════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 600;
+  line-height: 1; white-space: nowrap;
+}
+
+.badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%; flex-shrink: 0;
+}
+
+/* Pulsing dot for active status */
+.badge-dot.pulse {
+  position: relative;
+}
+.badge-dot.pulse::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 currentColor; opacity: 0.6; }
+  70%  { box-shadow: 0 0 0 5px currentColor; opacity: 0; }
+  100% { box-shadow: 0 0 0 0 currentColor; opacity: 0; }
+}
+
+.badge-draft    { background: #F0EBE3; color: #7A6E68; }
+.badge-draft .badge-dot { background: #A89E97; }
+
+.badge-active   { background: var(--navy-light); color: var(--navy); }
+.badge-active .badge-dot { background: var(--navy); color: var(--navy); }
+
+.badge-progress { background: #FFF7E6; color: var(--amber); }
+.badge-progress .badge-dot { background: #E09A30; }
+
+.badge-review   { background: var(--purple-bg); color: var(--purple); }
+.badge-review .badge-dot { background: #7C6CD4; }
+
+.badge-done     { background: var(--green-bg); color: var(--green); }
+.badge-done .badge-dot { background: var(--green); }
+
+.badge-danger   { background: var(--crimson-light); color: var(--crimson); }
+.badge-danger .badge-dot { background: var(--crimson); }
+
+.badge-pending  { background: var(--amber-bg); color: var(--amber); }
+.badge-pending .badge-dot { background: #D97706; }
+
+/* ══════════ DISCIPLINE CODE TAGS ══════════ */
+.disc-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px; font-weight: 700;
+  white-space: nowrap;
+}
+/* Structural = Navy */
+.disc-tag.structural { background: var(--navy-light); color: var(--navy); border: 1px solid #C8D9F0; }
+/* MEP = Amber */
+.disc-tag.mep        { background: var(--amber-bg); color: var(--amber); border: 1px solid #F0D8B0; }
+/* Architecture = Green */
+.disc-tag.arch       { background: var(--green-bg); color: var(--green); border: 1px solid #B0E0C8; }
+
+.proj-code {
+  font-size: 10.5px; font-weight: 600;
+  color: var(--warm-brown-lt);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+  display: block;
+}
+
+/* ══════════ PROGRESS BAR ══════════ */
+.progress-wrap { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.progress-bar  { flex: 1; height: 5px; background: var(--cream-dark); border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; transition: width 600ms ease; }
+.progress-fill.navy    { background: linear-gradient(90deg, var(--navy-mid), var(--navy)); }
+.progress-fill.green   { background: linear-gradient(90deg, #22A06B, var(--green)); }
+.progress-fill.amber   { background: linear-gradient(90deg, #D97706, var(--amber)); }
+.progress-fill.crimson { background: linear-gradient(90deg, #C0392B, var(--crimson)); }
+.progress-pct { font-size: 11px; font-weight: 700; color: var(--warm-brown-lt); white-space: nowrap; }
+
+/* ══════════ AVATAR STACK ══════════ */
+.avatar-stack { display: flex; align-items: center; }
+.avatar-sm {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy);
+  color: white; font-size: 8.5px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid white;
+  margin-left: -5px;
+}
+.avatar-sm:first-child { margin-left: 0; }
+.avatar-sm.c { background: var(--crimson); }
+.avatar-sm.g { background: var(--green); }
+.avatar-sm.a { background: #C67C1A; }
+.avatar-sm.p { background: var(--purple); }
+.avatar-sm.n { background: #555; }
+
+/* ══════════ TWO COL ══════════ */
+.two-col { display: grid; grid-template-columns: 1fr 292px; gap: 18px; align-items: start; }
+
+/* ══════════ WORKLOAD WIDGET ══════════ */
+.workload-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px;
+  border-bottom: 1px solid #F0EAE0;
+  transition: background 100ms;
+  cursor: default;
+}
+.workload-item:last-child { border-bottom: none; }
+.workload-item:hover { background: var(--cream-mid); }
+
+.workload-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10.5px; font-weight: 800; color: white; flex-shrink: 0;
+}
+
+.workload-info { flex: 1; min-width: 0; }
+.workload-name { font-size: 12.5px; font-weight: 600; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.workload-role { font-size: 11px; color: var(--warm-brown-lt); }
+
+.workload-right { text-align: right; flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.workload-bar-wrap { width: 48px; }
+.workload-count { font-size: 13px; font-weight: 800; min-width: 20px; text-align: right; }
+
+.wc-overload { color: var(--crimson); }
+.wc-high     { color: var(--amber); }
+.wc-normal   { color: var(--navy); }
+.wc-low      { color: var(--green); }
+
+/* ══════════ STAT STRIP ══════════ */
+.stat-strip { display: flex; border-bottom: 1px solid #F0EAE0; }
+.stat-strip-item {
+  flex: 1; padding: 10px 14px;
+  border-right: 1px solid #F0EAE0;
+  text-align: center;
+}
+.stat-strip-item:last-child { border-right: none; }
+.stat-strip-val   { font-size: 16px; font-weight: 800; }
+.stat-strip-label { font-size: 10px; color: var(--warm-brown-lt); margin-top: 1px; }
+
+/* ══════════ NOTIF / ATTENTION ══════════ */
+.notif-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 18px;
+  border-bottom: 1px solid #F0EAE0;
+  transition: background 100ms; cursor: pointer;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--cream-mid); }
+
+.notif-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0; margin-top: 1px;
+}
+.notif-icon.red    { background: var(--crimson-light); }
+.notif-icon.amber  { background: var(--amber-bg); }
+.notif-icon.navy   { background: var(--navy-light); }
+
+.notif-body { flex: 1; }
+.notif-text { font-size: 12.5px; color: var(--charcoal); line-height: 1.4; }
+.notif-text strong { font-weight: 600; }
+.notif-time { font-size: 11px; color: var(--warm-brown-lt); margin-top: 2px; }
+
+/* ══════════ EMPTY STATE ══════════ */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center;
+  padding: 52px 24px;
+  text-align: center;
+}
+
+.empty-illustration {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  background: var(--navy-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 0 8px #EBF1FA80;
+}
+
+.empty-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--charcoal); margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.empty-desc {
+  font-size: 12.5px; color: var(--warm-brown-lt);
+  max-width: 260px; line-height: 1.55; margin-bottom: 18px;
+}
+
+/* ══════════ SCROLLBAR ══════════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cream-border); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cream-dark); }
+
+/* ══════════ SVG ICONS ══════════ */
+.ico { display: inline-block; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">RE</div>
+      <div class="sb-logo-text">
+        <span class="sb-logo-name">Reka Engineering</span>
+        <span class="sb-logo-sub">Workspace OS</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-group">
+        <div class="sb-item active">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="5.5" height="5.5" rx="1.2"/><rect x="8.5" y="2" width="5.5" height="5.5" rx="1.2"/><rect x="2" y="8.5" width="5.5" height="5.5" rx="1.2"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.2"/></svg>
+          Dashboard
+        </div>
+      </div>
+
+      <hr class="sb-divider">
+
+      <div class="sb-group">
+        <div class="sb-group-label">Operasional</div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3h10v10H3z" rx="1.5"/><path d="M6 8h4M6 5.5h4M6 10.5h2"/></svg>
+          Proyek
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v2.5l1.5 1.5"/></svg>
+          Tasks
+          <span class="sb-badge">12</span>
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 2h6l3 3v9H4z"/><path d="M10 2v3h3"/><path d="M6 8h4M6 10.5h3"/></svg>
+          Deliverables
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><path d="M8 8.5v.5"/></svg>
+          Files
+        </div>
+      </div>
+
+      <hr class="sb-divider">
+
+      <div class="sb-group">
+        <div class="sb-group-label">Bisnis</div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="5.5" r="2.5"/><path d="M2.5 14c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
+          Klien
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M8 3v10M2 8h12"/></svg>
+          Finance
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 2L2 5.5v4c0 2.8 2.7 5 6 5.5 3.3-.5 6-2.7 6-5.5v-4L8 2z"/></svg>
+          Kompensasi
+        </div>
+      </div>
+
+      <hr class="sb-divider">
+
+      <div class="sb-group">
+        <div class="sb-group-label">Tim & Sistem</div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5.5" cy="5.5" r="2"/><path d="M1.5 13c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="11.5" cy="5" r="1.5"/><path d="M13.5 11c0-1.5-1-2.5-2.5-2.5"/></svg>
+          Tim
+        </div>
+        <div class="sb-item">
+          <svg class="sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4"/></svg>
+          Settings
+        </div>
+      </div>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar-wrap">
+          <div class="sb-avatar">AT</div>
+          <div class="sb-online-dot"></div>
+        </div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Ardella Teguh</div>
+          <div class="sb-user-role">Direktur</div>
+        </div>
+        <span class="sb-user-chevron">⌄</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════ MAIN ══════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        Reka Engineering
+        <span class="topbar-sep">/</span>
+        <strong>Dashboard</strong>
+      </div>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="topbar-search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+        Cari proyek, task, file...
+        <span class="topbar-kbd">⌘K</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 2a4.5 4.5 0 014.5 4.5c0 2 .5 3.5 1.5 4.5H2c1-1 1.5-2.5 1.5-4.5A4.5 4.5 0 018 2z"/><path d="M6.5 13a1.5 1.5 0 003 0"/></svg>
+          <span class="topbar-notif-dot"></span>
+        </button>
+        <div class="topbar-divider"></div>
+        <div class="topbar-avatar">AT</div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="page-title">Selamat pagi, Ardella 👋</div>
+          <div class="page-sub">Kamis, 24 April 2025 · Ringkasan operasional hari ini</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8v5h10V8M8 2v8M5 5l3-3 3 3"/></svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>
+            Proyek Baru
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+
+        <!-- KPI 1 -->
+        <div class="kpi-card">
+          <div class="kpi-accent navy"></div>
+          <div class="kpi-header">
+            <span class="kpi-label">Proyek Aktif</span>
+            <div class="kpi-icon navy">📁</div>
+          </div>
+          <div class="kpi-value">18</div>
+          <div class="kpi-footer">
+            <div class="kpi-trend"><span class="trend-up">↑ 3</span> dari bulan lalu</div>
+            <div class="sparkline">
+              <div class="sparkline-bar" style="height:8px;background:var(--navy);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:12px;background:var(--navy);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:9px;background:var(--navy);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:15px;background:var(--navy);opacity:.5"></div>
+              <div class="sparkline-bar" style="height:11px;background:var(--navy);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:18px;background:var(--navy);opacity:.6"></div>
+              <div class="sparkline-bar" style="height:24px;background:var(--navy)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="kpi-card">
+          <div class="kpi-accent crimson"></div>
+          <div class="kpi-header">
+            <span class="kpi-label">Task Overdue</span>
+            <div class="kpi-icon crimson">⚠️</div>
+          </div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-footer">
+            <div class="kpi-trend"><span class="trend-down">↑ 2</span> dari minggu lalu</div>
+            <div class="sparkline">
+              <div class="sparkline-bar" style="height:6px;background:var(--crimson);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:4px;background:var(--crimson);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:10px;background:var(--crimson);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:7px;background:var(--crimson);opacity:.35"></div>
+              <div class="sparkline-bar" style="height:5px;background:var(--crimson);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:12px;background:var(--crimson);opacity:.5"></div>
+              <div class="sparkline-bar" style="height:18px;background:var(--crimson)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="kpi-card">
+          <div class="kpi-accent green"></div>
+          <div class="kpi-header">
+            <span class="kpi-label">Invoice Bulan Ini</span>
+            <div class="kpi-icon green">💰</div>
+          </div>
+          <div class="kpi-value" style="font-size:19px;letter-spacing:-0.5px">Rp 284 jt</div>
+          <div class="kpi-footer">
+            <div class="kpi-trend"><span class="trend-up">↑ 12%</span> vs target</div>
+            <div class="sparkline">
+              <div class="sparkline-bar" style="height:10px;background:var(--green);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:14px;background:var(--green);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:18px;background:var(--green);opacity:.5"></div>
+              <div class="sparkline-bar" style="height:12px;background:var(--green);opacity:.35"></div>
+              <div class="sparkline-bar" style="height:20px;background:var(--green);opacity:.55"></div>
+              <div class="sparkline-bar" style="height:16px;background:var(--green);opacity:.45"></div>
+              <div class="sparkline-bar" style="height:24px;background:var(--green)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="kpi-card">
+          <div class="kpi-accent amber"></div>
+          <div class="kpi-header">
+            <span class="kpi-label">Perlu Approval</span>
+            <div class="kpi-icon amber">📋</div>
+          </div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-footer">
+            <div class="kpi-trend" style="color:var(--amber)">3 urgent · 2 biasa</div>
+            <div class="sparkline">
+              <div class="sparkline-bar" style="height:12px;background:var(--amber);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:8px;background:var(--amber);opacity:.3"></div>
+              <div class="sparkline-bar" style="height:16px;background:var(--amber);opacity:.45"></div>
+              <div class="sparkline-bar" style="height:20px;background:var(--amber);opacity:.55"></div>
+              <div class="sparkline-bar" style="height:10px;background:var(--amber);opacity:.35"></div>
+              <div class="sparkline-bar" style="height:14px;background:var(--amber);opacity:.4"></div>
+              <div class="sparkline-bar" style="height:18px;background:var(--amber)"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Two column -->
+      <div class="two-col">
+
+        <!-- Projects Table -->
+        <div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <div>
+                <div class="section-card-title">Proyek Aktif</div>
+                <div class="section-card-sub">18 proyek berjalan saat ini</div>
+              </div>
+              <div class="section-card-actions">
+                <button class="btn btn-ghost btn-sm">Lihat Semua →</button>
+                <button class="btn btn-primary btn-sm">＋ Baru</button>
+              </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+              <button class="filter-tab active">
+                Semua <span class="filter-tab-count">18</span>
+              </button>
+              <button class="filter-tab">
+                Active <span class="filter-tab-count">12</span>
+              </button>
+              <button class="filter-tab">
+                Review <span class="filter-tab-count">3</span>
+              </button>
+              <button class="filter-tab">
+                Overdue <span class="filter-tab-count danger">3</span>
+              </button>
+              <button class="filter-tab">
+                Selesai <span class="filter-tab-count">4</span>
+              </button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+              <div class="filter-input">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+                Cari proyek...
+              </div>
+              <select class="filter-select">
+                <option>Semua Disiplin</option>
+                <option>Structural</option>
+                <option>MEP</option>
+                <option>Architecture</option>
+              </select>
+              <select class="filter-select">
+                <option>Semua Fase</option>
+                <option>Schematic Design</option>
+                <option>Detail Design</option>
+                <option>Construction</option>
+              </select>
+              <div class="filter-spacer"></div>
+              <span class="result-count">18 proyek</span>
+            </div>
+
+            <!-- Table -->
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th class="sortable sorted">Proyek <span class="sort-icon">↑</span></th>
+                  <th>Klien</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                  <th class="sortable">Deadline <span class="sort-icon">↕</span></th>
+                  <th>Tim</th>
+                  <th style="width:1px"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td>
+                    <span class="proj-code">RKA-2025-001</span>
+                    <div style="font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:4px">Kantor Pusat Mandiri Tower</div>
+                    <span class="disc-tag structural">Structural · SD</span>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;font-weight:500;color:var(--charcoal)">PT Bank Mandiri</div>
+                    <div style="font-size:11.5px;color:var(--warm-brown-lt)">Jakarta Selatan</div>
+                  </td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-bar"><div class="progress-fill navy" style="width:65%"></div></div>
+                      <span class="progress-pct">65%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-progress"><span class="badge-dot"></span>In Progress</span></td>
+                  <td><span style="font-size:12px;color:var(--warm-brown)">31 Mei 2025</span></td>
+                  <td>
+                    <div class="avatar-stack">
+                      <div class="avatar-sm" title="Dewi W.">DW</div>
+                      <div class="avatar-sm c" title="Arif R.">AR</div>
+                      <div class="avatar-sm g" title="Budi N.">BN</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn view">Lihat</button>
+                      <button class="row-action-btn more">···</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="proj-code">RKA-2025-004</span>
+                    <div style="font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:4px">Residensial Green Valley</div>
+                    <span class="disc-tag mep">MEP · Detail Design</span>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;font-weight:500;color:var(--charcoal)">PT Ciputra Jaya</div>
+                    <div style="font-size:11.5px;color:var(--warm-brown-lt)">Tangerang</div>
+                  </td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-bar"><div class="progress-fill green" style="width:88%"></div></div>
+                      <span class="progress-pct" style="color:var(--green)">88%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-review"><span class="badge-dot"></span>Review</span></td>
+                  <td><span style="font-size:12px;color:var(--warm-brown)">10 Mei 2025</span></td>
+                  <td>
+                    <div class="avatar-stack">
+                      <div class="avatar-sm a" title="Fitra S.">FS</div>
+                      <div class="avatar-sm" title="Rini I.">RI</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn view">Lihat</button>
+                      <button class="row-action-btn more">···</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="overdue-row">
+                  <td>
+                    <span class="proj-code" style="color:var(--crimson)">RKA-2024-019</span>
+                    <div style="font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:4px">Jembatan Tol Cikampek</div>
+                    <span class="disc-tag structural">Structural · Construction</span>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;font-weight:500;color:var(--charcoal)">Jasa Marga</div>
+                    <div style="font-size:11.5px;color:var(--warm-brown-lt)">Bekasi</div>
+                  </td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-bar"><div class="progress-fill crimson" style="width:42%"></div></div>
+                      <span class="progress-pct" style="color:var(--crimson)">42%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-danger"><span class="badge-dot"></span>Overdue</span></td>
+                  <td><span style="font-size:12px;color:var(--crimson);font-weight:700">↑ 8 hari lalu</span></td>
+                  <td>
+                    <div class="avatar-stack">
+                      <div class="avatar-sm c" title="Yoga P.">YP</div>
+                      <div class="avatar-sm n" title="Maya K.">MK</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn view">Lihat</button>
+                      <button class="row-action-btn more">···</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="proj-code">RKA-2025-007</span>
+                    <div style="font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:4px">Hotel Bintang Lima Bali</div>
+                    <span class="disc-tag arch">Architecture · SD</span>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;font-weight:500;color:var(--charcoal)">Ayana Resort Group</div>
+                    <div style="font-size:11.5px;color:var(--warm-brown-lt)">Bali</div>
+                  </td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-bar"><div class="progress-fill navy" style="width:25%"></div></div>
+                      <span class="progress-pct">25%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge badge-active">
+                      <span class="badge-dot pulse" style="background:var(--navy);color:var(--navy)"></span>
+                      Active
+                    </span>
+                  </td>
+                  <td><span style="font-size:12px;color:var(--warm-brown)">30 Sep 2025</span></td>
+                  <td>
+                    <div class="avatar-stack">
+                      <div class="avatar-sm a" title="Rizal T.">RT</div>
+                      <div class="avatar-sm p" title="Lisa W.">LW</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn view">Lihat</button>
+                      <button class="row-action-btn more">···</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="proj-code">RKA-2025-011</span>
+                    <div style="font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:4px">Pergudangan Logistik Surabaya</div>
+                    <span class="disc-tag structural">Structural · Tender</span>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;font-weight:500;color:var(--charcoal)">PT Pos Logistik</div>
+                    <div style="font-size:11.5px;color:var(--warm-brown-lt)">Surabaya</div>
+                  </td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+                      <span class="progress-pct" style="color:var(--green)">100%</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-done"><span class="badge-dot"></span>Selesai</span></td>
+                  <td><span style="font-size:12px;color:var(--green);font-weight:600">✓ 20 Apr 2025</span></td>
+                  <td>
+                    <div class="avatar-stack">
+                      <div class="avatar-sm n" title="Benny K.">BK</div>
+                      <div class="avatar-sm c" title="Lisa W.">LW</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action-btn view">Lihat</button>
+                      <button class="row-action-btn more">···</button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--cream-border);background:var(--cream-mid)">
+              <span style="font-size:12px;color:var(--warm-brown-lt)">Menampilkan 5 dari 18 proyek</span>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-outline btn-xs" style="opacity:.4;cursor:default">←</button>
+                <button class="btn btn-xs" style="background:var(--navy);color:white">1</button>
+                <button class="btn btn-outline btn-xs">2</button>
+                <button class="btn btn-outline btn-xs">3</button>
+                <button class="btn btn-outline btn-xs">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Team Workload -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div>
+                <div class="section-card-title">Beban Tim</div>
+                <div class="section-card-sub">Task aktif per anggota</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" style="font-size:11.5px">Detail →</button>
+            </div>
+
+            <div class="stat-strip">
+              <div class="stat-strip-item">
+                <div class="stat-strip-val" style="color:var(--green)">5</div>
+                <div class="stat-strip-label">Ringan</div>
+              </div>
+              <div class="stat-strip-item">
+                <div class="stat-strip-val" style="color:var(--navy)">8</div>
+                <div class="stat-strip-label">Normal</div>
+              </div>
+              <div class="stat-strip-item">
+                <div class="stat-strip-val" style="color:var(--amber)">3</div>
+                <div class="stat-strip-label">Tinggi</div>
+              </div>
+              <div class="stat-strip-item">
+                <div class="stat-strip-val" style="color:var(--crimson)">2</div>
+                <div class="stat-strip-label">Overload</div>
+              </div>
+            </div>
+
+            <div class="workload-item">
+              <div class="workload-avatar" style="background:var(--crimson)">YP</div>
+              <div class="workload-info">
+                <div class="workload-name">Yoga Pratama</div>
+                <div class="workload-role">Structural Engineer</div>
+              </div>
+              <div class="workload-right">
+                <div class="workload-bar-wrap">
+                  <div class="progress-bar"><div class="progress-fill crimson" style="width:100%"></div></div>
+                </div>
+                <div class="workload-count wc-overload">16</div>
+              </div>
+            </div>
+
+            <div class="workload-item">
+              <div class="workload-avatar" style="background:#C67C1A">FS</div>
+              <div class="workload-info">
+                <div class="workload-name">Fitra Sari</div>
+                <div class="workload-role">MEP Designer</div>
+              </div>
+              <div class="workload-right">
+                <div class="workload-bar-wrap">
+                  <div class="progress-bar"><div class="progress-fill amber" style="width:78%"></div></div>
+                </div>
+                <div class="workload-count wc-high">11</div>
+              </div>
+            </div>
+
+            <div class="workload-item">
+              <div class="workload-avatar" style="background:var(--navy)">DW</div>
+              <div class="workload-info">
+                <div class="workload-name">Dewi Wulandari</div>
+                <div class="workload-role">Project Manager</div>
+              </div>
+              <div class="workload-right">
+                <div class="workload-bar-wrap">
+                  <div class="progress-bar"><div class="progress-fill navy" style="width:52%"></div></div>
+                </div>
+                <div class="workload-count wc-normal">7</div>
+              </div>
+            </div>
+
+            <div class="workload-item">
+              <div class="workload-avatar" style="background:var(--green)">BN</div>
+              <div class="workload-info">
+                <div class="workload-name">Budi Nugroho</div>
+                <div class="workload-role">Drafter</div>
+              </div>
+              <div class="workload-right">
+                <div class="workload-bar-wrap">
+                  <div class="progress-bar"><div class="progress-fill green" style="width:36%"></div></div>
+                </div>
+                <div class="workload-count wc-low">5</div>
+              </div>
+            </div>
+
+            <div class="workload-item">
+              <div class="workload-avatar" style="background:#7A6E68">AR</div>
+              <div class="workload-info">
+                <div class="workload-name">Arif Rahman</div>
+                <div class="workload-role">Drafter Junior</div>
+              </div>
+              <div class="workload-right">
+                <div class="workload-bar-wrap">
+                  <div class="progress-bar"><div class="progress-fill green" style="width:15%"></div></div>
+                </div>
+                <div class="workload-count wc-low">2</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Needs Attention -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div>
+                <div class="section-card-title">Perlu Perhatian</div>
+              </div>
+              <span class="badge badge-danger" style="font-size:10.5px">3 urgent</span>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-icon red">🔴</div>
+              <div class="notif-body">
+                <div class="notif-text">Invoice <strong>#INV-2025-041</strong> overdue 5 hari</div>
+                <div class="notif-time">Jasa Marga · Rp 45.000.000</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-icon red">⚡</div>
+              <div class="notif-body">
+                <div class="notif-text">Proyek <strong>Jembatan Tol</strong> melebihi deadline 8 hari</div>
+                <div class="notif-time">Perlu eskalasi segera</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="notif-icon amber">📋</div>
+              <div class="notif-body">
+                <div class="notif-text"><strong>5 proposal</strong> menunggu approval</div>
+                <div class="notif-time">Terlama: 3 hari lalu</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Empty State Example -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div>
+                <div class="section-card-title">Filter: "Overdue MEP"</div>
+                <div class="section-card-sub">Tidak ada hasil</div>
+              </div>
+            </div>
+
+            <div class="empty-state">
+              <div class="empty-illustration">🎉</div>
+              <div class="empty-title">Tidak ada proyek MEP overdue</div>
+              <div class="empty-desc">Semua proyek MEP berjalan sesuai jadwal. Pertahankan!</div>
+              <button class="btn btn-outline btn-sm">Lihat Semua Proyek</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

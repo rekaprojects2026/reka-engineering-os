@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReKa Engineering OS — Panduan Tooltip &amp; Penjelasan Modul</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --brand: #1d4ed8;
+      --brand-soft: #dbeafe;
+      --tooltip-bg: #0f172a;
+      --tooltip-fg: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .layout { display: flex; min-height: 100vh; }
+    nav.doc-nav {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 20px 14px;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    nav.doc-nav h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand);
+      margin: 0 0 4px;
+    }
+    nav.doc-nav .sub { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+    nav.doc-nav a {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 2px;
+    }
+    nav.doc-nav a:hover { background: var(--bg); }
+    nav.doc-nav .group { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 0 6px 8px; }
+    main { flex: 1; padding: 28px 36px 80px; max-width: 920px; }
+    h2 {
+      font-size: 1.35rem;
+      margin: 2.2rem 0 0.75rem;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--brand);
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-size: 1.05rem; margin: 1.4rem 0 0.5rem; color: #0f172a; }
+    p { margin: 0 0 0.75rem; }
+    ul { margin: 0 0 1rem; padding-left: 1.25rem; }
+    li { margin-bottom: 0.35rem; }
+    .callout {
+      background: var(--brand-soft);
+      border: 1px solid #93c5fd;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 0.9rem;
+    }
+    .muted { color: var(--muted); font-size: 0.875rem; }
+    article.card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 14px 0;
+    }
+    article.card h4 { margin: 0 0 8px; font-size: 1rem; }
+    /* —— Tooltip singkat (hover + keyboard focus) —— */
+    .tip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: help;
+      outline: none;
+      border-bottom: 1px dashed var(--muted);
+      font-weight: 600;
+      color: var(--brand);
+    }
+    .tip::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 8px);
+      min-width: 220px;
+      max-width: min(420px, 85vw);
+      padding: 10px 12px;
+      background: var(--tooltip-bg);
+      color: var(--tooltip-fg);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.45;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+      white-space: normal;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .15s ease;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .tip::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      bottom: calc(100% + 2px);
+      border: 6px solid transparent;
+      border-top-color: var(--tooltip-bg);
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .15s ease;
+      z-index: 51;
+    }
+    .tip:hover::after, .tip:focus-visible::after,
+    .tip:hover::before, .tip:focus-visible::before {
+      visibility: visible;
+      opacity: 1;
+    }
+    /* Demo baris: label + trigger */
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+    }
+    details.full-tip {
+      margin: 10px 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 12px 10px;
+      background: var(--surface);
+    }
+    details.full-tip summary {
+      cursor: pointer;
+      font-weight: 600;
+      padding: 10px 0;
+      color: var(--brand);
+    }
+    details.full-tip .body { font-size: 0.9rem; color: var(--text); }
+    table.route {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 12px 0 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table.route th, table.route td {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.route th { background: #e2e8f0; font-weight: 600; }
+    table.route code { font-size: 11px; background: #f1f5f9; padding: 2px 5px; border-radius: 4px; }
+    pre.flow {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .role-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      background: var(--surface);
+    }
+    .role-card strong { display: block; margin-bottom: 4px; color: var(--brand); }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    a.skip {
+      position: absolute;
+      left: -9999px;
+      top: 8px;
+      z-index: 100;
+      padding: 8px 14px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    a.skip:focus { left: 12px; outline: 2px solid #fff; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main-content">Langsung ke isi</a>
+  <div class="layout">
+    <nav class="doc-nav" aria-label="Daftar isi">
+      <h1>ReKa OS — Tooltip</h1>
+      <div class="sub">Panduan statis · Buka file ini langsung di browser</div>
+      <a href="#intro">Pembuka</a>
+      <a href="#roles">8 peran sistem</a>
+      <a href="#konsep">Outreach, Client, Convert</a>
+      <div class="group">Modul</div>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#crm">CRM, Leads &amp; Intakes</a>
+      <a href="#clients">Clients</a>
+      <a href="#projects">Projects</a>
+      <a href="#tasks">Tasks &amp; Deliverables</a>
+      <a href="#files">Files</a>
+      <a href="#finance">Finance</a>
+      <a href="#people">People &amp; Profil</a>
+      <a href="#settings">Settings</a>
+      <a href="#lainnya">Lainnya</a>
+      <a href="#appendix">Appendix route</a>
+    </nav>
+
+    <main id="main-content" tabindex="-1">
+      <h2 id="intro">Pembuka — cara memakai dokumen ini</h2>
+      <p>
+        Dokumen ini adalah <strong>referensi teks</strong> untuk tooltip dan penjelasan modul <strong>ReKa Engineering OS</strong>
+        (Next.js + Supabase). Gunakan sebagai: (1) salin teks ke atribut <code>title</code> di HTML/React untuk tooltip bawaan browser;
+        (2) salin ke komponen tooltip UI; (3) materi onboarding internal.
+      </p>
+      <div class="callout">
+        <strong>Tooltip singkat vs penjelasan penuh.</strong> Baris demo dengan teks bergaris putus-putus biru: arahkan mouse atau fokus keyboard (<kbd>Tab</kbd>) untuk melihat
+        <strong>tooltip hover</strong> (teks di <code>data-tip</code>). Di bawahnya, blok <strong>&lt;details&gt;</strong> berisi penjelasan panjang untuk training / dokumentasi.
+        Untuk produksi React, prefer komponen tooltip yang mengekspos <code>aria-describedby</code> / <code>role=&quot;tooltip&quot;</code> pada elemen munculan; di sini pola CSS hanya contoh visual.
+      </div>
+      <p class="muted">
+        <strong>Navigasi aplikasi nyata:</strong> sidebar <code>AppSidebar</code> menampilkan Dashboard, Operations (Leads, Outreach, Clients, Projects, Tasks saja sesuung role),
+        Finance (Invoices, Compensation, Payslips, Payments, My Payments, plus tautan FX Rates &amp; Payment Accounts ke <code>/settings?tab=finance</code>),
+        People (Team), Admin (Settings). Modul <strong>Deliverables</strong>, <strong>Files</strong>, <strong>Intakes</strong>, <strong>Search</strong>, dll. diakses dari alur lain (URL langsung, tautan internal, atau menu yang tidak ada di potongan sidebar ini).
+      </p>
+      <p class="muted">
+        Menu di aplikasi nyata <strong>tergantung</strong> <code>profiles.system_role</code> (8 nilai: direktur, technical_director, finance, manajer, bd, senior, member, freelancer).
+        Jika suatu modul tidak muncul di sidebar Anda, itu sesuai matriks akses — bukan bug.
+      </p>
+
+      <h2 id="roles">Ringkasan 8 peran (tooltip inti)</h2>
+      <p>Gunakan baris ini sebagai tooltip singkat di pengaturan tim atau halaman admin:</p>
+      <div class="role-grid">
+        <div class="role-card"><strong>direktur</strong> Persetujuan strategis: approve/reject project, void invoice, payslip final, termin domestik; lihat KPI organisasi; team &amp; settings finance biasanya read.</div>
+        <div class="role-card"><strong>technical_director</strong> Operasional penuh: semua project/task/deliverable/file; buat project (pending direktur); settings sistem &amp; file naming; tidak akses invoice/payslip.</div>
+        <div class="role-card"><strong>finance</strong> Invoice, payslip, pembayaran tim, kompensasi (confirm), FX &amp; rekening (tab Finance di Settings); tidak edit master dropdown sistem.</div>
+        <div class="role-card"><strong>manajer</strong> Project yang dipimpin, task/deliverable di project itu, intake buat/edit; propose kompensasi untuk timnya; tanpa finance penuh.</div>
+        <div class="role-card"><strong>bd</strong> Outreach penuh, client baru &amp; kontak, intake; dashboard sales; tanpa finance &amp; tanpa task operasional.</div>
+        <div class="role-card"><strong>senior</strong> Dashboard personal review: task/deliverable sebagai reviewer, approve versi file terkait.</div>
+        <div class="role-card"><strong>member</strong> Task &amp; deliverable yang di-assign, file pada tasknya; tanpa halaman Projects list.</div>
+        <div class="role-card"><strong>freelancer</strong> Hanya task terisolasi (tanpa nama proyek di dashboard), file &amp; deliverable submit; navigasi minimal.</div>
+      </div>
+
+      <h2 id="konsep">Konsep silang — Outreach, Client, Intake/Lead, Convert</h2>
+
+      <article class="card">
+        <h4>Outreach vs Client</h4>
+        <div class="demo-row">
+          <span>Outreach</span>
+          <span id="a11y-outreach-tip" class="sr-only">Daftar prospek perusahaan atau kontak: status follow-up. Belum jadi master klien. Utama diisi BD.</span>
+          <span class="tip" tabindex="0" data-tip="Daftar prospek perusahaan/kontak: status follow-up (dihubungi, balasan, diskusi). Belum jadi master klien. Utama diisi BD." aria-describedby="a11y-outreach-tip">?</span>
+        </div>
+        <details class="full-tip"><summary>Penjelasan penuh — Outreach</summary>
+          <div class="body">
+            <p><strong>Outreach</strong> mencatat siapa yang didekati sebelum ada deal formal. Satu baris = satu entitas prospek (perusahaan/kontak) dengan channel (LinkedIn, email, dll.).</p>
+            <p>Saat prospek “panas”, gunakan aksi <strong>Convert to lead</strong>: sistem membuat <strong>Intake baru</strong> (status new) dengan judul otomatis dari nama perusahaan, dan menandai baris outreach sebagai <code>converted</code>.</p>
+          </div>
+        </details>
+        <div class="demo-row">
+          <span>Client</span>
+          <span class="tip" tabindex="0" data-tip="Master data pelanggan: nama resmi, kode klien, dipakai di project &amp; invoice. Dibuat/dikelola sesuai role (mis. BD buat baru).">?</span>
+        </div>
+        <details class="full-tip"><summary>Penjelasan penuh — Client</summary>
+          <div class="body">
+            <p><strong>Client</strong> adalah entitas bisnis resmi di tabel <code>clients</code>. Dipakai untuk menaut proyek, alamat tagihan, dan referensi invoice.</p>
+            <p><strong>Intake</strong> bisa punya <code>temp_client_name</code> (prospek teks) atau <code>client_id</code> (sudah terhubung ke master client).</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="card">
+        <h4>Dua arti kata “Convert”</h4>
+        <ul>
+          <li><strong>Convert (Outreach)</strong> → membuat <strong>Intake/Lead</strong> baru dari baris outreach. Biasanya role <strong>bd</strong>.</li>
+          <li><strong>Convert to Project</strong> → membuat <strong>Project</strong> dari intake yang sudah qualified/closed. Membutuhkan client (UUID atau dropdown di halaman <code>/intakes/[id]/convert</code>) dan project lead.</li>
+        </ul>
+        <pre class="flow" aria-label="Alur funnel">Outreach (prospek)
+  → [Convert to lead] → Intake / Leads (kualifikasi, data scope)
+    → link ke Client (opsional tapi disarankan)
+      → [Convert to Project] → Project (operasional)
+        → Tasks / Deliverables / Files
+          → (Domestic) Termin &amp; invoice internal</pre>
+      </article>
+
+      <h2 id="dashboard">Dashboard</h2>
+      <p>Route: <code>/dashboard</code>. Konten bergantung role (server memilih komponen).</p>
+
+      <article class="card">
+        <h4>Dashboard Direktur</h4>
+        <div class="demo-row">
+          <span class="tip" tabindex="0" data-tip="KPI organisasi: revenue, P&amp;L, proyek, workload, antrian perlu persetujuan (project pending approval, dll.).">?</span>
+          <span>Ringkasan eksekutif</span>
+        </div>
+        <details class="full-tip"><summary>Detail</summary><div class="body"><p>Fokus monitoring dan keputusan: setujui/tolak project baru, pantau invoice &amp; pembayaran, termin domestik.</p></div></details>
+      </article>
+      <article class="card">
+        <h4>Dashboard Technical Director</h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Status proyek, deadline, workload tim, antrian teknis. Tanpa angka invoice/payslip penuh.">?</span><span>Operasional</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body"><p>Mengelola semua proyek dan pekerjaan teknis; membuat project yang masuk pending approval kecuali user adalah direktur.</p></div></details>
+      </article>
+      <article class="card">
+        <h4>Dashboard Finance</h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Outstanding invoice, arus kas ringkas, snapshot pembayaran.">?</span><span>Keuangan</span></div>
+      </article>
+      <article class="card">
+        <h4>Dashboard Manajer / BD / Personal / Freelancer</h4>
+        <ul>
+          <li><strong>Manajer</strong> — proyek yang dipimpin, deadline tim.</li>
+          <li><strong>BD</strong> — pipeline intake, leads, outreach.</li>
+          <li><strong>Senior &amp; Member</strong> — task &amp; deliverable relevan (member melihat konteks proyek).</li>
+          <li><strong>Freelancer</strong> — daftar task assignee tanpa konteks proyek di KPI.</li>
+        </ul>
+      </article>
+
+      <h2 id="crm">CRM — Leads, Outreach, Intakes</h2>
+
+      <article class="card">
+        <h4>Leads — <code>/leads</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Daftar intake yang difilter sebagai peluang penjualan: kode intake, klien/prospek, budget, kompleksitas, status.">?</span><span>Pipeline peluang</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body">
+          <p>Leads = view intake untuk BD/TD/Manajer/Direktur. Tombol convert ke project pada baris tertentu membuka modal ringan atau alur ke intake detail.</p>
+          <p><strong>New Lead</strong> <code>/leads/new</code> — form intake cepat.</p>
+        </details>
+      </article>
+
+      <article class="card">
+        <h4>Outreach — <code>/outreach</code>, <code>/outreach/new</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Tracking prospek perusahaan: status hubungan, channel, catatan. Aksi Convert membuat intake baru.">?</span><span>Prospeksi BD</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body"><p>Hanya role yang punya akses outreach (lihat app) yang melihat menu. Convert menghubungkan ke modul Intake/Leads.</p></div></details>
+      </article>
+
+      <article class="card">
+        <h4>Intakes — <code>/intakes</code>, <code>/intakes/new</code>, <code>/intakes/[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Detail peluang: sumber, disiplin, tipe proyek, kontak, anggaran, status workflow (new → qualified → closed → converted).">?</span><span>Detail intake</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body">
+          <p><code>/intakes/[id]/edit</code> — ubah data intake.</p>
+          <p><code>/intakes/[id]/convert</code> — <strong>form lengkap</strong> convert ke project: dropdown client &amp; user (project lead), disiplin, kontrak domestic/platform, dll.</p>
+          <p>Setelah intake <strong>Closed</strong>, UI dapat menawarkan convert; gunakan halaman convert untuk UX terbaik (hindari paste UUID).</p>
+        </details>
+      </article>
+
+      <h2 id="clients">Clients — <code>/clients</code>, <code>/clients/new</code>, <code>/clients/[id]</code></h2>
+      <article class="card">
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Master pelanggan: nama, kode, kontak billing. Dipilih saat membuat project atau menaut intake.">?</span><span>Master klien</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body">
+          <p>BD biasanya membuat client baru. Finance dapat mengedit info billing sesuai kebijakan. Direktur/TD sering read-only kontak.</p>
+          <p><code>/clients/[id]/edit</code> — perbarui data klien.</p>
+        </details>
+      </article>
+
+      <h2 id="projects">Projects — <code>/projects</code>, <code>/projects/new</code>, <code>/projects/[id]</code></h2>
+      <article class="card">
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Kontrak kerja internal: lead, reviewer, status operasional, domestic vs platform, nilai kontrak, termin (domestic).">?</span><span>Inti operasi</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body">
+          <p><strong>Pending approval / Rejected</strong> — workflow direktur: project baru dari Manajer/TD menunggu approve; saat pending, mutasi operasional (task, file, tim) dibatasi.</p>
+          <p><strong>Domestic</strong> — termin milestone + metadata BAST pada baris termin. <strong>Platform</strong> — billing via marketplace; termin internal tidak dipakai.</p>
+          <p><code>/projects/[id]/edit</code> — metadata proyek; perhatikan izin edit saat status khusus.</p>
+        </details>
+      </article>
+
+      <h2 id="tasks">Tasks &amp; Deliverables</h2>
+      <article class="card">
+        <h4>Tasks — <code>/tasks</code>, <code>/tasks/new</code>, <code>/tasks/[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Pekerjaan terjadwal: assignee, reviewer, status, jam aktual, link drive opsional.">?</span><span>Eksekusi harian</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body"><p>Member/freelancer hanya melihat/mengubah task miliknya sesuai RLS. TD/Manajer assign luas pada proyek yang boleh mereka sentuh.</p></details>
+      </article>
+      <article class="card">
+        <h4>Deliverables — <code>/deliverables</code>, <code>/deliverables/new</code>, <code>/deliverables/[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Output formal (gambar, laporan): reviewer, status review, tautan ke task.">?</span><span>Hasil pekerjaan</span></div>
+      </article>
+
+      <h2 id="files">Files — <code>/files</code>, <code>/files/new</code>, <code>/files/[id]</code></h2>
+      <article class="card">
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Metadata file: link manual atau Drive; kode file otomatis dari Settings file naming (disiplin, tipe dokumen, urut, revisi).">?</span><span>Dokumen proyek</span></div>
+        <details class="full-tip"><summary>Detail</summary><div class="body"><p>Form baru meminta pilihan disiplin &amp; tipe dokumen dari konfigurasi. <code>/files/[id]/edit</code> — perbarui metadata.</p></details>
+      </article>
+
+      <h2 id="finance">Finance</h2>
+      <article class="card">
+        <h4>Invoices — <code>/finance/invoices</code>, <code>.../new</code>, <code>.../[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Tagihan klien: baris item, mata uang, status, pembayaran masuk. Direktur/Finance.">?</span><span>AR klien</span></div>
+      </article>
+      <article class="card">
+        <h4>Payslips — <code>/finance/payslips</code>, <code>.../new</code>, <code>.../[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Slip gaji tim: generate, kirim, tandai paid.">?</span><span>HR keuangan</span></div>
+      </article>
+      <article class="card">
+        <h4>Payments — <code>/payments</code>, <code>/payments/new</code>, <code>/payments/[id]</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Pembayaran ke anggota tim (di luar slip detail jika ada modul terkait).">?</span><span>Bayar tim</span></div>
+      </article>
+      <article class="card">
+        <h4>Compensation — <code>/compensation</code>, <code>.../new</code>, <code>.../[id]</code>, <code>.../edit</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Proposal rate: TD/Manajer draft → Finance confirm/kembalikan. MONTHLY_FIXED via Finance di profil.">?</span><span>Kompensasi</span></div>
+      </article>
+      <article class="card">
+        <h4>My Payments — <code>/my-payments</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Riwayat pembayaran pribadi user yang login.">?</span><span>Self-service</span></div>
+      </article>
+      <article class="card">
+        <h4>FX Rates &amp; Payment Accounts (sidebar → Settings tab Finance)</h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Kurs referensi dan rekening penerimaan klien. Diatur Finance; Direktur bisa melihat tab Finance read-only.">?</span><span>Referensi keuangan</span></div>
+      </article>
+
+      <h2 id="people">People &amp; profil</h2>
+      <article class="card">
+        <h4>Team — <code>/team</code>, <code>/team/new</code>, <code>/team/invite</code>, <code>/team/[id]</code>, <code>/team/[id]/edit</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Daftar anggota, rate/salary (per role), undangan, edit profil tim. TD/Finance/Direktur sesuai matriks.">?</span><span>SDM</span></div>
+      </article>
+      <article class="card">
+        <h4>My Profile — <code>/my-profile</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Edit data diri; field sensitif (rate, system role) hanya untuk TD/Finance sesuai server.">?</span><span>Profil sendiri</span></div>
+      </article>
+
+      <h2 id="settings">Settings — <code>/settings</code></h2>
+      <article class="card">
+        <ul>
+          <li><strong>Tab Sistem</strong> — prefix kode project, separator, master dropdown (domain setting_options). Hanya TD.</li>
+          <li><strong>Tab File naming</strong> — map disiplin/tipe dokumen, format revisi, preview. Hanya TD.</li>
+          <li><strong>Tab Finance</strong> — FX rates, payment accounts. Finance edit; Direktur lihat.</li>
+        </ul>
+      </article>
+
+      <h2 id="lainnya">Lainnya</h2>
+      <article class="card">
+        <h4>Search — <code>/search</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Pencarian silang entitas yang diizinkan role Anda.">?</span><span>Globalsearch</span></div>
+      </article>
+      <article class="card">
+        <h4>Onboarding — <code>/onboarding/complete</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Melengkapi profil wajib setelah undangan/pertama login.">?</span><span>Kelengkapan akun</span></div>
+      </article>
+      <article class="card">
+        <h4>Access denied — <code>/access-denied</code></h4>
+        <div class="demo-row"><span class="tip" tabindex="0" data-tip="Role tidak punya izin ke URL yang diminta. Gunakan akun role lain atau minta TD/Direktur.">?</span><span>403 halaman</span></div>
+      </article>
+      <article class="card">
+        <h4>Auth — <code>/auth/login</code> (di luar protected)</h4>
+        <p class="muted">Login Supabase; logout dari menu user di sidebar.</p>
+      </article>
+
+      <h2 id="appendix">Appendix — route → ringkasan tooltip satu kalimat</h2>
+      <p class="muted">Path relatif terhadap origin aplikasi (mis. <code>https://app-anda.com</code>).</p>
+      <table class="route">
+        <thead><tr><th>Route</th><th>Tooltip satu kalimat (ID)</th></tr></thead>
+        <tbody>
+          <tr><td><code>/dashboard</code></td><td>Beranda bergantung role: KPI atau task pribadi.</td></tr>
+          <tr><td><code>/leads</code></td><td>Daftar intake sebagai peluang penjualan.</td></tr>
+          <tr><td><code>/leads/new</code></td><td>Buat lead/intake baru.</td></tr>
+          <tr><td><code>/leads/[id]</code></td><td>Redirect ke intake detail dengan id sama.</td></tr>
+          <tr><td><code>/outreach</code></td><td>Daftar prospek outreach dan status hubungan.</td></tr>
+          <tr><td><code>/outreach/new</code></td><td>Tambah entitas outreach baru.</td></tr>
+          <tr><td><code>/clients</code></td><td>Master data klien.</td></tr>
+          <tr><td><code>/clients/new</code></td><td>Registrasi klien baru.</td></tr>
+          <tr><td><code>/clients/[id]</code></td><td>Detail klien dan proyek terkait.</td></tr>
+          <tr><td><code>/clients/[id]/edit</code></td><td>Ubah data klien.</td></tr>
+          <tr><td><code>/intakes</code></td><td>Daftar intake (CRM internal).</td></tr>
+          <tr><td><code>/intakes/new</code></td><td>Buat intake baru.</td></tr>
+          <tr><td><code>/intakes/[id]</code></td><td>Detail satu intake + status + aksi convert.</td></tr>
+          <tr><td><code>/intakes/[id]/edit</code></td><td>Edit intake.</td></tr>
+          <tr><td><code>/intakes/[id]/convert</code></td><td>Form penuh jadikan project (dropdown client &amp; lead).</td></tr>
+          <tr><td><code>/projects</code></td><td>Daftar proyek sesuai scope role.</td></tr>
+          <tr><td><code>/projects/new</code></td><td>Buat proyek baru (mungkin pending approval).</td></tr>
+          <tr><td><code>/projects/[id]</code></td><td>Detail proyek, tim, termin domestic, link edit.</td></tr>
+          <tr><td><code>/projects/[id]/edit</code></td><td>Edit metadata &amp; status proyek.</td></tr>
+          <tr><td><code>/tasks</code></td><td>Daftar task.</td></tr>
+          <tr><td><code>/tasks/new</code></td><td>Buat task (proyek dipilih).</td></tr>
+          <tr><td><code>/tasks/[id]</code></td><td>Detail task.</td></tr>
+          <tr><td><code>/tasks/[id]/edit</code></td><td>Edit task.</td></tr>
+          <tr><td><code>/deliverables</code></td><td>Daftar deliverable.</td></tr>
+          <tr><td><code>/deliverables/new</code></td><td>Buat deliverable.</td></tr>
+          <tr><td><code>/deliverables/[id]</code></td><td>Detail deliverable.</td></tr>
+          <tr><td><code>/deliverables/[id]/edit</code></td><td>Edit deliverable (metadata &amp; status review).</td></tr>
+          <tr><td><code>/files</code></td><td>Daftar file metadata.</td></tr>
+          <tr><td><code>/files/new</code></td><td>Unggah metadata file + kode naming.</td></tr>
+          <tr><td><code>/files/[id]</code></td><td>Detail file.</td></tr>
+          <tr><td><code>/files/[id]/edit</code></td><td>Edit file metadata.</td></tr>
+          <tr><td><code>/finance/invoices</code></td><td>Daftar invoice klien.</td></tr>
+          <tr><td><code>/finance/invoices/new</code></td><td>Buat invoice.</td></tr>
+          <tr><td><code>/finance/invoices/[id]</code></td><td>Detail invoice.</td></tr>
+          <tr><td><code>/finance/payslips</code></td><td>Daftar payslip.</td></tr>
+          <tr><td><code>/finance/payslips/new</code></td><td>Buat payslip.</td></tr>
+          <tr><td><code>/finance/payslips/[id]</code></td><td>Detail payslip.</td></tr>
+          <tr><td><code>/payments</code></td><td>Daftar pembayaran tim.</td></tr>
+          <tr><td><code>/payments/new</code></td><td>Catat pembayaran baru.</td></tr>
+          <tr><td><code>/payments/[id]</code></td><td>Detail pembayaran.</td></tr>
+          <tr><td><code>/payments/[id]/edit</code></td><td>Edit pembayaran.</td></tr>
+          <tr><td><code>/compensation</code></td><td>Daftar kompensasi / proposal.</td></tr>
+          <tr><td><code>/compensation/new</code></td><td>Buat proposal kompensasi.</td></tr>
+          <tr><td><code>/compensation/[id]</code></td><td>Detail kompensasi.</td></tr>
+          <tr><td><code>/compensation/[id]/edit</code></td><td>Edit kompensasi (sesuai status &amp; role).</td></tr>
+          <tr><td><code>/my-payments</code></td><td>Pembayaran untuk user login.</td></tr>
+          <tr><td><code>/team</code></td><td>Daftar anggota tim.</td></tr>
+          <tr><td><code>/team/new</code></td><td>Tambah anggota (alur admin).</td></tr>
+          <tr><td><code>/team/invite</code></td><td>Undang user baru.</td></tr>
+          <tr><td><code>/team/[id]</code></td><td>Profil anggota (baca/edit sesuai role).</td></tr>
+          <tr><td><code>/team/[id]/edit</code></td><td>Edit anggota tim.</td></tr>
+          <tr><td><code>/my-profile</code></td><td>Edit profil sendiri.</td></tr>
+          <tr><td><code>/settings</code></td><td>Tab sistem / file naming / finance.</td></tr>
+          <tr><td><code>/settings?tab=finance#fx-rates</code></td><td>Daftar kurs referensi (link dari sidebar Finance untuk role yang berhak).</td></tr>
+          <tr><td><code>/settings?tab=finance#payment-accounts</code></td><td>Rekening penerimaan klien (link dari sidebar).</td></tr>
+          <tr><td><code>/search</code></td><td>Pencarian global.</td></tr>
+          <tr><td><code>/onboarding/complete</code></td><td>Lengkapi data profil wajib.</td></tr>
+          <tr><td><code>/access-denied</code></td><td>Halaman penolakan akses.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="muted" style="margin-top:32px;">
+        File ini: <code>docs/REKA_OS_TOOLTIPS_GUIDE.html</code> — ReKa Engineering OS. Untuk menyambungkan tooltip ke React, salin string dari <code>data-tip</code> atau isi <code>&lt;details&gt;</code> ke komponen tooltip aplikasi.
+      </p>
+    </main>
+  </div>
+</body>
+</html>
