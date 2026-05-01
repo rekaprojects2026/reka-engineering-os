@@ -41,15 +41,15 @@ export function Pagination({ currentPage, totalPages, pageSize, totalCount }: Pa
   }
 
   return (
-    <div className="flex flex-col gap-3 border-t border-[var(--color-border)] bg-[var(--color-surface-subtle)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-[var(--color-text-muted)]">
+    <div className="flex flex-col gap-3 border-t border-[var(--table-border)] bg-[var(--surface-neutral)] px-[var(--table-edge-padding-x)] py-3 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-[var(--text-muted-neutral)]">
         Menampilkan {fromLabel}–{toLabel} dari {totalCount} data
       </p>
       <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => pushPage(currentPage - 1)}>
           ← Prev
         </Button>
-        <span className="text-sm tabular-nums text-[var(--color-text-secondary)]">
+        <span className="text-sm tabular-nums text-[var(--text-secondary-neutral)]">
           Halaman {currentPage} / {totalPages}
         </span>
         <Button

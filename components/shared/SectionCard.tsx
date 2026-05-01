@@ -22,15 +22,17 @@ export function SectionCard({
   const hasHeader = Boolean(title || description || actions)
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card className={cn('overflow-hidden border-[var(--border-default)] bg-[var(--surface-card)]', className)}>
       {hasHeader && (
-        <CardHeader className="flex-row items-start justify-between gap-4 border-b border-[var(--color-border)] bg-[var(--color-surface-muted)] py-3 px-4 rounded-t-[var(--radius-card)]">
+        <CardHeader className="flex-row items-start justify-between gap-4 border-b border-[var(--table-border)] bg-[var(--surface-neutral)] px-[var(--table-edge-padding-x)] py-3.5 rounded-t-[var(--radius-card)]">
           <div className="min-w-0">
             {title && (
-              <CardTitle className="text-[0.875rem]">{title}</CardTitle>
+              <CardTitle className="text-[0.875rem] text-[var(--text-primary-neutral)]">{title}</CardTitle>
             )}
             {description && (
-              <CardDescription className={title ? 'mt-0.5' : ''}>{description}</CardDescription>
+              <CardDescription className={cn('text-[var(--text-muted-neutral)]', title ? 'mt-0.5' : '')}>
+                {description}
+              </CardDescription>
             )}
           </div>
           {actions && (
@@ -41,7 +43,7 @@ export function SectionCard({
       {noPadding ? (
         <div>{children}</div>
       ) : (
-        <CardContent className="p-4">{children}</CardContent>
+        <CardContent className="px-[var(--table-edge-padding-x)] py-4">{children}</CardContent>
       )}
     </Card>
   )
