@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils/cn'
 
 function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-auto">
+    <div className="w-full overflow-auto scrollbar-neutral">
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("w-full caption-bottom text-sm table-edge-align", className)}
         {...props}
       />
     </div>
@@ -17,7 +17,7 @@ function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSect
   return (
     <thead
       data-slot="table-header"
-      className={cn("border-b border-[var(--color-border)] bg-[var(--color-surface-subtle)]", className)}
+      className={cn("border-b border-[var(--table-border)] bg-[var(--table-header-bg)]", className)}
       {...props}
     />
   )
@@ -27,7 +27,7 @@ function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectio
   return (
     <tbody
       data-slot="table-body"
-      className={cn("divide-y divide-[var(--color-border)]", className)}
+      className={cn("divide-y divide-[var(--table-border)]", className)}
       {...props}
     />
   )
@@ -38,7 +38,7 @@ function TableFooter({ className, ...props }: React.HTMLAttributes<HTMLTableSect
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t border-[var(--color-border)] bg-[var(--color-surface-muted)] font-medium [&>tr]:last:border-b-0",
+        "border-t border-[var(--table-border)] bg-[var(--surface-neutral)] font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElem
     <tr
       data-slot="table-row"
       className={cn(
-        "hover:bg-[var(--color-surface-subtle)] transition-colors duration-100 data-[state=selected]:bg-[var(--color-primary-subtle)]",
+        "hover:bg-[var(--table-row-hover)] transition-colors duration-100 data-[state=selected]:bg-[var(--brand-accent-soft)]",
         className
       )}
       {...props}
@@ -64,7 +64,7 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
     <th
       data-slot="table-head"
       className={cn(
-        "px-4 py-3 text-left text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)] [&:has([role=checkbox])]:pr-0",
+        "px-[var(--table-cell-padding-x)] py-3 text-left text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--table-header-text)] [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
     <td
       data-slot="table-cell"
       className={cn(
-        "px-4 py-3 text-[0.8125rem] text-[var(--color-text-primary)] align-middle [&:has([role=checkbox])]:pr-0",
+        "px-[var(--table-cell-padding-x)] py-3 text-[0.8125rem] text-[var(--text-primary-neutral)] align-middle [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
