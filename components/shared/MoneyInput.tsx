@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { formatMoney } from '@/lib/utils/formatters'
+import { useState } from 'react'
+import { cn } from '@/lib/utils/cn'
 
 interface CurrencyOption {
   value: string
@@ -63,48 +63,26 @@ export function MoneyInput({
         })()
       : null
 
-  const inputStyle: React.CSSProperties = {
-    height: '36px',
-    flex: 1,
-    borderRadius: '0 var(--radius-control) var(--radius-control) 0',
-    border: '1px solid var(--color-border)',
-    borderLeft: 'none',
-    backgroundColor: disabled ? 'var(--color-surface-muted)' : 'var(--color-surface)',
-    color: 'var(--color-text-primary)',
-    padding: '0 10px',
-    fontSize: '0.8125rem',
-    outline: 'none',
-  }
-
-  const selectStyle: React.CSSProperties = {
-    height: '36px',
-    padding: '0 8px',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius-control) 0 0 var(--radius-control)',
-    backgroundColor: 'var(--color-surface-muted)',
-    color: 'var(--color-text-secondary)',
-    fontSize: '0.75rem',
-    fontWeight: 600,
-    cursor: 'pointer',
-    outline: 'none',
-  }
-
   return (
     <div>
       {label && (
         <label
-          style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
         >
-          {label}{required && <span style={{ color: 'var(--color-danger)', marginLeft: '3px' }}>*</span>}
+          {label}{required && <span className="ml-[3px] text-[var(--brand-accent)]">*</span>}
         </label>
       )}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="flex items-center">
         <select
           name={currencyName ?? `${name}_currency`}
           value={currency}
           onChange={e => setCurrency(e.target.value)}
           disabled={disabled}
-          style={selectStyle}
+          className={cn(
+            'h-9 cursor-pointer rounded-l-[var(--radius-control)] border border-r-0 border-[var(--input-border)] bg-[var(--surface-neutral)] px-2 text-[0.75rem] font-semibold text-[var(--text-secondary-neutral)] outline-none transition-colors duration-150',
+            'focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-2 focus:ring-[color:var(--input-focus-ring)]',
+            'disabled:cursor-not-allowed disabled:opacity-50'
+          )}
         >
           {currencyOptions.map((c) => (
             <option key={c.value} value={c.value}>
@@ -122,13 +100,15 @@ export function MoneyInput({
           placeholder={placeholder}
           min="0"
           step="any"
-          style={inputStyle}
-          onFocus={e => (e.target.style.boxShadow = '0 0 0 2px var(--color-primary)')}
-          onBlur={e => (e.target.style.boxShadow = 'none')}
+          className={cn(
+            'h-9 flex-1 rounded-r-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] px-[10px] text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-colors duration-150',
+            'focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-2 focus:ring-[color:var(--input-focus-ring)]',
+            'disabled:cursor-not-allowed disabled:opacity-50'
+          )}
         />
       </div>
       {conversionText && (
-        <p style={{ marginTop: '4px', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
+        <p className="mt-1 text-[0.6875rem] text-[var(--text-muted-neutral)]">
           {conversionText} (rate: 1 USD = Rp {fxRateToIDR?.toLocaleString('id-ID')})
         </p>
       )}

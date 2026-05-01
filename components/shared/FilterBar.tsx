@@ -46,7 +46,7 @@ export function FilterBar({
         <div className="relative">
           <Search
             size={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted-neutral)]"
             aria-hidden="true"
           />
           <input
@@ -59,7 +59,7 @@ export function FilterBar({
                 ? (e: ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)
                 : undefined
             }
-            className="h-9 w-[200px] rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] pl-9 pr-3 text-[0.8125rem] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
+            className="h-9 w-[200px] rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] pl-9 pr-3 text-[0.8125rem] text-[var(--text-primary-neutral)] placeholder:text-[var(--input-placeholder)] outline-none transition-colors duration-150 focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-2 focus:ring-[color:var(--input-focus-ring)]"
           />
         </div>
       )}
@@ -69,7 +69,7 @@ export function FilterBar({
       {showClear && clearHref && (
         <a
           href={clearHref}
-          className="flex h-9 items-center gap-1.5 rounded-md px-2 text-[0.8125rem] font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)]"
+          className="flex h-9 items-center gap-1.5 rounded-md px-2 text-[0.8125rem] font-medium text-[var(--text-muted-neutral)] transition-colors hover:text-[var(--text-secondary-neutral)]"
         >
           <X size={13} aria-hidden="true" />
           Clear
