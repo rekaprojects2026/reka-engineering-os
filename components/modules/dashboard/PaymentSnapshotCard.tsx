@@ -20,18 +20,18 @@ export function PaymentSnapshotCard({ snapshot }: { snapshot: PaymentSnapshot })
       <div>
         <p
           className="text-[0.625rem] font-semibold uppercase tracking-[0.09em]"
-          style={{ color: 'var(--color-text-muted)' }}
+          style={{ color: 'var(--text-muted-neutral)' }}
         >
           Outstanding on Unpaid / Partial
         </p>
         <p
           className="mt-0.5 text-2xl font-semibold tabular-nums"
-          style={{ color: outstanding > 0 ? 'var(--color-danger)' : 'var(--color-text-primary)' }}
+          style={{ color: outstanding > 0 ? 'var(--color-danger)' : 'var(--text-primary-neutral)' }}
         >
           {formatIDR(outstanding)}
         </p>
         {recordTotal === 0 && (
-          <p className="mt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="mt-1 text-xs" style={{ color: 'var(--text-muted-neutral)' }}>
             No payment periods on file yet.
           </p>
         )}
@@ -49,12 +49,12 @@ export function PaymentSnapshotCard({ snapshot }: { snapshot: PaymentSnapshot })
           <div
             key={label}
             className="rounded-lg p-2"
-            style={{ backgroundColor: 'var(--color-surface-subtle)' }}
+            style={{ backgroundColor: 'var(--surface-neutral)' }}
           >
             <p className="text-lg font-semibold tabular-nums" style={{ color }}>{count}</p>
             <p
               className="text-[0.625rem] font-medium uppercase tracking-wide"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{ color: 'var(--text-muted-neutral)' }}
             >
               {label}
             </p>
@@ -65,10 +65,9 @@ export function PaymentSnapshotCard({ snapshot }: { snapshot: PaymentSnapshot })
       {/* Open payments link */}
       <Link
         href="/payments"
-        className="flex items-center justify-between rounded-md px-3 py-2 text-xs font-medium no-underline transition-colors hover:bg-[var(--color-surface-muted)]"
+        className="flex items-center justify-between rounded-md border border-[var(--border-divider-soft)] bg-[var(--surface-neutral)] px-3 py-2 text-xs font-medium no-underline transition-colors hover:bg-[var(--table-row-hover)]"
         style={{
-          backgroundColor: 'var(--color-surface-subtle)',
-          color: 'var(--color-text-secondary)',
+          color: 'var(--text-secondary-neutral)',
         }}
       >
         Open payments

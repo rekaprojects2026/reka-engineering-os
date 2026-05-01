@@ -6,7 +6,7 @@ function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     <div
       data-slot="card"
       className={cn(
-        "rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)]",
+        "rounded-[var(--radius-card)] border border-[var(--border-default)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]",
         className
       )}
       {...props}
@@ -28,7 +28,7 @@ function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElem
   return (
     <h3
       data-slot="card-title"
-      className={cn("text-sm font-semibold text-[var(--color-text-primary)] leading-tight", className)}
+      className={cn("text-sm font-semibold text-[var(--text-primary-neutral)] leading-tight", className)}
       {...props}
     />
   )
@@ -38,7 +38,7 @@ function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParag
   return (
     <p
       data-slot="card-description"
-      className={cn("text-xs text-[var(--color-text-muted)]", className)}
+      className={cn("text-xs text-[var(--text-muted-neutral)]", className)}
       {...props}
     />
   )
@@ -68,7 +68,7 @@ function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return (
     <div
       data-slot="card-footer"
-      className={cn("flex items-center px-5 pb-5 border-t border-[var(--color-border)]", className)}
+      className={cn("flex items-center px-5 pb-5 border-t border-[var(--border-default)]", className)}
       {...props}
     />
   )

@@ -25,11 +25,11 @@ import type { ActivityLogEntry } from '@/lib/activity/queries'
 import type { PnlPeriod } from '@/lib/dashboard/pnl-queries'
 
 export const TH_CLASS =
-  'whitespace-nowrap border-b border-[var(--color-border)] bg-[var(--color-surface-subtle)] px-3 py-2.5 text-left text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]'
-export const TD_CLASS = 'align-middle px-3 py-2.5 text-[0.8125rem] text-[var(--color-text-secondary)]'
+  'whitespace-nowrap border-b border-[var(--table-border)] bg-[var(--table-header-bg)] px-[var(--table-cell-padding-x)] py-2.5 text-left text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-[var(--table-header-text)]'
+export const TD_CLASS = 'align-middle px-[var(--table-cell-padding-x)] py-2.5 text-[0.8125rem] text-[var(--text-secondary-neutral)]'
 export const ROW_LINK_CLASS =
-  'text-[0.8125rem] font-medium text-[var(--color-text-primary)] no-underline hover:text-[var(--color-primary)]'
-export const CODE_LINK_CLASS = 'text-xs font-medium text-[var(--color-primary)] no-underline hover:underline'
+  'text-[0.8125rem] font-medium text-[var(--text-primary-neutral)] no-underline hover:text-[var(--brand-accent)]'
+export const CODE_LINK_CLASS = 'text-xs font-medium text-[var(--brand-accent)] no-underline hover:underline'
 
 export function DashboardSection({
   title,
@@ -48,18 +48,18 @@ export function DashboardSection({
     <div
       className={cn('rounded-[var(--radius-card)] border p-5', className)}
       style={{
-        backgroundColor: 'var(--color-surface)',
-        borderColor: 'var(--color-border)',
-        boxShadow: 'var(--shadow-sm)',
+        backgroundColor: 'var(--surface-card)',
+        borderColor: 'var(--border-default)',
+        boxShadow: 'var(--shadow-card)',
       }}
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary-neutral)' }}>
             {title}
           </h2>
           {description && (
-            <p className="mt-0.5 text-[0.8125rem]" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="mt-0.5 text-[0.8125rem]" style={{ color: 'var(--text-muted-neutral)' }}>
               {description}
             </p>
           )}
@@ -105,11 +105,11 @@ export function RecentActivityFeed({ entries }: { entries: ActivityLogEntry[] })
       <div className="flex items-center gap-3 py-2">
         <div
           aria-hidden="true"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-neutral)] text-[var(--text-muted-neutral)]"
         >
           <Activity className="h-4 w-4" />
         </div>
-        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--color-text-muted)]">
+        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--text-muted-neutral)]">
           No recent updates — activity across projects, tasks, and deliverables will stream here.
         </p>
       </div>
@@ -125,10 +125,10 @@ export function RecentActivityFeed({ entries }: { entries: ActivityLogEntry[] })
           <div key={entry.id} className="flex items-start gap-2.5 rounded-md px-2 py-2">
             <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)' }} />
             <div className="min-w-0">
-              <p className="text-[0.8125rem] leading-snug" style={{ color: 'var(--color-text-primary)' }}>
+              <p className="text-[0.8125rem] leading-snug" style={{ color: 'var(--text-primary-neutral)' }}>
                 {description}
               </p>
-              <p className="text-[0.6875rem]" style={{ color: 'var(--color-text-muted)' }}>
+              <p className="text-[0.6875rem]" style={{ color: 'var(--text-muted-neutral)' }}>
                 {entry.actor?.full_name ?? 'System'} · {formatRelativeDate(entry.created_at)}
               </p>
             </div>
@@ -155,7 +155,7 @@ export function PnlPeriodTabs({ current }: { current: PnlPeriod }) {
             'rounded-[var(--radius-pill)] px-2.5 py-1 text-[0.6875rem] font-semibold no-underline transition-colors',
             current === tab.id
               ? 'bg-[var(--color-primary)] text-[var(--color-primary-fg)]'
-              : 'bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-subtle)]',
+              : 'bg-[var(--surface-neutral)] text-[var(--text-secondary-neutral)] hover:bg-[var(--table-row-hover)]',
           )}
         >
           {tab.label}
@@ -172,11 +172,11 @@ export function UpcomingDeadlinesList({ waitingClient }: { waitingClient: Waitin
       <div className="flex items-center gap-3 py-2">
         <div
           aria-hidden="true"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-neutral)] text-[var(--text-muted-neutral)]"
         >
           <CalendarClock className="h-4 w-4" />
         </div>
-        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--color-text-muted)]">
+        <p className="m-0 text-[0.8125rem] leading-snug text-[var(--text-muted-neutral)]">
           No deadlines on hold — dated client-side holds will appear here.
         </p>
       </div>
@@ -193,18 +193,18 @@ export function UpcomingDeadlinesList({ waitingClient }: { waitingClient: Waitin
           <Link
             key={p.id}
             href={`/projects/${p.id}`}
-            className="flex items-center justify-between gap-3 rounded-[var(--radius-control)] bg-[var(--color-surface-muted)] px-3 py-2.5 text-inherit no-underline transition-colors hover:bg-[var(--color-surface-subtle)]"
+            className="flex items-center justify-between gap-3 rounded-[var(--radius-control)] bg-[var(--surface-neutral)] px-3 py-2.5 text-inherit no-underline transition-colors hover:bg-[var(--table-row-hover)]"
           >
             <div className="min-w-0">
-              <p className="m-0 truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">{p.name}</p>
-              <p className="mt-0.5 truncate text-[0.6875rem] text-[var(--color-text-muted)]">
+              <p className="m-0 truncate text-[0.8125rem] font-medium text-[var(--text-primary-neutral)]">{p.name}</p>
+              <p className="mt-0.5 truncate text-[0.6875rem] text-[var(--text-muted-neutral)]">
                 {p.project_code} · {p.clients?.client_name ?? 'Client'}
               </p>
             </div>
             <span
               className={cn(
                 'shrink-0 text-[0.75rem] font-medium tabular-nums',
-                urgent ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]',
+                urgent ? 'text-[var(--color-danger)]' : 'text-[var(--text-muted-neutral)]',
               )}
             >
               {days <= 0 ? 'Due' : `${days}d`}
@@ -260,8 +260,8 @@ export function ScopedTasksSection({
         {tasks.length === 0 ? (
           <EmptyState icon={<CheckSquare size={20} />} title="No open tasks" description="You're all caught up." className="py-8" />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+          <div className="overflow-x-auto scrollbar-neutral">
+            <table className="w-full border-collapse table-edge-align">
               <thead>
                 <tr>
                   <th className={TH_CLASS}>Task</th>
@@ -275,7 +275,7 @@ export function ScopedTasksSection({
                 {tasks.map((t, i) => {
                   const overdue = t.due_date && t.due_date < today
                   return (
-                    <tr key={t.id} className={cn(i < tasks.length - 1 && 'border-b border-[var(--color-border)]')}>
+                    <tr key={t.id} className={cn(i < tasks.length - 1 && 'border-b border-[var(--table-border)]')}>
                       <td className={TD_CLASS}>
                         <Link href={`/tasks/${t.id}`} className={ROW_LINK_CLASS}>
                           {t.title}
@@ -296,7 +296,7 @@ export function ScopedTasksSection({
                         className={cn(
                           TD_CLASS,
                           'whitespace-nowrap text-xs',
-                          overdue ? 'font-semibold text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]',
+                          overdue ? 'font-semibold text-[var(--color-danger)]' : 'text-[var(--text-muted-neutral)]',
                         )}
                       >
                         {overdue && <AlertTriangle size={11} className="mr-1 inline-block align-middle" />}
@@ -330,8 +330,8 @@ export function FreelancerTasksTable({ tasks, title }: { tasks: { id: string; ti
         {tasks.length === 0 ? (
           <EmptyState icon={<CheckSquare size={20} />} title="No open tasks" description="You're all caught up." className="py-8" />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+          <div className="overflow-x-auto scrollbar-neutral">
+            <table className="w-full border-collapse table-edge-align">
               <thead>
                 <tr>
                   <th className={TH_CLASS}>Task</th>
@@ -345,7 +345,7 @@ export function FreelancerTasksTable({ tasks, title }: { tasks: { id: string; ti
                 {tasks.map((t, i) => {
                   const overdue = t.due_date && t.due_date < today
                   return (
-                    <tr key={t.id} className={cn(i < tasks.length - 1 && 'border-b border-[var(--color-border)]')}>
+                    <tr key={t.id} className={cn(i < tasks.length - 1 && 'border-b border-[var(--table-border)]')}>
                       <td className={TD_CLASS}>
                         <Link href={`/tasks/${t.id}`} className={ROW_LINK_CLASS}>
                           {t.title}
@@ -355,7 +355,7 @@ export function FreelancerTasksTable({ tasks, title }: { tasks: { id: string; ti
                         className={cn(
                           TD_CLASS,
                           'whitespace-nowrap text-xs',
-                          overdue ? 'font-semibold text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]',
+                          overdue ? 'font-semibold text-[var(--color-danger)]' : 'text-[var(--text-muted-neutral)]',
                         )}
                       >
                         {t.due_date ? formatDate(t.due_date) : '—'}
@@ -391,8 +391,8 @@ export function ScopedDeliverablesSection({ deliverables, title }: { deliverable
         {deliverables.length === 0 ? (
           <EmptyState icon={<FileText size={20} />} title="No active deliverables" description="Deliverables will appear here." className="py-8" />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+          <div className="overflow-x-auto scrollbar-neutral">
+            <table className="w-full border-collapse table-edge-align">
               <thead>
                 <tr>
                   <th className={TH_CLASS}>Deliverable</th>
@@ -403,7 +403,7 @@ export function ScopedDeliverablesSection({ deliverables, title }: { deliverable
               </thead>
               <tbody>
                 {deliverables.map((d, i) => (
-                  <tr key={d.id} className={cn(i < deliverables.length - 1 && 'border-b border-[var(--color-border)]')}>
+                  <tr key={d.id} className={cn(i < deliverables.length - 1 && 'border-b border-[var(--table-border)]')}>
                     <td className={TD_CLASS}>
                       <Link href={`/deliverables/${d.id}`} className={ROW_LINK_CLASS}>
                         {d.name}
@@ -442,8 +442,8 @@ export function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] 
     <Card className="p-5">
       <SectionHeader title="My Payments" />
       <div className="space-y-3">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto scrollbar-neutral">
+          <table className="w-full border-collapse table-edge-align">
             <thead>
               <tr>
                 <th className={TH_CLASS}>Period</th>
@@ -455,8 +455,8 @@ export function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] 
             </thead>
             <tbody>
               {payments.map((p, i) => (
-                <tr key={p.id} className={cn(i < payments.length - 1 && 'border-b border-[var(--color-border)]')}>
-                  <td className={cn(TD_CLASS, 'font-medium text-[var(--color-text-primary)]')}>{p.period_label ?? '—'}</td>
+                <tr key={p.id} className={cn(i < payments.length - 1 && 'border-b border-[var(--table-border)]')}>
+                  <td className={cn(TD_CLASS, 'font-medium text-[var(--text-primary-neutral)]')}>{p.period_label ?? '—'}</td>
                   <td className={cn(TD_CLASS, 'text-right tabular-nums')}>{formatIDR(p.total_due)}</td>
                   <td className={cn(TD_CLASS, 'text-right tabular-nums')}>{formatIDR(p.total_paid)}</td>
                   <td className={cn(TD_CLASS, 'text-right tabular-nums', p.balance > 0 && 'font-semibold')}>{formatIDR(p.balance)}</td>
@@ -476,7 +476,7 @@ export function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] 
           </table>
         </div>
         <div className="mt-3">
-          <Link href="/my-payments" className="text-[0.8125rem] font-medium text-[var(--color-primary)] no-underline hover:underline">
+          <Link href="/my-payments" className="text-[0.8125rem] font-medium text-[var(--brand-accent)] no-underline hover:underline">
             View all payments →
           </Link>
         </div>

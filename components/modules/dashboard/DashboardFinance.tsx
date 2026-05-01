@@ -54,15 +54,15 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DashboardSection title="Compensation to confirm" description="Draft rows awaiting your review.">
           {data.pendingCompensations.length === 0 ? (
-            <p className="m-0 text-sm text-[var(--color-text-muted)]">No draft compensation records.</p>
+            <p className="m-0 text-sm text-[var(--text-muted-neutral)]">No draft compensation records.</p>
           ) : (
             <ul className="m-0 list-none space-y-2 p-0">
               {data.pendingCompensations.map((c) => (
-                <li key={c.id} className="flex items-center justify-between gap-2 rounded-md border px-3 py-2" style={{ borderColor: 'var(--color-border)' }}>
+                <li key={c.id} className="flex items-center justify-between gap-2 rounded-md border border-[var(--table-border)] bg-[var(--surface-card)] px-3 py-2">
                   <Link href={`/compensation/${c.id}`} className={ROW_LINK_CLASS}>
                     {c.member?.full_name ?? 'Member'}
                   </Link>
-                  <span className="font-mono text-[0.75rem] text-[var(--color-text-secondary)]">
+                  <span className="font-mono text-[0.75rem] text-[var(--text-secondary-neutral)]">
                     {formatIDR(c.subtotal_amount)} {c.currency_code}
                   </span>
                 </li>
@@ -70,7 +70,7 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
             </ul>
           )}
           <div className="mt-3">
-            <Link href="/compensation?view=pending" className="text-[0.8125rem] font-medium text-[var(--color-primary)] no-underline hover:underline">
+            <Link href="/compensation?view=pending" className="text-[0.8125rem] font-medium text-[var(--brand-accent)] no-underline hover:underline">
               Open compensation →
             </Link>
           </div>
@@ -78,10 +78,10 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
 
         <DashboardSection title="Overdue invoices" description="Follow up on collection.">
           {data.overdueInvoices.length === 0 ? (
-            <p className="m-0 text-sm text-[var(--color-text-muted)]">No overdue invoices.</p>
+            <p className="m-0 text-sm text-[var(--text-muted-neutral)]">No overdue invoices.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+            <div className="overflow-x-auto scrollbar-neutral">
+              <table className="w-full border-collapse table-edge-align">
                 <thead>
                   <tr>
                     <th className={TH_CLASS}>Invoice</th>
@@ -92,7 +92,7 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
                 </thead>
                 <tbody>
                   {data.overdueInvoices.map((inv, i) => (
-                    <tr key={inv.id} className={cn(i < data.overdueInvoices.length - 1 && 'border-b border-[var(--color-border)]')}>
+                    <tr key={inv.id} className={cn(i < data.overdueInvoices.length - 1 && 'border-b border-[var(--table-border)]')}>
                       <td className={TD_CLASS}>
                         <Link href="/finance/invoices" className={ROW_LINK_CLASS}>
                           {inv.invoice_code}
@@ -118,8 +118,8 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DashboardSection title="Recent invoices">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-[0.8125rem]">
+          <div className="overflow-x-auto scrollbar-neutral">
+            <table className="w-full border-collapse table-edge-align text-[0.8125rem]">
               <thead>
                 <tr>
                   <th className={TH_CLASS}>Code</th>
@@ -129,7 +129,7 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
               </thead>
               <tbody>
                 {data.recentInvoices.map((r, i) => (
-                  <tr key={r.id} className={cn(i < data.recentInvoices.length - 1 && 'border-b border-[var(--color-border)]')}>
+                  <tr key={r.id} className={cn(i < data.recentInvoices.length - 1 && 'border-b border-[var(--table-border)]')}>
                     <td className={TD_CLASS}>
                       <Link href="/finance/invoices" className={ROW_LINK_CLASS}>
                         {r.invoice_code}
@@ -145,8 +145,8 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
         </DashboardSection>
 
         <DashboardSection title="Recent payslips">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-[0.8125rem]">
+          <div className="overflow-x-auto scrollbar-neutral">
+            <table className="w-full border-collapse table-edge-align text-[0.8125rem]">
               <thead>
                 <tr>
                   <th className={TH_CLASS}>Code</th>
@@ -156,7 +156,7 @@ export function DashboardFinance({ data, profile }: { data: FinanceDashboardData
               </thead>
               <tbody>
                 {data.recentPayslips.map((r, i) => (
-                  <tr key={r.id} className={cn(i < data.recentPayslips.length - 1 && 'border-b border-[var(--color-border)]')}>
+                  <tr key={r.id} className={cn(i < data.recentPayslips.length - 1 && 'border-b border-[var(--table-border)]')}>
                     <td className={TD_CLASS}>
                       <Link href="/finance/payslips" className={ROW_LINK_CLASS}>
                         {r.payslip_code}

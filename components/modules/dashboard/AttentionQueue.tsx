@@ -83,7 +83,7 @@ export const KIND_BADGE_CLASS: Record<RowKind, string> = {
   overdue:        'bg-[var(--color-danger)]/10  text-[var(--color-danger)]',
   blocked:        'bg-[var(--color-danger)]/10  text-[var(--color-danger)]',
   revision:       'bg-[var(--color-warning)]/10 text-[var(--color-warning)]',
-  waiting_client: 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]',
+  waiting_client: 'bg-[var(--brand-accent)]/10 text-[var(--brand-accent)]',
 }
 
 export function AttentionQueue({
@@ -118,10 +118,10 @@ export function AttentionQueue({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </div>
-          <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>All clear</p>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>No items need attention right now</p>
+          <p className="text-sm font-medium" style={{ color: 'var(--text-primary-neutral)' }}>All clear</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted-neutral)' }}>No items need attention right now</p>
         </div>
-        <div className="border-t border-[var(--color-border)] pt-3">
+        <div className="border-t border-[var(--table-border)] pt-3">
           <AttentionQueueQuickLinks />
         </div>
       </div>
@@ -137,19 +137,19 @@ export function AttentionQueue({
               ? 'var(--color-danger-subtle)'
               : row.kind === 'revision'
               ? 'var(--color-warning-subtle)'
-              : 'var(--color-surface-muted)'
+              : 'var(--surface-neutral)'
           const dotColor =
             row.kind === 'overdue' || row.kind === 'blocked'
               ? 'var(--color-danger)'
               : row.kind === 'revision'
               ? 'var(--color-warning)'
-              : 'var(--color-primary)'
+              : 'var(--brand-accent)'
 
           return (
             <li key={`${row.kind}-${row.id}`}>
               <Link
                 href={row.href}
-                className="group relative flex items-start gap-3 rounded-lg p-3 no-underline transition-colors duration-100 bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)]"
+                className="group relative flex items-start gap-3 rounded-lg border border-[var(--border-divider-soft)] p-3 no-underline transition-colors duration-100 bg-[var(--surface-neutral)] hover:bg-[var(--table-row-hover)]"
               >
                 {/* Status dot */}
                 <div
@@ -175,10 +175,10 @@ export function AttentionQueue({
                       {KIND_LABEL[row.kind]}
                     </span>
                   </div>
-                  <p className="mt-0.5 truncate text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                  <p className="mt-0.5 truncate text-sm font-medium" style={{ color: 'var(--text-primary-neutral)' }}>
                     {row.title}
                   </p>
-                  <div className="mt-0.5 flex items-center gap-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                  <div className="mt-0.5 flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted-neutral)' }}>
                     <span className="font-mono">{row.project}</span>
                     <span>·</span>
                     <span>{row.detailLabel}: {row.detailValue}</span>
@@ -202,12 +202,12 @@ export function AttentionQueue({
       </ul>
 
       {hidden > 0 && (
-        <p className="mt-3 pl-1 text-[0.75rem]" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="mt-3 pl-1 text-[0.75rem]" style={{ color: 'var(--text-muted-neutral)' }}>
           +{hidden} more — use the task and deliverable lists to triage.
         </p>
       )}
 
-      <div className="mt-4 border-t border-[var(--color-border)] pt-3">
+      <div className="mt-4 border-t border-[var(--table-border)] pt-3">
         <AttentionQueueQuickLinks />
       </div>
     </div>
@@ -217,9 +217,9 @@ export function AttentionQueue({
 export function AttentionQueueQuickLinks() {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-2">
-      <Link href="/tasks"        className="text-[0.8125rem] font-semibold text-[var(--color-primary)] no-underline hover:underline">Open tasks →</Link>
-      <Link href="/projects"     className="text-[0.8125rem] font-semibold text-[var(--color-primary)] no-underline hover:underline">Projects →</Link>
-      <Link href="/deliverables" className="text-[0.8125rem] font-semibold text-[var(--color-primary)] no-underline hover:underline">Deliverables →</Link>
+      <Link href="/tasks"        className="text-[0.8125rem] font-semibold text-[var(--brand-accent)] no-underline hover:underline">Open tasks →</Link>
+      <Link href="/projects"     className="text-[0.8125rem] font-semibold text-[var(--brand-accent)] no-underline hover:underline">Projects →</Link>
+      <Link href="/deliverables" className="text-[0.8125rem] font-semibold text-[var(--brand-accent)] no-underline hover:underline">Deliverables →</Link>
     </div>
   )
 }
