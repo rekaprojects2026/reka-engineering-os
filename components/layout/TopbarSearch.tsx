@@ -60,7 +60,7 @@ export function TopbarSearch() {
           aria-hidden="true"
           className={cn(
             'pointer-events-none absolute left-3 transition-colors duration-100',
-            focused ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'
+            focused ? 'text-[var(--brand-accent)]' : 'text-[var(--text-muted-neutral)]'
           )}
         />
         <input
@@ -77,14 +77,14 @@ export function TopbarSearch() {
           autoComplete="off"
           spellCheck={false}
           className={cn(
-            'h-9 w-[300px] rounded-md border border-transparent bg-[var(--color-surface-muted)] py-2 pl-9 pr-8 text-[0.875rem] text-[var(--color-text-primary)] outline-none transition-colors duration-150 placeholder:text-[var(--color-text-muted)]',
-            focused && 'border-[var(--color-primary)] bg-[var(--color-surface)] ring-[3px] ring-[var(--color-primary)]/10'
+            'h-9 w-[240px] rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] py-2 pl-9 pr-8 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-colors duration-150 placeholder:text-[var(--input-placeholder)] lg:w-[280px]',
+            focused && 'border-[var(--input-focus-border)] bg-[var(--input-bg-focus)] ring-[3px] ring-[color:var(--input-focus-ring)]'
           )}
         />
         {!focused && !value && (
           <kbd
             aria-hidden="true"
-            className="pointer-events-none absolute right-3 inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 text-[0.6875rem] font-semibold text-[var(--color-text-muted)]"
+            className="pointer-events-none absolute right-3 inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-[var(--border-default)] bg-[var(--surface-chip)] px-1.5 text-[0.625rem] font-semibold text-[var(--text-soft-muted)]"
           >
             /
           </kbd>

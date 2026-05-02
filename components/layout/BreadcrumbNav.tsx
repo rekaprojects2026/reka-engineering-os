@@ -66,23 +66,23 @@ export function BreadcrumbNav() {
   if (!module) return null
 
   return (
-    <nav aria-label="Current section" className="flex items-center gap-1.5">
+    <nav aria-label="Current section" className="flex items-center gap-2">
       {sub ? (
-        <span className="max-w-[180px] truncate text-[0.8125rem] text-[var(--color-text-muted)] transition-colors">
+        <span className="max-w-[220px] truncate text-[0.875rem] font-medium text-[var(--text-secondary-neutral)] transition-colors">
           {module}
         </span>
       ) : (
-        <span className="max-w-[180px] truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
+        <span className="max-w-[220px] truncate text-[0.875rem] font-semibold text-[var(--text-primary-neutral)]">
           {module}
         </span>
       )}
 
       {sub && (
         <>
-          <span aria-hidden="true" className="select-none text-xs leading-none text-[var(--color-text-muted)] opacity-40">
+          <span aria-hidden="true" className="select-none text-[0.75rem] leading-none text-[var(--text-muted-neutral)] opacity-50">
             /
           </span>
-          <span className="max-w-[180px] truncate text-[0.8125rem] font-medium text-[var(--color-text-primary)]">
+          <span className="max-w-[220px] truncate text-[0.875rem] font-semibold text-[var(--text-primary-neutral)]">
             {sub}
           </span>
         </>
