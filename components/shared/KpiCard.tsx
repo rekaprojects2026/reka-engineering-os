@@ -66,62 +66,72 @@ export function KpiCard({
   const tone = resolveVisualTone(variant, accent)
 
   const valueTone = muted
-    ? 'text-[var(--color-text-muted)]'
-    : tone === 'danger'  ? 'text-[var(--color-danger)]'  :
+    ? 'text-[var(--text-muted-neutral)]'
+    : tone === 'danger'  ? 'text-[var(--color-danger)]' :
     tone === 'warning' ? 'text-[var(--color-warning)]' :
     tone === 'success' ? 'text-[var(--color-success)]' :
-    'text-[var(--color-text-primary)]'
+    'text-[var(--text-primary-neutral)]'
 
-  const iconPill =
-    tone === 'danger'  ? 'bg-[var(--color-danger-subtle)]  text-[var(--color-danger)]'  :
-    tone === 'warning' ? 'bg-[var(--color-warning-subtle)] text-[var(--color-warning)]' :
-    tone === 'success' ? 'bg-[var(--color-success-subtle)] text-[var(--color-success)]' :
-    tone === 'primary' ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)]' :
-    'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'
+  const iconTone =
+    tone === 'danger' ? 'text-[var(--color-danger)]' :
+    tone === 'warning' ? 'text-[var(--color-warning)]' :
+    tone === 'success' ? 'text-[var(--color-success)]' :
+    tone === 'primary' ? 'text-[var(--brand-accent)]' :
+    'text-[var(--text-muted-neutral)]'
+
+  const accentBarTone =
+    tone === 'danger' ? 'bg-[var(--color-danger)]' :
+    tone === 'warning' ? 'bg-[var(--color-warning)]' :
+    tone === 'success' ? 'bg-[var(--color-success)]' :
+    tone === 'primary' ? 'bg-[var(--brand-accent)]' :
+    'bg-transparent'
+
+  const accentBorderTone =
+    tone === 'danger' ? 'border-l-[var(--color-danger)]/25' :
+    tone === 'warning' ? 'border-l-[var(--color-warning)]/25' :
+    tone === 'success' ? 'border-l-[var(--color-success)]/25' :
+    tone === 'primary' ? 'border-l-[var(--brand-accent)]/25' :
+    'border-l-[var(--border-default)]'
 
   const iconContent = icon
     ? React.isValidElement(icon)
       ? icon
-      : React.createElement(icon as React.ElementType, { className: 'h-4 w-4' })
+      : React.createElement(icon as React.ElementType, { className: 'h-3.5 w-3.5' })
     : null
 
   return (
     <div
       className={cn(
-        'kpi-card-hover relative overflow-hidden rounded-[var(--radius-card)] p-4',
-        'border bg-[var(--color-surface)]',
-        tone === 'danger'  ? 'border-[var(--color-danger)]/20'  :
-        tone === 'warning' ? 'border-[var(--color-warning)]/20' :
-        tone === 'success' ? 'border-[var(--color-success)]/20' :
-        'border-[var(--color-border)]',
+        'kpi-card-hover relative overflow-hidden rounded-[var(--radius-card)] border border-l-2 bg-[var(--surface-card)] px-4 py-3.5',
+        tone === 'danger' ? 'border-[var(--border-default)]' :
+        tone === 'warning' ? 'border-[var(--border-default)]' :
+        tone === 'success' ? 'border-[var(--border-default)]' :
+        tone === 'primary' ? 'border-[var(--border-default)]' :
+        'border-[var(--border-default)]',
+        accentBorderTone,
         className
       )}
       style={{ boxShadow: 'var(--shadow-sm)' }}
     >
-      {/* Accent bar — left edge color stripe */}
+      {/* Subtle top accent to preserve semantic tone without saturating card body */}
       <div
         className={cn(
-          'absolute left-0 top-0 h-full w-0.5',
-          tone === 'danger'  ? 'bg-[var(--color-danger)]'  :
-          tone === 'warning' ? 'bg-[var(--color-warning)]' :
-          tone === 'success' ? 'bg-[var(--color-success)]' :
-          tone === 'primary' ? 'bg-[var(--color-primary)]' :
-          'bg-transparent'
+          'absolute left-0 top-0 h-0.5 w-full',
+          accentBarTone
         )}
       />
 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-0.5">
           <p
-            className="text-[0.625rem] font-semibold uppercase tracking-[0.09em]"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="text-[0.625rem] font-semibold uppercase tracking-[0.09em] text-[var(--text-muted-neutral)]"
           >
             {heading}
           </p>
 
           <p
             className={cn(
-              'text-2xl font-semibold leading-none tracking-tight tabular-nums',
+              'text-[1.7rem] font-bold leading-[1.05] tracking-tight tabular-nums',
               valueTone
             )}
           >
@@ -131,7 +141,7 @@ export function KpiCard({
           {trend && (
             <p
               className={cn(
-                'flex items-center gap-0.5 text-[0.6875rem] font-medium',
+                'flex items-center gap-0.5 text-[0.6875rem] font-medium leading-tight',
                 trend.isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]'
               )}
             >
@@ -141,7 +151,7 @@ export function KpiCard({
           )}
 
           {subline && (
-            <p className="text-[0.75rem] leading-snug" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="line-clamp-1 text-[0.75rem] leading-snug text-[var(--text-soft-muted)]">
               {subline}
             </p>
           )}
@@ -151,8 +161,8 @@ export function KpiCard({
           <div
             aria-hidden="true"
             className={cn(
-              'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl',
-              iconPill
+              'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[var(--surface-neutral)]',
+              iconTone
             )}
           >
             {iconContent}
