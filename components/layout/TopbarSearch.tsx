@@ -6,11 +6,8 @@ import { Search } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 
 /**
- * TopbarSearch — global search control.
- *
- * Quiet surface (surface-muted background, no visible border) at rest;
- * resolves to the brand primary focus ring. Width is stable (no expand-on-focus
- * animation) which reads more premium and avoids visual jitter.
+ * TopbarSearch — global search control (Stage 2 input tokens).
+ * Width is stable (no expand-on-focus) to avoid visual jitter.
  */
 export function TopbarSearch() {
   const [value,   setValue]   = useState('')
@@ -60,7 +57,7 @@ export function TopbarSearch() {
           aria-hidden="true"
           className={cn(
             'pointer-events-none absolute left-3 transition-colors duration-100',
-            focused ? 'text-[var(--brand-accent)]' : 'text-[var(--text-muted-neutral)]'
+            focused ? 'text-[var(--brand-accent)]' : 'text-[var(--icon-empty-neutral)]'
           )}
         />
         <input
@@ -77,14 +74,14 @@ export function TopbarSearch() {
           autoComplete="off"
           spellCheck={false}
           className={cn(
-            'h-9 w-[240px] rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] py-2 pl-9 pr-8 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-colors duration-150 placeholder:text-[var(--input-placeholder)] lg:w-[280px]',
+            'h-9 min-w-[200px] max-w-[min(100vw-8rem,320px)] w-[min(100%,260px)] rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] py-2 pl-9 pr-[2.25rem] text-[0.8125rem] leading-snug text-[var(--text-primary-neutral)] outline-none transition-[color,background-color,border-color,box-shadow] duration-150 placeholder:text-[var(--input-placeholder)] md:w-[min(100%,280px)] lg:max-w-[320px]',
             focused && 'border-[var(--input-focus-border)] bg-[var(--input-bg-focus)] ring-[3px] ring-[color:var(--input-focus-ring)]'
           )}
         />
         {!focused && !value && (
           <kbd
             aria-hidden="true"
-            className="pointer-events-none absolute right-3 inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-[var(--border-default)] bg-[var(--surface-chip)] px-1.5 text-[0.625rem] font-semibold text-[var(--text-soft-muted)]"
+            className="pointer-events-none absolute right-2.5 top-1/2 inline-flex h-5 min-w-[1.25rem] -translate-y-1/2 items-center justify-center rounded border border-[var(--input-border)] bg-[var(--surface-neutral)] px-1 text-[0.625rem] font-medium tabular-nums text-[var(--text-muted-neutral)]"
           >
             /
           </kbd>

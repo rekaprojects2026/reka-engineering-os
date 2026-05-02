@@ -3,8 +3,8 @@ import type { WorkerType } from '@/types/database'
 
 const CONFIG: Record<WorkerType, { label: string; bg: string; color: string }> = {
   internal:      { label: 'Internal',      bg: '#E8EEF8', color: '#142D50' },
-  freelancer:    { label: 'Freelancer',    bg: '#FFFBEB', color: '#B45309' },
-  subcontractor: { label: 'Subcontractor', bg: '#F1EFE8', color: '#6A6666' },
+  freelancer:    { label: 'Freelancer',    bg: '#F3F4F6', color: '#B45309' },
+  subcontractor: { label: 'Subcontractor', bg: '#F0F0F0', color: '#8A8A8A' },
 }
 
 const badgeStyle: CSSProperties = {
@@ -19,7 +19,7 @@ const badgeStyle: CSSProperties = {
 }
 
 export function WorkerTypeBadge({ type }: { type: WorkerType }) {
-  const cfg = CONFIG[type] ?? { label: type, bg: '#F1EFE8', color: '#6A6666' }
+  const cfg = CONFIG[type] ?? { label: type, bg: '#F0F0F0', color: '#8A8A8A' }
   return (
     <span style={{ ...badgeStyle, backgroundColor: cfg.bg, color: cfg.color }}>
       {cfg.label}

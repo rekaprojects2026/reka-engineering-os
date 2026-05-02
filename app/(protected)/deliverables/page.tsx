@@ -210,8 +210,8 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
 
       <form method="GET">
         <FilterBar>
-          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search deliverables…" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors min-w-[200px]" />
-          <select name="status" defaultValue={params.status ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
+          <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search deliverables…" className="h-9 min-w-[200px] rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]" />
+          <select name="status" defaultValue={params.status ?? ''} className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Statuses</option>
             <option value="draft">Draft</option>
             <option value="internal_review">Internal Review</option>
@@ -221,7 +221,7 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
             <option value="approved">Approved</option>
             <option value="final_issued">Final Issued</option>
           </select>
-          <select name="type" defaultValue={params.type ?? ''} className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer transition-colors">
+          <select name="type" defaultValue={params.type ?? ''} className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Types</option>
             <option value="drawing">Drawing</option>
             <option value="3d_model">3D Model</option>
@@ -233,7 +233,7 @@ export default async function DeliverablesPage({ searchParams }: PageProps) {
             <option value="revision_package">Revision Package</option>
             <option value="submission_package">Submission Package</option>
           </select>
-          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors whitespace-nowrap cursor-pointer">Filter</button>
+          <button type="submit" className="h-9 cursor-pointer whitespace-nowrap rounded-md border border-[var(--input-border)] bg-[var(--surface-card)] px-3 text-sm font-medium text-[var(--text-secondary-neutral)] transition-colors hover:bg-[var(--surface-neutral)]">Filter</button>
           {hasActiveFilters && (
             <Link href="/deliverables" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium transition-colors whitespace-nowrap no-underline">Clear filters</Link>
           )}

@@ -43,7 +43,7 @@ function resolveVisualTone(
 /**
  * KpiCard — headline metric tile, stripped to v0 discipline.
  *
- *   • p-4 padding, compact tile.
+ *   • Padding from `--space-kpi-*` (global rhythm).
  *   • Supports `title` or legacy `label`, optional `trend`, `subtitle` / `description`.
  *   • `variant` (v0) and `accent` (legacy) combine per resolve rules.
  */
@@ -102,7 +102,7 @@ export function KpiCard({
   return (
     <div
       className={cn(
-        'kpi-card-hover relative overflow-hidden rounded-[var(--radius-card)] border border-l-2 bg-[var(--surface-card)] px-4 py-3.5',
+        'kpi-card-hover relative overflow-hidden rounded-[var(--radius-card)] border border-l-2 bg-[var(--surface-card)] px-[var(--space-kpi-padding-x)] py-[var(--space-kpi-padding-y)]',
         tone === 'danger' ? 'border-[var(--border-default)]' :
         tone === 'warning' ? 'border-[var(--border-default)]' :
         tone === 'success' ? 'border-[var(--border-default)]' :
@@ -121,8 +121,8 @@ export function KpiCard({
         )}
       />
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 space-y-0.5">
+      <div className="flex items-start justify-between gap-[var(--space-grid-gap)]">
+        <div className="min-w-0 space-y-[var(--space-compact-gap)]">
           <p
             className="text-[0.625rem] font-semibold uppercase tracking-[0.09em] text-[var(--text-muted-neutral)]"
           >
@@ -175,7 +175,12 @@ export function KpiCard({
 
 export function KpiStrip({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn('grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6', className)}>
+    <div
+      className={cn(
+        'grid grid-cols-2 gap-[var(--space-grid-gap)] md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
+        className,
+      )}
+    >
       {children}
     </div>
   )

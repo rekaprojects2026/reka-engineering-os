@@ -92,8 +92,8 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
       )}
 
       <div>
-        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
-          Member <span style={{ color: 'var(--color-danger)' }}>*</span>
+        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
+          Member <span style={{ color: 'var(--brand-accent)' }}>*</span>
         </label>
         <select
           name="profile_id"
@@ -102,11 +102,11 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
             width: '100%',
             height: '36px',
             borderRadius: 'var(--radius-control)',
-            border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--text-primary-neutral)',
             padding: '0 10px',
             fontSize: '0.8125rem',
+            outline: 'none',
           }}
         >
           <option value="">Select member…</option>
@@ -120,7 +120,7 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
             Month
           </label>
           <select
@@ -131,11 +131,11 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
               width: '100%',
               height: '36px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              border: '1px solid var(--input-border)',
+              color: 'var(--text-primary-neutral)',
               padding: '0 10px',
               fontSize: '0.8125rem',
+              outline: 'none',
             }}
           >
             {MONTHS.map(m => (
@@ -144,7 +144,7 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
           </select>
         </div>
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
             Year
           </label>
           <select
@@ -155,11 +155,11 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
               width: '100%',
               height: '36px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              border: '1px solid var(--input-border)',
+              color: 'var(--text-primary-neutral)',
               padding: '0 10px',
               fontSize: '0.8125rem',
+              outline: 'none',
             }}
           >
             {YEARS.map(y => (
@@ -178,7 +178,7 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
       />
 
       <div>
-        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
           Bonus
         </label>
         <input
@@ -192,17 +192,17 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
             width: '100%',
             height: '36px',
             borderRadius: 'var(--radius-control)',
-            border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--text-primary-neutral)',
             padding: '0 10px',
             fontSize: '0.8125rem',
+            outline: 'none',
           }}
         />
       </div>
 
       <div>
-        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
           Deduction
         </label>
         <input
@@ -216,11 +216,11 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
             width: '100%',
             height: '36px',
             borderRadius: 'var(--radius-control)',
-            border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--text-primary-neutral)',
             padding: '0 10px',
             fontSize: '0.8125rem',
+            outline: 'none',
           }}
         />
       </div>
@@ -229,25 +229,25 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
         style={{
           padding: '12px 14px',
           borderRadius: 'var(--radius-card)',
-          border: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-surface-muted)',
+          border: '1px solid var(--border-default)',
+          backgroundColor: 'var(--surface-neutral)',
         }}
       >
-        <p style={{ margin: '0 0 4px', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <p style={{ margin: '0 0 4px', fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted-neutral)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Net (read-only)
         </p>
-        <p style={{ margin: 0, fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+        <p style={{ margin: 0, fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary-neutral)' }}>
           {baseCurrency === 'IDR'
             ? formatIDR(netPrimary)
             : `USD ${netPrimary.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`}
         </p>
-        <p style={{ margin: '10px 0 0', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
+        <p style={{ margin: '10px 0 0', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary-neutral)' }}>
           Net yang diterima: {formatIDR(netIdrPreview)}
         </p>
       </div>
 
       <div>
-        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
           Payment account
         </label>
         <select
@@ -256,11 +256,11 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
             width: '100%',
             height: '36px',
             borderRadius: 'var(--radius-control)',
-            border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--text-primary-neutral)',
             padding: '0 10px',
             fontSize: '0.8125rem',
+            outline: 'none',
           }}
         >
           <option value="">—</option>
@@ -271,7 +271,7 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
       </div>
 
       <div>
-        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
+        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)' }}>
           Notes
         </label>
         <textarea
@@ -281,12 +281,12 @@ export function PayslipForm({ members, accounts, fxRate, createPayslip }: Paysli
           style={{
             width: '100%',
             borderRadius: 'var(--radius-control)',
-            border: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--text-primary-neutral)',
             padding: '8px 10px',
             fontSize: '0.8125rem',
             resize: 'vertical',
+            outline: 'none',
           }}
         />
       </div>

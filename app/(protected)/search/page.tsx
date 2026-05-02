@@ -38,17 +38,17 @@ interface PageProps {
 }
 
 const ROW_CLASS =
-  'flex items-center gap-3 px-4 py-2.5 no-underline transition-colors hover:bg-[var(--color-surface-muted)]'
+  'flex items-center gap-3 px-4 py-2.5 no-underline transition-colors hover:bg-[var(--surface-neutral)]'
 
 const searchInputClass =
-  'h-9 w-full max-w-md rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-9 pr-3 text-[0.8125rem] text-[var(--color-text-primary)] outline-none transition-colors placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+  'h-9 w-full max-w-md rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] py-2 pl-9 pr-3 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]'
 
 function SearchField({ defaultQuery }: { defaultQuery: string }) {
   return (
     <form action="/search" method="get" className="relative max-w-md" role="search">
       <Search
         size={14}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--icon-empty-neutral)]"
         aria-hidden="true"
       />
       <input

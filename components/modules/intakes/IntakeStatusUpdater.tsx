@@ -89,8 +89,8 @@ export function IntakeStatusUpdater({
         >
           <div
             style={{
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
+              backgroundColor: 'var(--surface-card)',
+              border: '1px solid var(--border-default)',
               borderRadius: 'var(--radius-card)',
               width: '100%',
               maxWidth: '480px',
@@ -102,7 +102,7 @@ export function IntakeStatusUpdater({
               style={{
                 fontSize: '1.0625rem',
                 fontWeight: 700,
-                color: 'var(--color-text-primary)',
+                color: 'var(--text-primary-neutral)',
                 margin: 0,
               }}
             >
@@ -111,7 +111,7 @@ export function IntakeStatusUpdater({
             <p
               style={{
                 fontSize: '0.875rem',
-                color: 'var(--color-text-muted)',
+                color: 'var(--text-muted-neutral)',
                 marginTop: '8px',
                 lineHeight: 1.5,
               }}
@@ -134,10 +134,10 @@ export function IntakeStatusUpdater({
                 }}
                 style={{
                   padding: '8px 16px',
-                  border: '1px solid var(--color-border)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 'var(--radius-control)',
                   backgroundColor: 'transparent',
-                  color: 'var(--color-text-secondary)',
+                  color: 'var(--text-secondary-neutral)',
                   fontSize: '0.8125rem',
                   fontWeight: 500,
                   cursor: 'pointer',

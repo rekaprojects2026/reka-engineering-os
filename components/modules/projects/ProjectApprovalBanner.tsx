@@ -84,7 +84,7 @@ export function ProjectApprovalBanner({ project, isDirektur, showResubmitCta }: 
                   value={rejectNote}
                   onChange={(e) => setRejectNote(e.target.value)}
                   rows={2}
-                  className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.8125rem] outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                  className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                   placeholder="Jelaskan alasan penolakan…"
                 />
                 <button

@@ -165,9 +165,9 @@ export function FileUploadInput({
           disabled={disabled || isPending}
           style={{
             padding: '8px 14px',
-            backgroundColor: disabled || isPending ? 'var(--color-surface-muted)' : 'var(--color-surface)',
-            color: 'var(--color-text-primary)',
-            border: '1px solid var(--color-border)',
+            backgroundColor: disabled || isPending ? 'var(--surface-chip)' : 'var(--input-bg)',
+            color: 'var(--text-primary-neutral)',
+            border: '1px solid var(--input-border)',
             borderRadius: 'var(--radius-control)',
             fontSize: '0.8125rem',
             fontWeight: 500,
@@ -189,7 +189,7 @@ export function FileUploadInput({
               fontSize: '0.75rem',
               color: 'var(--color-danger)',
               background: 'none',
-              border: '1px solid var(--color-border)',
+              border: '1px solid var(--input-border)',
               borderRadius: 'var(--radius-control)',
               cursor: disabled || isPending ? 'not-allowed' : 'pointer',
             }}

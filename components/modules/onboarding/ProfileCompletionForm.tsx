@@ -13,11 +13,10 @@ interface Props {
 const inputStyle: CSSProperties = {
   width:           '100%',
   padding:         '8px 11px',
-  border:          '1px solid var(--color-border)',
+  border:          '1px solid var(--input-border)',
   borderRadius:    '6px',
   fontSize:        '0.8125rem',
-  color:           'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color:           'var(--text-primary-neutral)',
   outline:         'none',
 }
 
@@ -25,7 +24,7 @@ const labelStyle: CSSProperties = {
   display:      'block',
   fontSize:     '0.8125rem',
   fontWeight:   500,
-  color:        'var(--color-text-secondary)',
+  color:        'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -40,7 +39,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div>
       <label style={labelStyle}>{label}</label>
       {children}
-      {hint && <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '3px' }}>{hint}</p>}
+      {hint && <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '3px' }}>{hint}</p>}
     </div>
   )
 }

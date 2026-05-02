@@ -27,11 +27,10 @@ interface ConvertIntakeFormProps {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '8px 11px',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color: 'var(--text-primary-neutral)',
   outline: 'none',
 }
 
@@ -39,7 +38,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '0.8125rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -53,7 +52,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   return (
     <div>
       <label style={labelStyle}>
-        {label}{required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--brand-accent)', marginLeft: '2px' }}>*</span>}
       </label>
       {children}
     </div>
@@ -90,10 +89,10 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
             padding: '12px 16px',
             marginBottom: '20px',
             backgroundColor: 'var(--color-primary-subtle)',
-            border: '1px solid var(--color-border)',
+            border: '1px solid var(--border-default)',
             borderRadius: 'var(--radius-control)',
             fontSize: '0.8125rem',
-            color: 'var(--color-text-secondary)',
+            color: 'var(--text-secondary-neutral)',
           }}
         >
           <p style={{ fontWeight: 600, color: 'var(--color-primary)', marginBottom: '4px' }}>
@@ -102,7 +101,7 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
           <p>
             <strong>{intake.title}</strong>
             {intake.short_brief && (
-              <span style={{ display: 'block', marginTop: '4px', color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
+              <span style={{ display: 'block', marginTop: '4px', color: 'var(--text-muted-neutral)', fontSize: '0.75rem' }}>
                 {intake.short_brief.length > 150 ? intake.short_brief.slice(0, 150) + '…' : intake.short_brief}
               </span>
             )}
@@ -141,14 +140,14 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
                   <div
                     style={{
                       padding: '8px 12px',
-                      backgroundColor: 'var(--color-surface-subtle)',
-                    borderRadius: 'var(--radius-control)',
-                    fontSize: '0.75rem',
-                      color: 'var(--color-text-muted)',
+                      backgroundColor: 'var(--surface-neutral)',
+                      borderRadius: 'var(--radius-control)',
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted-neutral)',
                       marginBottom: '4px',
                     }}
                   >
-                    Intake prospect name: <strong style={{ color: 'var(--color-text-secondary)' }}>{intake.temp_client_name}</strong>
+                    Intake prospect name: <strong style={{ color: 'var(--text-secondary-neutral)' }}>{intake.temp_client_name}</strong>
                     <br />
                     Select an existing client below to associate with this project.
                   </div>
@@ -175,14 +174,14 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
                 <div
                   style={{
                     padding: '10px 14px',
-                    backgroundColor: 'var(--color-surface-subtle)',
+                    backgroundColor: 'var(--surface-neutral)',
                     borderRadius: 'var(--radius-control)',
                     fontSize: '0.8125rem',
-                    color: 'var(--color-text-primary)',
+                    color: 'var(--text-primary-neutral)',
                   }}
                 >
                   <span style={{ fontWeight: 500 }}>{intake.clients?.client_name}</span>
-                  <span style={{ color: 'var(--color-text-muted)', marginLeft: '6px', fontSize: '0.75rem' }}>
+                  <span style={{ color: 'var(--text-muted-neutral)', marginLeft: '6px', fontSize: '0.75rem' }}>
                     {intake.clients?.client_code}
                   </span>
                 </div>
@@ -317,7 +316,7 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
             style={{
               padding: '10px 12px',
               backgroundColor: 'var(--color-danger-subtle)',
-              border: '1px solid var(--color-border-strong)',
+              border: '1px solid var(--border-strong-neutral)',
               borderRadius: 'var(--radius-control)',
               color: 'var(--color-danger)',
               fontSize: '0.8125rem',
@@ -351,9 +350,9 @@ export function ConvertIntakeForm({ intake, clients, users, disciplineOptions, p
             disabled={isPending}
             style={{
               padding: '9px 16px',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-secondary)',
-              border: '1px solid var(--color-border)',
+              backgroundColor: 'var(--surface-card)',
+              color: 'var(--text-secondary-neutral)',
+              border: '1px solid var(--input-border)',
               borderRadius: 'var(--radius-control)',
               fontSize: '0.8125rem',
               cursor: 'pointer',

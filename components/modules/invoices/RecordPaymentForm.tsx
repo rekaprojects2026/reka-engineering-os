@@ -41,11 +41,10 @@ export function RecordPaymentForm({ invoiceId, currency, accounts, fxRate, onSub
   const fieldStyle = {
     width: '100%',
     padding: '7px 10px',
-    border: '1px solid var(--color-border)',
+    border: '1px solid var(--input-border)',
     borderRadius: 'var(--radius-control)',
     fontSize: '0.875rem',
-    backgroundColor: 'var(--color-surface)',
-    color: 'var(--color-text-primary)',
+    color: 'var(--text-primary-neutral)',
     outline: 'none',
     boxSizing: 'border-box' as const,
   }
@@ -54,7 +53,7 @@ export function RecordPaymentForm({ invoiceId, currency, accounts, fxRate, onSub
     display: 'block',
     fontSize: '0.75rem',
     fontWeight: 600,
-    color: 'var(--color-text-secondary)',
+    color: 'var(--text-secondary-neutral)',
     marginBottom: '4px',
   }
 
@@ -97,7 +96,7 @@ export function RecordPaymentForm({ invoiceId, currency, accounts, fxRate, onSub
             style={fieldStyle}
           />
           {currency === 'USD' && amountNum > 0 && (
-            <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+            <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '2px' }}>
               ≈ {(amountNum * fxRate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}
             </p>
           )}

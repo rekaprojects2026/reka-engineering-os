@@ -29,15 +29,14 @@ export default async function ProtectedLayout({
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:pl-[var(--sidebar-width)]">
         <AppTopbar
           left={
-            <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <MobileSidebar {...sidebarProfile} />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 py-0.5">
                 <BreadcrumbNav />
               </div>
             </div>
           }
           right={<TopbarSearch />}
-          showSearch={true}
           notificationUserId={profile.id}
         />
 

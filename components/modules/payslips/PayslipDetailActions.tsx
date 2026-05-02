@@ -50,9 +50,9 @@ export function PayslipDetailActions({ payslipId, status, markPayslipPaid }: Pay
         style={{
           padding: '8px 14px',
           borderRadius: 'var(--radius-control)',
-          border: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-surface)',
-          color: 'var(--color-text-primary)',
+          border: '1px solid var(--input-border)',
+          backgroundColor: 'var(--surface-card)',
+          color: 'var(--text-primary-neutral)',
           fontSize: '0.8125rem',
           fontWeight: 600,
           cursor: 'pointer',

@@ -22,7 +22,7 @@ interface PageProps {
 const STATUS_STYLES: Record<string, { bg: string; color: string; label: string }> = {
   draft:   { bg: '#f1f5f9', color: '#475569', label: 'Draft' },
   sent:    { bg: '#eff6ff', color: '#2563eb', label: 'Sent' },
-  partial: { bg: '#fefce8', color: '#ca8a04', label: 'Partial' },
+  partial: { bg: '#F3F4F6', color: '#D97706', label: 'Partial' },
   paid:    { bg: '#f0fdf4', color: '#16a34a', label: 'Paid' },
   overdue: { bg: '#fef2f2', color: '#dc2626', label: 'Overdue' },
   void:    { bg: '#f8fafc', color: '#94a3b8', label: 'Void' },
@@ -171,9 +171,9 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
       <form method="GET">
         <FilterBar>
           <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search invoices…"
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] min-w-[200px]" />
+            className="h-9 min-w-[200px] rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]" />
           <select name="status" defaultValue={params.status ?? ''}
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
+            className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Statuses</option>
             <option value="draft">Draft</option>
             <option value="sent">Sent</option>
@@ -182,7 +182,7 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
             <option value="overdue">Overdue</option>
             <option value="void">Void</option>
           </select>
-          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium hover:bg-[var(--color-surface-muted)] cursor-pointer">Filter</button>
+          <button type="submit" className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--surface-card)] px-3 text-sm font-medium text-[var(--text-secondary-neutral)] transition-colors hover:bg-[var(--surface-neutral)]">Filter</button>
           {hasActiveFilters && <Link href="/finance/invoices" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium no-underline">Clear</Link>}
         </FilterBar>
       </form>

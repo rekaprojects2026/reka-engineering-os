@@ -14,11 +14,10 @@ interface AddTeamMemberFormProps {
 
 const inputStyle: React.CSSProperties = {
   padding: '7px 11px',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: '6px',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color: 'var(--text-primary-neutral)',
   outline: 'none',
 }
 
@@ -52,7 +51,7 @@ export function AddTeamMemberForm({ projectId, users, assignedUserIds, projectDi
     return (
       <p style={{
         fontSize: '0.75rem',
-        color: 'var(--color-text-muted)',
+        color: 'var(--text-muted-neutral)',
         padding: '8px 0',
       }}>
         All active users are already assigned to this project.
@@ -71,7 +70,7 @@ export function AddTeamMemberForm({ projectId, users, assignedUserIds, projectDi
               display: 'block',
               fontSize: '0.6875rem',
               fontWeight: 600,
-              color: 'var(--color-text-muted)',
+              color: 'var(--text-muted-neutral)',
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
               marginBottom: '4px',
@@ -95,7 +94,7 @@ export function AddTeamMemberForm({ projectId, users, assignedUserIds, projectDi
               display: 'block',
               fontSize: '0.6875rem',
               fontWeight: 600,
-              color: 'var(--color-text-muted)',
+              color: 'var(--text-muted-neutral)',
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
               marginBottom: '4px',
@@ -118,7 +117,7 @@ export function AddTeamMemberForm({ projectId, users, assignedUserIds, projectDi
               display: 'block',
               fontSize: '0.6875rem',
               fontWeight: 600,
-              color: 'var(--color-text-muted)',
+              color: 'var(--text-muted-neutral)',
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
               marginBottom: '4px',
@@ -142,7 +141,7 @@ export function AddTeamMemberForm({ projectId, users, assignedUserIds, projectDi
           style={{
             padding: '7px 14px',
             backgroundColor: isPending ? 'var(--color-primary-hover)' : 'var(--color-primary)',
-            color: '#fff',
+            color: 'var(--color-primary-fg)',
             border: 'none',
             borderRadius: '6px',
             fontSize: '0.8125rem',

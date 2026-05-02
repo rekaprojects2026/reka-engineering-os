@@ -34,11 +34,10 @@ interface TaskFormProps {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '8px 11px',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color: 'var(--text-primary-neutral)',
   outline: 'none',
 }
 
@@ -46,7 +45,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '0.8125rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -59,10 +58,10 @@ const fieldGroupStyle: React.CSSProperties = {
 const noticeStyle: React.CSSProperties = {
   padding: '10px 12px',
   backgroundColor: 'var(--color-info-subtle)',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--border-default)',
   borderRadius: 'var(--radius-control)',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   lineHeight: 1.5,
 }
 
@@ -79,7 +78,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   return (
     <div>
       <label style={labelStyle}>
-        {label}{required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--brand-accent)', marginLeft: '2px' }}>*</span>}
       </label>
       {children}
     </div>
@@ -103,7 +102,7 @@ function FormChrome({
         <div role="alert" style={{
           padding: '10px 12px',
           backgroundColor: 'var(--color-danger-subtle)',
-          border: '1px solid var(--color-border-strong)',
+          border: '1px solid var(--border-strong-neutral)',
           borderRadius: 'var(--radius-control)',
           color: 'var(--color-danger)',
           fontSize: '0.8125rem',
@@ -126,9 +125,9 @@ function FormChrome({
         </button>
         <button type="button" onClick={onCancel} disabled={isPending} style={{
           padding: '9px 16px',
-          backgroundColor: 'var(--color-surface)',
-          color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)',
+          backgroundColor: 'var(--surface-card)',
+          color: 'var(--text-secondary-neutral)',
+          border: '1px solid var(--input-border)',
           borderRadius: 'var(--radius-control)',
           fontSize: '0.8125rem',
           cursor: 'pointer',

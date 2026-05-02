@@ -5,10 +5,10 @@ import { AlertCircle } from 'lucide-react'
 import { activateInvite } from '@/lib/invites/actions'
 
 const controlClass =
-  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+  'h-10 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.875rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]'
 
 const readOnlyControlClass =
-  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-subtle)] px-3 text-[0.875rem] text-[var(--color-text-muted)] outline-none'
+  'h-10 w-full rounded-md border border-[var(--input-border)] bg-[var(--surface-neutral)] px-3 text-[0.875rem] text-[var(--text-muted-neutral)] outline-none'
 
 interface Props {
   token: string
@@ -35,7 +35,7 @@ export function ActivateForm({ token, email, fullName }: Props) {
       <div className="space-y-1.5">
         <label
           htmlFor="activate-email"
-          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
         >
           Email address
         </label>
@@ -51,10 +51,10 @@ export function ActivateForm({ token, email, fullName }: Props) {
       <div className="space-y-1.5">
         <label
           htmlFor="activate-full-name"
-          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
         >
           Full name{' '}
-          <span className="text-[var(--color-danger)]" aria-hidden>
+          <span className="text-[var(--brand-accent)]" aria-hidden>
             *
           </span>
         </label>
@@ -72,10 +72,10 @@ export function ActivateForm({ token, email, fullName }: Props) {
       <div className="space-y-1.5">
         <label
           htmlFor="activate-password"
-          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
         >
           Password{' '}
-          <span className="text-[var(--color-danger)]" aria-hidden>
+          <span className="text-[var(--brand-accent)]" aria-hidden>
             *
           </span>
         </label>
@@ -94,10 +94,10 @@ export function ActivateForm({ token, email, fullName }: Props) {
       <div className="space-y-1.5">
         <label
           htmlFor="activate-confirm"
-          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
         >
           Confirm password{' '}
-          <span className="text-[var(--color-danger)]" aria-hidden>
+          <span className="text-[var(--brand-accent)]" aria-hidden>
             *
           </span>
         </label>

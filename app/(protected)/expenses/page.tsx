@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
-  pending: { bg: '#fefce8', color: '#ca8a04', label: 'Pending' },
+  pending: { bg: '#F3F4F6', color: '#D97706', label: 'Pending' },
   approved: { bg: '#f0fdf4', color: '#16a34a', label: 'Approved' },
   rejected: { bg: '#fef2f2', color: '#dc2626', label: 'Rejected' },
 }

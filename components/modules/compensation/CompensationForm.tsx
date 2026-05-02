@@ -24,7 +24,7 @@ const LABEL: CSSProperties = {
   display: 'block',
   fontSize: '0.75rem',
   fontWeight: 600,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '4px',
 }
 
@@ -32,10 +32,10 @@ const INPUT: CSSProperties = {
   width: '100%',
   padding: '8px 10px',
   fontSize: '0.8125rem',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
-  backgroundColor: 'var(--color-surface)',
-  color: 'var(--color-text-primary)',
+  color: 'var(--text-primary-neutral)',
+  outline: 'none',
 }
 
 const GRID2: CSSProperties = {

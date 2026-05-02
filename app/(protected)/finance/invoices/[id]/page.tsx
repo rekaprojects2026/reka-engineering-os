@@ -19,7 +19,7 @@ export const metadata = { title: 'Invoice — ReKa Engineering OS' }
 const STATUS_STYLES: Record<string, { bg: string; color: string; label: string }> = {
   draft:   { bg: '#f1f5f9', color: '#475569', label: 'Draft' },
   sent:    { bg: '#eff6ff', color: '#2563eb', label: 'Sent' },
-  partial: { bg: '#fefce8', color: '#ca8a04', label: 'Partial' },
+  partial: { bg: '#F3F4F6', color: '#D97706', label: 'Partial' },
   paid:    { bg: '#f0fdf4', color: '#16a34a', label: 'Paid' },
   overdue: { bg: '#fef2f2', color: '#dc2626', label: 'Overdue' },
   void:    { bg: '#f8fafc', color: '#94a3b8', label: 'Void' },
@@ -257,7 +257,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
                 <select
                   name="status"
                   defaultValue={invoice.status}
-                  style={{ width: '100%', padding: '7px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.875rem', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', outline: 'none', cursor: 'pointer' }}
+                  style={{ width: '100%', padding: '7px 10px', border: '1px solid var(--input-border)', borderRadius: 'var(--radius-control)', fontSize: '0.875rem', backgroundColor: 'var(--input-bg)', color: 'var(--text-primary-neutral)', outline: 'none', cursor: 'pointer' }}
                 >
                   <option value="draft">Draft</option>
                   <option value="sent">Sent</option>
@@ -268,7 +268,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
                 </select>
                 <button
                   type="submit"
-                  style={{ padding: '7px 14px', backgroundColor: 'var(--color-surface-muted)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--color-text-primary)' }}
+                  style={{ padding: '7px 14px', backgroundColor: 'var(--surface-neutral)', border: '1px solid var(--input-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer', color: 'var(--text-primary-neutral)' }}
                 >
                   Save Status
                 </button>

@@ -16,7 +16,7 @@ const label: CSSProperties = {
   display: 'block',
   fontSize: '0.75rem',
   fontWeight: 600,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '4px',
 }
 
@@ -24,10 +24,10 @@ const input: CSSProperties = {
   width: '100%',
   padding: '8px 10px',
   fontSize: '0.8125rem',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
-  backgroundColor: 'var(--color-surface)',
-  color: 'var(--color-text-primary)',
+  color: 'var(--text-primary-neutral)',
+  outline: 'none',
 }
 
 export function CompensationRecordActions({
@@ -82,7 +82,7 @@ export function CompensationRecordActions({
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {showFinanceDraft && (
         <div>
-          <h3 style={{ fontSize: '0.8125rem', fontWeight: 600, marginBottom: '10px', color: 'var(--color-text-primary)' }}>
+          <h3 style={{ fontSize: '0.8125rem', fontWeight: 600, marginBottom: '10px', color: 'var(--text-primary-neutral)' }}>
             Tindakan Finance
           </h3>
           <form action={confirmFormAction} style={{ marginBottom: '14px' }}>
@@ -117,12 +117,12 @@ export function CompensationRecordActions({
               disabled={returnPending}
               style={{
                 padding: '8px 16px',
-                border: '1px solid var(--color-border-strong)',
+                border: '1px solid var(--border-strong-neutral)',
                 borderRadius: 'var(--radius-control)',
                 fontSize: '0.8125rem',
                 fontWeight: 600,
                 color: 'var(--color-danger)',
-                backgroundColor: 'var(--color-surface)',
+                backgroundColor: 'var(--surface-card)',
                 cursor: returnPending ? 'not-allowed' : 'pointer',
               }}
             >

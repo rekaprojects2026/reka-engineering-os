@@ -44,10 +44,10 @@ interface ProjectFormProps {
 }
 
 const controlClass =
-  'h-10 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.875rem] text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+  'h-10 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.875rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]'
 
 const textareaClass =
-  'min-h-[5rem] w-full resize-y rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.875rem] leading-normal text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-subtle)]'
+  'min-h-[5rem] w-full resize-y rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[0.875rem] leading-normal text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]'
 
 function ProjectFormSection({
   title,
@@ -62,9 +62,9 @@ function ProjectFormSection({
 }) {
   return (
     <section className={cn(!first && 'mt-10')}>
-      <div className="mb-6 border-b border-[var(--color-border)] pb-4">
-        <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
-        <p className="mt-0.5 text-[0.8125rem] text-[var(--color-text-muted)]">{description}</p>
+      <div className="mb-6 border-b border-[var(--border-default)] pb-4">
+        <h2 className="text-base font-semibold text-[var(--text-primary-neutral)]">{title}</h2>
+        <p className="mt-0.5 text-[0.8125rem] text-[var(--text-muted-neutral)]">{description}</p>
       </div>
       {children}
     </section>
@@ -74,10 +74,10 @@ function ProjectFormSection({
 function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--color-text-secondary)]">
+      <label className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]">
         {label}{' '}
         {required && (
-          <span className="text-[var(--color-danger)]" aria-hidden>
+          <span className="text-[var(--brand-accent)]" aria-hidden>
             *
           </span>
         )}
@@ -101,18 +101,18 @@ function DriveModeRadio({
   hint?: string
 }) {
   return (
-    <label className="flex cursor-pointer gap-2 text-[0.875rem] text-[var(--color-text-primary)]">
+    <label className="flex cursor-pointer gap-2 text-[0.875rem] text-[var(--text-primary-neutral)]">
       <input
         type="radio"
         name="drive_mode_radio"
         value={value}
         checked={current === value}
         onChange={() => onChange(value)}
-        className="mt-0.5 h-4 w-4 shrink-0 border-[var(--color-border)]"
+        className="mt-0.5 h-4 w-4 shrink-0 border-[var(--input-border)]"
       />
       <span>
         <span className="font-medium">{title}</span>
-        {hint ? <span className="mt-0.5 block text-[0.75rem] font-normal text-[var(--color-text-muted)]">{hint}</span> : null}
+        {hint ? <span className="mt-0.5 block text-[0.75rem] font-normal text-[var(--text-muted-neutral)]">{hint}</span> : null}
       </span>
     </label>
   )
@@ -263,7 +263,7 @@ export function ProjectForm({
                     </option>
                   ))}
                 </select>
-                <p className="mt-1.5 text-[0.8125rem] text-[var(--color-text-muted)]">
+                <p className="mt-1.5 text-[0.8125rem] text-[var(--text-muted-neutral)]">
                   {contractSourceType === 'PLATFORM'
                     ? 'Billing dan pembayaran dikelola oleh platform — tidak ada termin atau BAST di ReKa OS untuk project ini.'
                     : 'Billing domestik — sistem membuat jadwal termin otomatis setelah project disetujui Direktur.'}
@@ -313,7 +313,7 @@ export function ProjectForm({
           <div className="space-y-5">
             {contractSourceType === 'DOMESTIC' ? (
               <>
-                <p className="text-[0.8125rem] leading-relaxed text-[var(--color-text-muted)]">
+                <p className="text-[0.8125rem] leading-relaxed text-[var(--text-muted-neutral)]">
                   Setelah project disetujui Direktur dan status menjadi aktif, sistem membuat jadwal termin otomatis
                   dari nilai kontrak (empat termin + retensi opsional).
                 </p>
@@ -335,9 +335,9 @@ export function ProjectForm({
                     value="true"
                     defaultChecked={project?.has_retention ?? false}
                     onChange={(e) => setShowRetention(e.target.checked)}
-                    className="h-4 w-4 rounded border border-[var(--color-border)]"
+                    className="h-4 w-4 rounded border border-[var(--border-default)]"
                   />
-                  <label htmlFor="has_retention" className="text-[0.875rem] text-[var(--color-text-secondary)]">
+                  <label htmlFor="has_retention" className="text-[0.875rem] text-[var(--text-secondary-neutral)]">
                     Ada klausul retensi di kontrak?
                   </label>
                 </div>
@@ -356,7 +356,7 @@ export function ProjectForm({
                 ) : null}
               </>
             ) : (
-              <p className="text-[0.8125rem] text-[var(--color-text-muted)]">
+              <p className="text-[0.8125rem] text-[var(--text-muted-neutral)]">
                 Billing dan pembayaran dikelola oleh platform; tidak ada termin atau BAST di ReKa OS untuk project ini.
               </p>
             )}
@@ -498,10 +498,10 @@ export function ProjectForm({
                   aria-readonly="true"
                   className={cn(
                     controlClass,
-                    'cursor-default bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
+                    'cursor-default bg-[var(--surface-neutral)] text-[var(--text-muted-neutral)]',
                   )}
                 />
-                <p className="mt-1.5 text-[0.75rem] text-[var(--color-text-muted)]">
+                <p className="mt-1.5 text-[0.75rem] text-[var(--text-muted-neutral)]">
                   Dikalkulasi otomatis dari tasks
                 </p>
               </Field>
@@ -511,8 +511,8 @@ export function ProjectForm({
 
         <ProjectFormSection title="Links & notes" description="Google Drive setup and internal-only context.">
           <div className="space-y-5">
-            <fieldset className="space-y-3 rounded-md border border-[var(--color-border)] p-4">
-              <legend className="px-1 text-[0.8125rem] font-semibold text-[var(--color-text-primary)]">
+            <fieldset className="space-y-3 rounded-md border border-[var(--border-default)] p-4">
+              <legend className="px-1 text-[0.8125rem] font-semibold text-[var(--text-primary-neutral)]">
                 Penyimpanan Google Drive
               </legend>
               {mode === 'create' ? (
@@ -541,7 +541,7 @@ export function ProjectForm({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <p className="text-[0.8125rem] text-[var(--color-text-muted)]">
+                      <p className="text-[0.8125rem] text-[var(--text-muted-neutral)]">
                         Google Drive belum terhubung.{' '}
                         <a href="/settings?tab=finance" className="font-medium text-[var(--color-primary)] underline-offset-2 hover:underline">
                           Hubungkan di Settings
@@ -579,7 +579,7 @@ export function ProjectForm({
                 <div className="space-y-3">
                   {project?.google_drive_folder_link ? (
                     <div className="space-y-2">
-                      <p className="text-[0.8125rem] text-[var(--color-text-muted)]">Folder Drive saat ini</p>
+                      <p className="text-[0.8125rem] text-[var(--text-muted-neutral)]">Folder Drive saat ini</p>
                       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
                         <a
                           href={project.google_drive_folder_link}
@@ -591,7 +591,7 @@ export function ProjectForm({
                         </a>
                         {project.project_code ? (
                           <CopyDriveFolderNameButton
-                            className="inline-flex h-10 shrink-0 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] px-3 text-[0.75rem] font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-border)] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex h-10 shrink-0 items-center justify-center rounded-md border border-[var(--border-default)] bg-[var(--surface-neutral)] px-3 text-[0.75rem] font-medium text-[var(--text-secondary-neutral)] transition-colors hover:bg-[var(--surface-chip)] disabled:cursor-not-allowed disabled:opacity-50"
                             folderName={buildRekaDriveFolderName({
                               clientCode: clients.find((c) => c.id === project.client_id)?.client_code ?? '',
                               projectCode: project.project_code,
@@ -671,14 +671,14 @@ export function ProjectForm({
         {error && (
           <div
             role="alert"
-            className="mt-8 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.8125rem] text-[var(--color-danger)]"
+            className="mt-8 rounded-lg border border-[var(--border-strong-neutral)] bg-[var(--color-danger-subtle)] px-4 py-3 text-[0.8125rem] text-[var(--color-danger)]"
           >
             {error}
           </div>
         )}
       </div>
 
-      <div className="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-4">
+      <div className="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-[var(--border-default)] bg-[var(--surface-card)] px-6 py-4">
         <div className="flex items-center justify-end gap-3">
           <button
             type="button"

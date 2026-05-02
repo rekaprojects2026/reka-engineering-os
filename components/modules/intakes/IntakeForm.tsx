@@ -26,11 +26,10 @@ interface IntakeFormProps {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '8px 11px',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color: 'var(--text-primary-neutral)',
   outline: 'none',
 }
 
@@ -38,7 +37,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '0.8125rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -121,8 +120,8 @@ export function IntakeForm({ mode, intake, clients, disciplineOptions, projectTy
                   fontSize: '0.8125rem',
                   fontWeight: 500,
                   borderRadius: 'var(--radius-control)',
-                  border: useExistingClient ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
-                  backgroundColor: useExistingClient ? 'var(--color-primary-subtle)' : 'var(--color-surface)',
+                  border: useExistingClient ? '1px solid var(--color-primary)' : '1px solid var(--input-border)',
+                  backgroundColor: useExistingClient ? 'var(--color-primary-subtle)' : 'var(--input-bg)',
                   color: useExistingClient ? 'var(--color-primary)' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                 }}
@@ -137,8 +136,8 @@ export function IntakeForm({ mode, intake, clients, disciplineOptions, projectTy
                   fontSize: '0.8125rem',
                   fontWeight: 500,
                   borderRadius: 'var(--radius-control)',
-                  border: !useExistingClient ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
-                  backgroundColor: !useExistingClient ? 'var(--color-primary-subtle)' : 'var(--color-surface)',
+                  border: !useExistingClient ? '1px solid var(--color-primary)' : '1px solid var(--input-border)',
+                  backgroundColor: !useExistingClient ? 'var(--color-primary-subtle)' : 'var(--input-bg)',
                   color: !useExistingClient ? 'var(--color-primary)' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                 }}
@@ -294,8 +293,8 @@ export function IntakeForm({ mode, intake, clients, disciplineOptions, projectTy
                   lineHeight: 1.5,
                   margin: 0,
                   padding: '8px 10px',
-                  backgroundColor: 'var(--color-surface-subtle)',
-                  border: '1px solid var(--color-border)',
+                  backgroundColor: 'var(--surface-neutral)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 'var(--radius-control)',
                 }}
               >
@@ -321,7 +320,7 @@ export function IntakeForm({ mode, intake, clients, disciplineOptions, projectTy
             style={{
               padding: '10px 12px',
               backgroundColor: 'var(--color-danger-subtle)',
-              border: '1px solid var(--color-border-strong)',
+              border: '1px solid var(--border-strong-neutral)',
               borderRadius: 'var(--radius-control)',
               color: 'var(--color-danger)',
               fontSize: '0.8125rem',
@@ -355,9 +354,9 @@ export function IntakeForm({ mode, intake, clients, disciplineOptions, projectTy
             disabled={isPending}
             style={{
               padding: '9px 16px',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-secondary)',
-              border: '1px solid var(--color-border)',
+              backgroundColor: 'var(--surface-card)',
+              color: 'var(--text-secondary-neutral)',
+              border: '1px solid var(--input-border)',
               borderRadius: 'var(--radius-control)',
               fontSize: '0.8125rem',
               cursor: 'pointer',

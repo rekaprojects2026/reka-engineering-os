@@ -22,7 +22,12 @@ export function MobileSidebar(props: Omit<SidebarShellProps, 'onNavigate'>) {
           <Menu size={18} aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" showCloseButton className="border-0 p-0" style={{ backgroundColor: 'var(--sidebar-bg)' }}>
+      <SheetContent
+        side="left"
+        showCloseButton
+        className="w-[var(--sidebar-drawer-max-w)] max-w-[100vw] overflow-x-hidden border-0 p-0 sm:max-w-[min(20rem,calc(100vw-1rem))]"
+        style={{ backgroundColor: 'var(--sidebar-bg)' }}
+      >
         <SheetTitle className="sr-only">Main navigation</SheetTitle>
         <SidebarContent {...props} onNavigate={() => setOpen(false)} />
       </SheetContent>

@@ -66,23 +66,26 @@ export function BreadcrumbNav() {
   if (!module) return null
 
   return (
-    <nav aria-label="Current section" className="flex items-center gap-2">
+    <nav aria-label="Current section" className="flex min-h-[1.375rem] items-center gap-2.5 sm:gap-3">
       {sub ? (
-        <span className="max-w-[220px] truncate text-[0.875rem] font-medium text-[var(--text-secondary-neutral)] transition-colors">
+        <span className="max-w-[min(100%,240px)] truncate text-[0.9375rem] font-medium leading-snug text-[var(--text-muted-neutral)] sm:max-w-[280px]">
           {module}
         </span>
       ) : (
-        <span className="max-w-[220px] truncate text-[0.875rem] font-semibold text-[var(--text-primary-neutral)]">
+        <span className="max-w-[min(100%,280px)] truncate text-[0.9375rem] font-semibold leading-snug text-[var(--text-primary-neutral)] sm:max-w-[320px]">
           {module}
         </span>
       )}
 
       {sub && (
         <>
-          <span aria-hidden="true" className="select-none text-[0.75rem] leading-none text-[var(--text-muted-neutral)] opacity-50">
+          <span
+            aria-hidden="true"
+            className="select-none px-0.5 text-[0.8125rem] font-normal leading-none text-[var(--text-soft-muted)]"
+          >
             /
           </span>
-          <span className="max-w-[220px] truncate text-[0.875rem] font-semibold text-[var(--text-primary-neutral)]">
+          <span className="max-w-[min(100%,240px)] truncate text-[0.9375rem] font-semibold leading-snug text-[var(--text-primary-neutral)] sm:max-w-[280px]">
             {sub}
           </span>
         </>

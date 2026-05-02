@@ -24,7 +24,7 @@ export function EmptyState({ icon, title, description, action, emphasis, compact
     return (
       <div
         className={cn(
-          'flex items-center gap-3 rounded-[var(--radius-control)] px-4 py-3',
+          'flex items-center gap-[var(--space-grid-gap)] rounded-[var(--radius-control)] px-[var(--space-4)] py-[var(--space-3)]',
           neutralTone
             ? 'border border-dashed border-[var(--empty-border)] bg-[var(--empty-bg)]'
             : 'border border-dashed border-[var(--color-border)] bg-[var(--color-surface-subtle)]',
@@ -66,19 +66,19 @@ export function EmptyState({ icon, title, description, action, emphasis, compact
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center py-16 text-center',
-        emphasis && 'py-20',
+        'flex flex-col items-center justify-center py-[var(--space-empty-block-y)] text-center',
+        emphasis && 'py-[var(--space-empty-block-y-emphasis)]',
         className
       )}
     >
       {icon && (
         <div
           className={cn(
-            'mb-4 flex items-center justify-center rounded-2xl',
+            'mb-[var(--space-section-gap)] flex items-center justify-center rounded-2xl',
             neutralTone
               ? 'bg-[var(--surface-neutral)] text-[var(--empty-icon)]'
               : 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
-            emphasis ? 'mb-5 h-14 w-14' : 'h-12 w-12'
+            emphasis ? 'mb-[var(--space-5)] h-14 w-14' : 'h-12 w-12'
           )}
           aria-hidden="true"
         >
@@ -103,7 +103,7 @@ export function EmptyState({ icon, title, description, action, emphasis, compact
           {description}
         </p>
       )}
-      {action && <div className="mt-4">{action}</div>}
+      {action && <div className="mt-[var(--space-section-gap)]">{action}</div>}
     </div>
   )
 }

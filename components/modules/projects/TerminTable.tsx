@@ -243,7 +243,7 @@ function TerminRowActions({
               placeholder="UUID invoice"
               value={invoiceDraft}
               onChange={(e) => setInvoiceDraft(e.target.value)}
-              className="h-8 min-w-[140px] flex-1 rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.75rem]"
+              className="h-8 min-w-[140px] flex-1 rounded border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.75rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             />
             <button
               type="button"

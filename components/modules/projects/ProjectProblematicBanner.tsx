@@ -52,7 +52,7 @@ export function ProjectProblematicBanner({ projectId, problemNote, canResolve }:
               type="button"
               onClick={handleResolve}
               disabled={isPending}
-              className="whitespace-nowrap rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[0.75rem] font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-subtle)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="whitespace-nowrap rounded border border-[var(--input-border)] bg-[var(--surface-card)] px-2.5 py-1 text-[0.75rem] font-medium text-[var(--text-primary-neutral)] transition-colors hover:bg-[var(--surface-neutral)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isPending ? (
                 <span className="inline-flex items-center gap-1.5">

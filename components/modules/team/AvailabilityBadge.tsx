@@ -3,9 +3,9 @@ import type { AvailabilityStatus } from '@/types/database'
 
 const CONFIG: Record<AvailabilityStatus, { label: string; bg: string; color: string }> = {
   available:           { label: 'Available',   bg: '#ECFDF3', color: '#166534' },
-  partially_available: { label: 'Partial',     bg: '#FFFBEB', color: '#B45309' },
-  unavailable:         { label: 'Unavailable', bg: '#F8E9E8', color: '#851E1E' },
-  on_leave:            { label: 'On Leave',    bg: '#F1EFE8', color: '#6A6666' },
+  partially_available: { label: 'Partial',     bg: '#F3F4F6', color: '#B45309' },
+  unavailable:         { label: 'Unavailable', bg: '#FEF2F2', color: '#991B1B' },
+  on_leave:            { label: 'On Leave',    bg: '#F0F0F0', color: '#8A8A8A' },
 }
 
 const badgeStyle: CSSProperties = {

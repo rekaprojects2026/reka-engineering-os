@@ -26,13 +26,13 @@ export function NotificationsBell({ userId }: { userId?: string }) {
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="relative h-9 w-9 shrink-0 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--surface-card)] text-[var(--text-muted-neutral)] hover:bg-[var(--surface-neutral)] hover:text-[var(--text-secondary-neutral)]"
+          className="relative h-9 w-9 shrink-0 rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-muted-neutral)] shadow-none hover:border-[var(--border-strong-neutral)] hover:bg-[var(--surface-neutral)] hover:text-[var(--text-secondary-neutral)]"
           aria-label={unread > 0 ? `Notifications, ${unread} unread` : 'Notifications'}
         >
-          <Bell size={15} aria-hidden="true" />
+          <Bell size={15} aria-hidden="true" className="shrink-0" />
           {unread > 0 && (
             <span
-              className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border border-[var(--surface-card)] bg-[var(--brand-accent)] px-1 text-[0.5625rem] font-bold leading-none text-white"
+              className="absolute -right-0.5 -top-0.5 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full border-2 border-[var(--surface-card)] bg-[var(--brand-accent)] px-0.5 text-[0.5625rem] font-bold leading-none text-white"
             >
               {unread > 9 ? '9+' : unread}
             </span>

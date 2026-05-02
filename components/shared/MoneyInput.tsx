@@ -64,12 +64,11 @@ export function MoneyInput({
       : null
 
   return (
-    <div>
+    <div className="flex flex-col gap-[var(--space-form-field-gap)]">
       {label && (
-        <label
-          className="mb-1.5 block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
-        >
-          {label}{required && <span className="ml-[3px] text-[var(--brand-accent)]">*</span>}
+        <label className="block text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]">
+          {label}
+          {required && <span className="ml-[3px] text-[var(--brand-accent)]">*</span>}
         </label>
       )}
       <div className="flex items-center">
@@ -79,7 +78,7 @@ export function MoneyInput({
           onChange={e => setCurrency(e.target.value)}
           disabled={disabled}
           className={cn(
-            'h-9 cursor-pointer rounded-l-[var(--radius-control)] border border-r-0 border-[var(--input-border)] bg-[var(--surface-neutral)] px-2 text-[0.75rem] font-semibold text-[var(--text-secondary-neutral)] outline-none transition-colors duration-150',
+            'h-9 cursor-pointer rounded-l-[var(--radius-control)] border border-r-0 border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.75rem] font-semibold text-[var(--text-secondary-neutral)] outline-none transition-colors duration-150',
             'focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-2 focus:ring-[color:var(--input-focus-ring)]',
             'disabled:cursor-not-allowed disabled:opacity-50'
           )}
@@ -108,7 +107,7 @@ export function MoneyInput({
         />
       </div>
       {conversionText && (
-        <p className="mt-1 text-[0.6875rem] text-[var(--text-muted-neutral)]">
+        <p className="text-[0.6875rem] text-[var(--text-muted-neutral)]">
           {conversionText} (rate: 1 USD = Rp {fxRateToIDR?.toLocaleString('id-ID')})
         </p>
       )}

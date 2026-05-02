@@ -54,7 +54,7 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               display: 'block',
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: 'var(--color-text-secondary)',
+              color: 'var(--text-secondary-neutral)',
               marginBottom: '4px',
             }}
           >
@@ -73,10 +73,9 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               width: '100%',
               padding: '8px 10px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
+              border: '1px solid var(--input-border)',
               fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              color: 'var(--text-primary-neutral)',
             }}
           >
             <option value="">Pilih task…</option>
@@ -95,7 +94,7 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               display: 'block',
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: 'var(--color-text-secondary)',
+              color: 'var(--text-secondary-neutral)',
               marginBottom: '4px',
             }}
           >
@@ -110,10 +109,9 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               width: '100%',
               padding: '8px 10px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
+              border: '1px solid var(--input-border)',
               fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              color: 'var(--text-primary-neutral)',
             }}
           />
         </div>
@@ -124,7 +122,7 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               display: 'block',
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: 'var(--color-text-secondary)',
+              color: 'var(--text-secondary-neutral)',
               marginBottom: '4px',
             }}
           >
@@ -143,10 +141,9 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               maxWidth: '120px',
               padding: '8px 10px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
+              border: '1px solid var(--input-border)',
               fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              color: 'var(--text-primary-neutral)',
             }}
           />
         </div>
@@ -157,7 +154,7 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               display: 'block',
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: 'var(--color-text-secondary)',
+              color: 'var(--text-secondary-neutral)',
               marginBottom: '4px',
             }}
           >
@@ -171,10 +168,9 @@ export function WorkLogCreateForm({ tasks, defaultLogDate }: Props) {
               width: '100%',
               padding: '8px 10px',
               borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
+              border: '1px solid var(--input-border)',
               fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
+              color: 'var(--text-primary-neutral)',
             }}
           />
         </div>

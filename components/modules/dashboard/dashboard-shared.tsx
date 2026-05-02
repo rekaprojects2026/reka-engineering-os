@@ -46,14 +46,14 @@ export function DashboardSection({
 }) {
   return (
     <div
-      className={cn('rounded-[var(--radius-card)] border p-5', className)}
+      className={cn('rounded-[var(--radius-card)] border p-[var(--space-card-padding-x)]', className)}
       style={{
         backgroundColor: 'var(--surface-card)',
         borderColor: 'var(--border-default)',
         boxShadow: 'var(--shadow-card)',
       }}
     >
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-[var(--space-section-gap)] flex items-center justify-between gap-[var(--space-section-gap)]">
         <div>
           <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary-neutral)' }}>
             {title}
@@ -64,7 +64,9 @@ export function DashboardSection({
             </p>
           )}
         </div>
-        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+        {actions && (
+          <div className="flex shrink-0 items-center gap-[var(--space-panel-gap)]">{actions}</div>
+        )}
       </div>
       {children}
     </div>
@@ -102,7 +104,7 @@ const ACTION_LABELS: Record<string, string> = {
 export function RecentActivityFeed({ entries }: { entries: ActivityLogEntry[] }) {
   if (entries.length === 0) {
     return (
-      <div className="flex items-center gap-3 py-2">
+      <div className="flex items-center gap-[var(--space-grid-gap)] py-[var(--space-panel-gap)]">
         <div
           aria-hidden="true"
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-neutral)] text-[var(--text-muted-neutral)]"
@@ -146,7 +148,7 @@ export function PnlPeriodTabs({ current }: { current: PnlPeriod }) {
     { id: 'this_year', label: 'Tahun ini', href: '/dashboard?pnl_period=this_year' },
   ]
   return (
-    <nav className="flex flex-wrap gap-1" aria-label="P&L period">
+    <nav className="flex flex-wrap gap-[var(--space-compact-gap)]" aria-label="P&L period">
       {tabs.map((tab) => (
         <Link
           key={tab.id}
@@ -169,7 +171,7 @@ export function UpcomingDeadlinesList({ waitingClient }: { waitingClient: Waitin
   const items = waitingClient.slice(0, 4)
   if (items.length === 0) {
     return (
-      <div className="flex items-center gap-3 py-2">
+      <div className="flex items-center gap-[var(--space-grid-gap)] py-[var(--space-panel-gap)]">
         <div
           aria-hidden="true"
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-neutral)] text-[var(--text-muted-neutral)]"
@@ -184,7 +186,7 @@ export function UpcomingDeadlinesList({ waitingClient }: { waitingClient: Waitin
   }
   const today = Date.now()
   return (
-    <div className="space-y-2">
+    <div className="space-y-[var(--space-panel-gap)]">
       {items.map((p) => {
         const due = new Date(p.target_due_date).getTime()
         const days = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
@@ -254,9 +256,9 @@ export function ScopedTasksSection({
 }) {
   const today = new Date().toISOString().split('T')[0]
   return (
-    <Card className="p-5">
+    <Card className="p-[var(--space-card-padding-x)]">
       <SectionHeader title={title} />
-      <div className="space-y-3">
+      <div className="space-y-[var(--space-grid-gap)]">
         {tasks.length === 0 ? (
           <EmptyState icon={<CheckSquare size={20} />} title="No open tasks" description="You're all caught up." className="py-8" />
         ) : (
@@ -324,9 +326,9 @@ export function ScopedTasksSection({
 export function FreelancerTasksTable({ tasks, title }: { tasks: { id: string; title: string; due_date: string | null; status: string; priority: string }[]; title: string }) {
   const today = new Date().toISOString().split('T')[0]
   return (
-    <Card className="p-5">
+    <Card className="p-[var(--space-card-padding-x)]">
       <SectionHeader title={title} />
-      <div className="space-y-3">
+      <div className="space-y-[var(--space-grid-gap)]">
         {tasks.length === 0 ? (
           <EmptyState icon={<CheckSquare size={20} />} title="No open tasks" description="You're all caught up." className="py-8" />
         ) : (
@@ -385,9 +387,9 @@ export function FreelancerTasksTable({ tasks, title }: { tasks: { id: string; ti
 
 export function ScopedDeliverablesSection({ deliverables, title }: { deliverables: ScopedDeliverable[]; title: string }) {
   return (
-    <Card className="p-5">
+    <Card className="p-[var(--space-card-padding-x)]">
       <SectionHeader title={title} />
-      <div className="space-y-3">
+      <div className="space-y-[var(--space-grid-gap)]">
         {deliverables.length === 0 ? (
           <EmptyState icon={<FileText size={20} />} title="No active deliverables" description="Deliverables will appear here." className="py-8" />
         ) : (
@@ -439,9 +441,9 @@ export function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] 
     paid: 'text-[var(--color-success)] bg-[var(--color-success-subtle)]',
   }
   return (
-    <Card className="p-5">
+    <Card className="p-[var(--space-card-padding-x)]">
       <SectionHeader title="My Payments" />
-      <div className="space-y-3">
+      <div className="space-y-[var(--space-grid-gap)]">
         <div className="overflow-x-auto scrollbar-neutral">
           <table className="w-full border-collapse table-edge-align">
             <thead>
@@ -475,7 +477,7 @@ export function ScopedPaymentsSection({ payments }: { payments: ScopedPayment[] 
             </tbody>
           </table>
         </div>
-        <div className="mt-3">
+        <div className="mt-[var(--space-grid-gap)]">
           <Link href="/my-payments" className="text-[0.8125rem] font-medium text-[var(--brand-accent)] no-underline hover:underline">
             View all payments →
           </Link>

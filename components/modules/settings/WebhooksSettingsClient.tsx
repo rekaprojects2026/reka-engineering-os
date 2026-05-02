@@ -228,7 +228,7 @@ export function WebhooksSettingsClient({
                 <input
                   name="name"
                   required
-                  className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.8125rem] outline-none focus:border-[var(--color-primary)]"
+                  className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                 />
               </div>
               <div>
@@ -240,7 +240,7 @@ export function WebhooksSettingsClient({
                   type="url"
                   required
                   placeholder="https://example.com/webhook"
-                  className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.8125rem] outline-none focus:border-[var(--color-primary)]"
+                  className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                 />
               </div>
               <fieldset>
@@ -300,7 +300,7 @@ export function WebhooksSettingsClient({
                   name="name"
                   required
                   defaultValue={editRow.name}
-                  className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.8125rem] outline-none focus:border-[var(--color-primary)]"
+                  className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                 />
               </div>
               <div>
@@ -312,7 +312,7 @@ export function WebhooksSettingsClient({
                   type="url"
                   required
                   defaultValue={editRow.url}
-                  className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-[0.8125rem] outline-none focus:border-[var(--color-primary)]"
+                  className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                 />
               </div>
               <fieldset>
@@ -373,7 +373,7 @@ export function WebhooksSettingsClient({
                 setLogFilter(e.target.value as 'all' | 'success' | 'failed')
                 setLogPage(1)
               }}
-              className="h-8 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem]"
+              className="h-8 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             >
               <option value="all">All</option>
               <option value="success">Success</option>

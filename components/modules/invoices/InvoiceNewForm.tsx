@@ -88,25 +88,24 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
   const fieldStyle = {
     width: '100%',
     padding: '8px 12px',
-    border: '1px solid var(--color-border)',
+    border: '1px solid var(--input-border)',
     borderRadius: 'var(--radius-control)',
     fontSize: '0.875rem',
-    backgroundColor: 'var(--color-surface)',
-    color: 'var(--color-text-primary)',
+    color: 'var(--text-primary-neutral)',
     outline: 'none',
     boxSizing: 'border-box' as const,
   }
 
   const optionalFieldStyle = {
     ...fieldStyle,
-    backgroundColor: 'var(--color-surface-subtle)',
+    backgroundColor: 'var(--surface-neutral)',
   }
 
   const labelStyle = {
     display: 'block',
     fontSize: '0.8125rem',
     fontWeight: 600,
-    color: 'var(--color-text-primary)',
+    color: 'var(--text-primary-neutral)',
     marginBottom: '6px',
   }
 
@@ -156,7 +155,7 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
         {/* Dates */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
-            <label style={labelStyle}>Issue Date <span style={{ color: 'var(--color-danger)' }}>*</span></label>
+            <label style={labelStyle}>Issue Date <span style={{ color: 'var(--brand-accent)' }}>*</span></label>
             <input name="issue_date" type="date" required defaultValue={new Date().toISOString().split('T')[0]} style={fieldStyle} />
           </div>
           <div>
@@ -166,8 +165,8 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
         </div>
 
         {/* Amount section */}
-        <div style={{ padding: '16px', backgroundColor: 'var(--color-surface-subtle)', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)' }}>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '14px' }}>Amount & Fees</p>
+        <div style={{ padding: '16px', backgroundColor: 'var(--surface-neutral)', borderRadius: 'var(--radius-card)', border: '1px solid var(--border-default)' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary-neutral)', marginBottom: '14px' }}>Amount & Fees</p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '12px', marginBottom: '12px' }}>
             <div>
@@ -178,7 +177,7 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
               </select>
             </div>
             <div>
-              <label style={labelStyle}>Gross Amount <span style={{ color: 'var(--color-danger)' }}>*</span></label>
+              <label style={labelStyle}>Gross Amount <span style={{ color: 'var(--brand-accent)' }}>*</span></label>
               <input
                 name="gross_amount"
                 type="number"
@@ -191,7 +190,7 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
                 style={fieldStyle}
               />
               {currency === 'USD' && grossNum > 0 && (
-                <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '3px' }}>
+                <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '3px' }}>
                   ≈ {(grossNum * fxRate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}
                 </p>
               )}
@@ -263,15 +262,15 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
 
           {/* Net amount summary */}
           {grossNum > 0 && (
-            <div style={{ padding: '10px 12px', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-control)', border: '1px solid var(--color-border)' }}>
+            <div style={{ padding: '10px 12px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--radius-control)', border: '1px solid var(--border-default)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>Net Received</span>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary-neutral)' }}>Net Received</span>
                 <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary-neutral)' }}>
                     {currency} {netAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                   {currency === 'USD' && (
-                    <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '1px' }}>
+                    <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '1px' }}>
                       ≈ {(netAmount * fxRate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}
                     </p>
                   )}
@@ -345,7 +344,7 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
                 <button
                   type="button"
                   onClick={() => removeLineItem(i)}
-                  style={{ width: 28, height: 36, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}
+                  style={{ width: 28, height: 36, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted-neutral)' }}
                 >
                   <Trash2 size={13} />
                 </button>
@@ -383,7 +382,7 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
           </button>
           <Link
             href="/finance/invoices"
-            style={{ padding: '9px 16px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-secondary)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+            style={{ padding: '9px 16px', border: '1px solid var(--input-border)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-secondary-neutral)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--surface-card)' }}
           >
             Cancel
           </Link>

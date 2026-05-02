@@ -1,5 +1,6 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import { useActionState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { submitExpense, type ExpenseActionResult } from '@/lib/expenses/actions'
@@ -24,6 +25,24 @@ const CATEGORY_LABELS: Record<string, string> = {
 type Props = {
   projects: ExpenseProjectOption[]
   defaultExpenseDate: string
+}
+
+const expenseControlStyle: CSSProperties = {
+  width: '100%',
+  padding: '8px 10px',
+  borderRadius: 'var(--radius-control)',
+  border: '1px solid var(--input-border)',
+  fontSize: '0.8125rem',
+  color: 'var(--text-primary-neutral)',
+  outline: 'none',
+}
+
+const expenseLabelStyle: CSSProperties = {
+  display: 'block',
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  color: 'var(--text-secondary-neutral)',
+  marginBottom: '4px',
 }
 
 export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
@@ -56,30 +75,14 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
         }}
       >
         <div style={{ gridColumn: 'span 1', minWidth: 0 }}>
-          <label
-            style={{
-              display: 'block',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              marginBottom: '4px',
-            }}
-          >
+          <label style={expenseLabelStyle}>
             Project *
           </label>
           <select
             name="project_id"
             required
             defaultValue=""
-            style={{
-              width: '100%',
-              padding: '8px 10px',
-              borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-            }}
+            style={expenseControlStyle}
           >
             <option value="">Pilih project…</option>
             {projects.map((p) => (
@@ -91,30 +94,14 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
         </div>
 
         <div>
-          <label
-            style={{
-              display: 'block',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              marginBottom: '4px',
-            }}
-          >
+          <label style={expenseLabelStyle}>
             Kategori *
           </label>
           <select
             name="category"
             required
             defaultValue=""
-            style={{
-              width: '100%',
-              padding: '8px 10px',
-              borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-            }}
+            style={expenseControlStyle}
           >
             <option value="">Pilih…</option>
             {Object.entries(CATEGORY_LABELS).map(([v, l]) => (
@@ -126,15 +113,7 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
         </div>
 
         <div>
-          <label
-            style={{
-              display: 'block',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              marginBottom: '4px',
-            }}
-          >
+          <label style={expenseLabelStyle}>
             Tanggal *
           </label>
           <input
@@ -142,28 +121,12 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
             name="expense_date"
             required
             defaultValue={defaultExpenseDate}
-            style={{
-              width: '100%',
-              padding: '8px 10px',
-              borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-            }}
+            style={expenseControlStyle}
           />
         </div>
 
         <div style={{ gridColumn: '1 / -1', minWidth: 0 }}>
-          <label
-            style={{
-              display: 'block',
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              marginBottom: '4px',
-            }}
-          >
+          <label style={expenseLabelStyle}>
             Deskripsi *
           </label>
           <input
@@ -171,58 +134,26 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
             name="description"
             required
             placeholder="e.g. Print gambar A1 x3 lembar"
-            style={{
-              width: '100%',
-              padding: '8px 10px',
-              borderRadius: 'var(--radius-control)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.8125rem',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-            }}
+            style={expenseControlStyle}
           />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(100px, 1fr) 1fr', gap: '8px' }}>
           <div>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
-                marginBottom: '4px',
-              }}
-            >
+            <label style={expenseLabelStyle}>
               Mata Uang
             </label>
             <select
               name="currency_code"
               defaultValue="IDR"
-              style={{
-                width: '100%',
-                padding: '8px 10px',
-                borderRadius: 'var(--radius-control)',
-                border: '1px solid var(--color-border)',
-                fontSize: '0.8125rem',
-                backgroundColor: 'var(--color-surface)',
-                color: 'var(--color-text-primary)',
-              }}
+              style={expenseControlStyle}
             >
               <option value="IDR">IDR</option>
               <option value="USD">USD</option>
             </select>
           </div>
           <div>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
-                marginBottom: '4px',
-              }}
-            >
+            <label style={expenseLabelStyle}>
               Jumlah *
             </label>
             <input
@@ -232,15 +163,7 @@ export function ExpenseSubmitForm({ projects, defaultExpenseDate }: Props) {
               min={1}
               step={1}
               placeholder="e.g. 75000"
-              style={{
-                width: '100%',
-                padding: '8px 10px',
-                borderRadius: 'var(--radius-control)',
-                border: '1px solid var(--color-border)',
-                fontSize: '0.8125rem',
-                backgroundColor: 'var(--color-surface)',
-                color: 'var(--color-text-primary)',
-              }}
+              style={expenseControlStyle}
             />
           </div>
         </div>

@@ -33,11 +33,10 @@ interface TeamMemberFormProps {
 const inputStyle: CSSProperties = {
   width:           '100%',
   padding:         '8px 11px',
-  border:          '1px solid var(--color-border)',
+  border:          '1px solid var(--input-border)',
   borderRadius:    'var(--radius-control)',
   fontSize:        '0.8125rem',
-  color:           'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color:           'var(--text-primary-neutral)',
   outline:         'none',
 }
 
@@ -45,7 +44,7 @@ const labelStyle: CSSProperties = {
   display:      'block',
   fontSize:     '0.8125rem',
   fontWeight:   500,
-  color:        'var(--color-text-secondary)',
+  color:        'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -68,7 +67,7 @@ function Field({
     <div>
       <label style={labelStyle}>
         {label}
-        {required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+        {required && <span style={{ color: 'var(--brand-accent)', marginLeft: '2px' }}>*</span>}
       </label>
       {children}
     </div>
@@ -124,7 +123,7 @@ export function TeamMemberForm({ mode, member, functionalRoleOptions, discipline
                   />
                 ) : (
                   <input
-                    style={{ ...inputStyle, backgroundColor: 'var(--color-surface-subtle)', color: 'var(--color-text-muted)' }}
+                    style={{ ...inputStyle, backgroundColor: 'var(--surface-neutral)', color: 'var(--text-muted-neutral)' }}
                     value={v?.email ?? ''}
                     readOnly
                     tabIndex={-1}
@@ -140,7 +139,7 @@ export function TeamMemberForm({ mode, member, functionalRoleOptions, discipline
                 defaultValue={v?.google_email ?? ''}
                 placeholder="Kosongkan kalau sama dengan email login"
               />
-              <p style={{ marginTop: '4px', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
+              <p style={{ marginTop: '4px', fontSize: '0.6875rem', color: 'var(--text-muted-neutral)' }}>
                 Diisi kalau email Google Drive kamu berbeda dengan email login ReKa OS.
               </p>
             </Field>
@@ -319,12 +318,12 @@ export function TeamMemberForm({ mode, member, functionalRoleOptions, discipline
             disabled={isPending}
             style={{
               padding:         '8px 16px',
-              border:          '1px solid var(--color-border)',
+              border:          '1px solid var(--input-border)',
               borderRadius:    'var(--radius-control)',
               fontSize:        '0.8125rem',
               fontWeight:      500,
-              color:           'var(--color-text-secondary)',
-              backgroundColor: 'var(--color-surface)',
+              color:           'var(--text-secondary-neutral)',
+              backgroundColor: 'var(--surface-card)',
               cursor:          'pointer',
             }}
           >
@@ -340,7 +339,7 @@ export function TeamMemberForm({ mode, member, functionalRoleOptions, discipline
               fontSize:        '0.8125rem',
               fontWeight:      500,
               color:           'var(--color-primary-fg)',
-              backgroundColor: isPending ? 'var(--color-text-muted)' : 'var(--color-primary)',
+              backgroundColor: isPending ? 'var(--text-muted-neutral)' : 'var(--color-primary)',
               cursor:          isPending ? 'not-allowed' : 'pointer',
             }}
           >

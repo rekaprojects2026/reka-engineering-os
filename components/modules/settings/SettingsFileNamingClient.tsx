@@ -52,7 +52,7 @@ function CodeMapTable({
                     value={row.value}
                     onChange={(e) => setRow(i, { value: e.target.value })}
                     disabled={readOnly}
-                    className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 font-mono text-[0.8125rem] outline-none focus:border-[var(--color-primary)] disabled:opacity-60"
+                    className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 font-mono text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)] disabled:opacity-60"
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -60,7 +60,7 @@ function CodeMapTable({
                     value={row.label}
                     onChange={(e) => setRow(i, { label: e.target.value })}
                     disabled={readOnly}
-                    className="h-9 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem] outline-none focus:border-[var(--color-primary)] disabled:opacity-60"
+                    className="h-9 w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)] disabled:opacity-60"
                   />
                 </td>
                 {!readOnly && (
@@ -164,7 +164,7 @@ export function SettingsFileNamingClient({
             <select
               value={previewDisc}
               onChange={(e) => setPreviewDisc(e.target.value)}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem]"
+              className="h-9 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             >
               {disciplineOptions.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -178,7 +178,7 @@ export function SettingsFileNamingClient({
             <select
               value={previewDoc}
               onChange={(e) => setPreviewDoc(e.target.value)}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem]"
+              className="h-9 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             >
               {docTypeOptions.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -194,7 +194,7 @@ export function SettingsFileNamingClient({
               min={1}
               value={previewSeq}
               onChange={(e) => setPreviewSeq(Math.max(1, parseInt(e.target.value, 10) || 1))}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem]"
+              className="h-9 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             />
           </label>
           <label className="flex flex-col gap-1 text-[0.75rem] font-medium text-[var(--color-text-muted)]">
@@ -204,7 +204,7 @@ export function SettingsFileNamingClient({
               min={0}
               value={previewRev}
               onChange={(e) => setPreviewRev(Math.max(0, parseInt(e.target.value, 10) || 0))}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[0.8125rem]"
+              className="h-9 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
             />
           </label>
         </div>
@@ -214,7 +214,7 @@ export function SettingsFileNamingClient({
             value={separator}
             onChange={(e) => setSeparator(e.target.value.slice(0, 3))}
             disabled={readOnly}
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 font-mono text-[0.8125rem] outline-none focus:border-[var(--color-primary)] disabled:opacity-60"
+            className="h-9 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2 font-mono text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)] disabled:opacity-60"
           />
         </label>
       </div>

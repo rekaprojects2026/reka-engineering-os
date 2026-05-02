@@ -221,9 +221,9 @@ export default async function LeadsPage({ searchParams }: PageProps) {
       <form method="GET">
         <FilterBar>
           <input name="search" type="search" defaultValue={params.search ?? ''} placeholder="Search leads…"
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] min-w-[200px]" />
+            className="h-9 min-w-[200px] rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]" />
           <select name="status" defaultValue={params.status ?? ''}
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
+            className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Statuses</option>
             <option value="new">New</option>
             <option value="awaiting_info">Awaiting Info</option>
@@ -233,7 +233,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
             <option value="converted">Converted</option>
           </select>
           <select name="source" defaultValue={params.source ?? ''}
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
+            className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Sources</option>
             <option value="upwork">Upwork</option>
             <option value="fiverr">Fiverr</option>
@@ -242,7 +242,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
             <option value="other">Other</option>
           </select>
           <select name="discipline" defaultValue={params.discipline ?? ''}
-            className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
+            className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 text-sm text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]">
             <option value="">All Disciplines</option>
             <option value="mechanical">Mechanical</option>
             <option value="civil">Civil</option>
@@ -250,7 +250,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
             <option value="electrical">Electrical</option>
             <option value="other">Other</option>
           </select>
-          <button type="submit" className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
+          <button type="submit" className="h-9 cursor-pointer rounded-md border border-[var(--input-border)] bg-[var(--surface-card)] px-3 text-sm font-medium text-[var(--text-secondary-neutral)] transition-colors hover:bg-[var(--surface-neutral)]">
             Filter
           </button>
           {hasActiveFilters && (

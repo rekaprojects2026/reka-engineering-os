@@ -9,11 +9,10 @@ import { FormSection } from '@/components/shared/FormSection'
 const inputStyle: CSSProperties = {
   width:           '100%',
   padding:         '8px 11px',
-  border:          '1px solid var(--color-border)',
+  border:          '1px solid var(--input-border)',
   borderRadius:    'var(--radius-control)',
   fontSize:        '0.8125rem',
-  color:           'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color:           'var(--text-primary-neutral)',
   outline:         'none',
 }
 
@@ -21,7 +20,7 @@ const labelStyle: CSSProperties = {
   display:      'block',
   fontSize:     '0.8125rem',
   fontWeight:   500,
-  color:        'var(--color-text-secondary)',
+  color:        'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -30,7 +29,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
     <div>
       <label style={labelStyle}>
         {label}
-        {required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+        {required && <span style={{ color: 'var(--brand-accent)', marginLeft: '2px' }}>*</span>}
       </label>
       {children}
     </div>
@@ -108,7 +107,7 @@ export function InviteForm({
           </div>
         </FormSection>
 
-        <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', lineHeight: 1.5, marginTop: '4px' }}>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted-neutral)', lineHeight: 1.5, marginTop: '4px' }}>
           An invite link will be generated. Copy it and share manually with the invited person. They will use it to set their password and complete their profile.
         </p>
 
@@ -119,12 +118,12 @@ export function InviteForm({
             disabled={isPending}
             style={{
               padding:         '8px 16px',
-              border:          '1px solid var(--color-border)',
+              border:          '1px solid var(--input-border)',
               borderRadius:    'var(--radius-control)',
               fontSize:        '0.8125rem',
               fontWeight:      500,
-              color:           'var(--color-text-secondary)',
-              backgroundColor: 'var(--color-surface)',
+              color:           'var(--text-secondary-neutral)',
+              backgroundColor: 'var(--surface-card)',
               cursor:          'pointer',
             }}
           >

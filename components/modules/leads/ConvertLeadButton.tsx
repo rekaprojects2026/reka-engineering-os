@@ -69,15 +69,14 @@ export function ConvertLeadButton({
   const labelStyle: React.CSSProperties = {
     display: 'block', marginBottom: '5px',
     fontSize: '0.75rem', fontWeight: 500,
-    color: 'var(--color-text-muted)',
+    color: 'var(--text-secondary-neutral)',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%', height: '36px',
-    border: '1px solid var(--color-border)',
+    border: '1px solid var(--input-border)',
     borderRadius: 'var(--radius-control)',
-    backgroundColor: 'var(--color-surface)',
-    color: 'var(--color-text-primary)',
+    color: 'var(--text-primary-neutral)',
     padding: '0 10px', fontSize: '0.8125rem',
     outline: 'none',
   }
@@ -115,8 +114,8 @@ export function ConvertLeadButton({
           onClick={(e) => { if (e.target === e.currentTarget) close() }}
         >
           <div style={{
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
+            backgroundColor: 'var(--surface-card)',
+            border: '1px solid var(--border-default)',
             borderRadius: 'var(--radius-card)',
             width: '100%', maxWidth: '540px',
             maxHeight: '90vh', overflowY: 'auto',
@@ -126,14 +125,14 @@ export function ConvertLeadButton({
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
               <div>
-                <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: 0 }}>
+                <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary-neutral)', margin: 0 }}>
                   Convert to Project
                 </h2>
-                <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginTop: '3px' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted-neutral)', marginTop: '3px' }}>
                   {leadTitle} · {leadClientName}
                 </p>
               </div>
-              <button onClick={close} type="button" style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '4px' }}>
+              <button onClick={close} type="button" style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted-neutral)', padding: '4px' }}>
                 <X size={18} />
               </button>
             </div>
@@ -165,12 +164,12 @@ export function ConvertLeadButton({
                           alignItems: 'center',
                           height: 'auto',
                           minHeight: 36,
-                          backgroundColor: 'var(--color-surface-subtle)',
+                          backgroundColor: 'var(--surface-neutral)',
                         }}
                       >
                         <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{leadClientName}</span>
                       </div>
-                      <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                      <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '4px' }}>
                         Linked from this lead
                       </p>
                     </>
@@ -186,7 +185,7 @@ export function ConvertLeadButton({
                           </option>
                         ))}
                       </select>
-                      <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                      <p style={{ fontSize: '0.6875rem', color: 'var(--text-muted-neutral)', marginTop: '4px' }}>
                         Or{' '}
                         <Link href="/clients/new" style={{ color: 'var(--color-primary)' }}>
                           add a new client
@@ -194,7 +193,7 @@ export function ConvertLeadButton({
                       </p>
                     </>
                   ) : (
-                    <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted-neutral)' }}>
                       No clients available.{' '}
                       <Link href="/clients/new" style={{ color: 'var(--color-primary)' }}>
                         Create a client first
@@ -217,7 +216,7 @@ export function ConvertLeadButton({
                       ))}
                     </select>
                   ) : (
-                    <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted-neutral)' }}>
                       No active users found for assignment.
                     </p>
                   )}
@@ -267,7 +266,7 @@ export function ConvertLeadButton({
                 <button
                   type="button"
                   onClick={close}
-                  style={{ padding: '8px 16px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-control)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-secondary)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer' }}
+                  style={{ padding: '8px 16px', border: '1px solid var(--input-border)', borderRadius: 'var(--radius-control)', backgroundColor: 'var(--surface-card)', color: 'var(--text-secondary-neutral)', fontSize: '0.8125rem', fontWeight: 500, cursor: 'pointer' }}
                 >
                   Cancel
                 </button>

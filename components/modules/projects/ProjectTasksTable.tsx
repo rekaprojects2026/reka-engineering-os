@@ -194,7 +194,7 @@ export function ProjectTasksTable({
                   name="title"
                   type="text"
                   required
-                  className="w-full max-w-md rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1.5 text-[0.8125rem] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="w-full max-w-md rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-2.5 py-1.5 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] placeholder:text-[var(--input-placeholder)] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                   placeholder="e.g. Wireframe"
                   autoFocus
                 />
@@ -213,7 +213,7 @@ export function ProjectTasksTable({
                     setAddingSubToId(null)
                     setFormError(null)
                   }}
-                  className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-[0.8125rem] text-[var(--color-text-secondary)]"
+                  className="rounded-md border border-[var(--input-border)] bg-[var(--surface-card)] px-3 py-1.5 text-[0.8125rem] text-[var(--text-secondary-neutral)] transition-colors hover:bg-[var(--surface-neutral)]"
                 >
                   Cancel
                 </button>

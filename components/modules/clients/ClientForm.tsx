@@ -15,11 +15,10 @@ interface ClientFormProps {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '8px 11px',
-  border: '1px solid var(--color-border)',
+  border: '1px solid var(--input-border)',
   borderRadius: 'var(--radius-control)',
   fontSize: '0.8125rem',
-  color: 'var(--color-text-primary)',
-  backgroundColor: 'var(--color-surface)',
+  color: 'var(--text-primary-neutral)',
   outline: 'none',
 }
 
@@ -27,7 +26,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '0.8125rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--text-secondary-neutral)',
   marginBottom: '5px',
 }
 
@@ -41,7 +40,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   return (
     <div>
       <label style={labelStyle}>
-        {label}{required && <span style={{ color: 'var(--color-danger)', marginLeft: '2px' }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--brand-accent)', marginLeft: '2px' }}>*</span>}
       </label>
       {children}
     </div>
@@ -206,9 +205,9 @@ export function ClientForm({ mode, client }: ClientFormProps) {
             disabled={isPending}
             style={{
               padding: '9px 16px',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-secondary)',
-              border: '1px solid var(--color-border)',
+              backgroundColor: 'var(--surface-card)',
+              color: 'var(--text-secondary-neutral)',
+              border: '1px solid var(--input-border)',
               borderRadius: 'var(--radius-control)',
               fontSize: '0.8125rem',
               cursor: 'pointer',

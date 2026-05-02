@@ -24,7 +24,7 @@ export function SectionCard({
   return (
     <Card className={cn('overflow-hidden border-[var(--border-default)] bg-[var(--surface-card)]', className)}>
       {hasHeader && (
-        <CardHeader className="flex-row items-start justify-between gap-4 border-b border-[var(--table-border)] bg-[var(--surface-neutral)] px-[var(--table-edge-padding-x)] py-3.5 rounded-t-[var(--radius-card)]">
+        <CardHeader className="flex-row items-start justify-between gap-[var(--space-section-gap)] border-b border-[var(--table-border)] bg-[var(--surface-neutral)] px-[var(--space-card-padding-x)] py-[var(--space-card-header-padding-y)] rounded-t-[var(--radius-card)]">
           <div className="min-w-0">
             {title && (
               <CardTitle className="text-[0.875rem] text-[var(--text-primary-neutral)]">{title}</CardTitle>
@@ -43,7 +43,9 @@ export function SectionCard({
       {noPadding ? (
         <div>{children}</div>
       ) : (
-        <CardContent className="px-[var(--table-edge-padding-x)] py-4">{children}</CardContent>
+        <CardContent className="px-[var(--space-card-padding-x)] py-[var(--space-card-body-padding-y)]">
+          {children}
+        </CardContent>
       )}
     </Card>
   )

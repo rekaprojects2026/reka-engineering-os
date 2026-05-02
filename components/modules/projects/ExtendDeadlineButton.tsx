@@ -63,16 +63,16 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
     marginBottom: '5px',
     fontSize: '0.75rem',
     fontWeight: 500,
-    color: 'var(--color-text-muted)',
+    color: 'var(--text-secondary-neutral)',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
     minHeight: '36px',
-    border: '1px solid var(--color-border)',
+    border: '1px solid var(--input-border)',
     borderRadius: 'var(--radius-control)',
-    backgroundColor: 'var(--color-surface)',
-    color: 'var(--color-text-primary)',
+    backgroundColor: 'var(--input-bg)',
+    color: 'var(--text-primary-neutral)',
     padding: '0 10px',
     fontSize: '0.8125rem',
     outline: 'none',
@@ -90,7 +90,7 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1 rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-0.5 text-[0.75rem] font-medium text-[var(--color-text-secondary)] shadow-sm transition-colors hover:bg-[var(--color-surface-subtle)]"
+        className="inline-flex items-center gap-1 rounded border border-[var(--input-border)] bg-[var(--input-bg)] px-2 py-0.5 text-[0.75rem] font-medium text-[var(--text-secondary-neutral)] shadow-sm transition-colors hover:bg-[var(--input-bg-focus)]"
         title={currentDueDate ? 'Perpanjang target due date' : 'Set target due date'}
       >
         <Calendar size={12} aria-hidden="true" />
@@ -106,7 +106,7 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
           role="presentation"
         >
           <div
-            className="max-h-[90vh] w-full max-w-[480px] overflow-y-auto rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-xl"
+            className="max-h-[90vh] w-full max-w-[480px] overflow-y-auto rounded-[var(--radius-card)] border border-[var(--border-default)] bg-[var(--surface-card)] p-6 shadow-xl"
             role="dialog"
             aria-modal="true"
             aria-labelledby="extend-deadline-title"
@@ -116,18 +116,18 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
               <div>
                 <h2
                   id="extend-deadline-title"
-                  className="m-0 text-base font-bold text-[var(--color-text-primary)]"
+                  className="m-0 text-base font-bold text-[var(--text-primary-neutral)]"
                 >
                   Extend deadline
                 </h2>
-                <p className="mt-1 text-[0.8125rem] text-[var(--color-text-muted)]">
+                <p className="mt-1 text-[0.8125rem] text-[var(--text-muted-neutral)]">
                   Tanggal saat ini: {currentDueDate || '—'}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="shrink-0 border-0 bg-transparent p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                className="shrink-0 border-0 bg-transparent p-1 text-[var(--text-muted-neutral)] hover:text-[var(--text-primary-neutral)]"
                 aria-label="Tutup"
               >
                 <X size={18} />
@@ -154,7 +154,7 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
                   type="date"
                   required
                   min={minDate}
-                  className="w-full rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-2 text-[0.8125rem] text-[var(--color-text-primary)] outline-none focus:ring-2 focus:ring-[var(--color-primary-subtle)]"
+                  className="w-full rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--input-bg)] px-2.5 py-2 text-[0.8125rem] text-[var(--text-primary-neutral)] outline-none transition-[border-color,background-color,box-shadow] focus:border-[var(--input-focus-border)] focus:bg-[var(--input-bg-focus)] focus:ring-[3px] focus:ring-[color:var(--input-focus-ring)]"
                 />
               </div>
               <div>
@@ -174,7 +174,7 @@ export function ExtendDeadlineButton({ projectId, currentDueDate }: ExtendDeadli
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-[0.8125rem] font-medium text-[var(--color-text-secondary)]"
+                  className="rounded-[var(--radius-control)] border border-[var(--input-border)] bg-[var(--surface-card)] px-4 py-2 text-[0.8125rem] font-medium text-[var(--text-secondary-neutral)]"
                 >
                   Cancel
                 </button>
