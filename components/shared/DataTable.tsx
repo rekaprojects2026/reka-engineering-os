@@ -62,15 +62,7 @@ export function DataTable<T extends { id: string }>({
     )
     return (
       <div
-        className={cn(
-          'overflow-hidden rounded-[var(--radius-card)] border',
-          className
-        )}
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          borderColor: 'var(--color-border)',
-          boxShadow: 'var(--shadow-sm)',
-        }}
+        className={cn('overflow-hidden rounded-[var(--radius-card)] border border-[var(--table-border)] bg-[var(--surface-card)] shadow-[var(--shadow-sm)]', className)}
       >
         {body}
       </div>
@@ -79,22 +71,11 @@ export function DataTable<T extends { id: string }>({
 
   return (
     <div
-      className={cn(
-        'overflow-hidden rounded-[var(--radius-card)] border',
-        className
-      )}
-      style={{
-        backgroundColor: 'var(--color-surface)',
-        borderColor: 'var(--color-border)',
-        boxShadow: 'var(--shadow-sm)',
-      }}
+      className={cn('overflow-hidden rounded-[var(--radius-card)] border border-[var(--table-border)] bg-[var(--surface-card)] shadow-[var(--shadow-sm)]', className)}
     >
       <Table>
         <TableHeader>
-          <TableRow
-            className="border-none hover:bg-transparent"
-            style={{ backgroundColor: 'var(--color-surface-subtle)' }}
-          >
+          <TableRow className="border-none hover:bg-transparent">
             {columns.map((col) => {
               const active = sortKey === col.key
               const sortControl = sortable && onSort
@@ -103,8 +84,8 @@ export function DataTable<T extends { id: string }>({
                 <TableHead
                   key={col.key}
                   className={cn(
-                    'h-10 whitespace-nowrap bg-[var(--color-surface-muted)]/50 text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]',
-                    sortControl && 'cursor-pointer select-none hover:text-[var(--color-text-secondary)]'
+                    'h-10 whitespace-nowrap',
+                    sortControl && 'cursor-pointer select-none hover:text-[var(--text-secondary-neutral)]'
                   )}
                   style={{
                     width:     col.width,
@@ -127,7 +108,7 @@ export function DataTable<T extends { id: string }>({
                   <span className="inline-flex items-center gap-1">
                     {col.header}
                     {sortControl && active && (
-                      <span className="text-[0.625rem] font-semibold normal-case tracking-normal text-[var(--color-text-muted)]">
+                      <span className="text-[0.625rem] font-semibold normal-case tracking-normal text-[var(--table-header-text)]">
                         {sortDirection === 'desc' ? '↓' : '↑'}
                       </span>
                     )}
@@ -142,7 +123,6 @@ export function DataTable<T extends { id: string }>({
             <TableRow
               key={row.id}
               className={cn(
-                'tbl-row',
                 !interactiveRows && 'hover:bg-transparent'
               )}
               style={getRowStyle?.(row, idx)}
@@ -150,7 +130,7 @@ export function DataTable<T extends { id: string }>({
               {columns.map((col) => (
                 <TableCell
                   key={col.key}
-                  className="text-[var(--color-text-secondary)]"
+                  className="text-[var(--text-secondary-neutral)]"
                   style={{ textAlign: col.align ?? 'left' }}
                 >
                   {cellContent(col, row)}

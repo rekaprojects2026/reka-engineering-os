@@ -74,59 +74,52 @@
   --color-warning:       var(--warning);
 }
 
-/* ─── Design Tokens — derived from brand palette ────────────────
-   Carbon Black  #1D1F1E
-   Porcelain     #FFFDF7
-   Dark Wine     #851E1E
-   Twilight Indigo #142D50
-   Graphite      #454040
-   Parchment     #F4F3EE
-   ─────────────────────────────────────────────────────────────── */
+/* ─── Design Tokens — align with docs/handoff/02_GLOBAL_COLOR_SYSTEM.md (cool neutrals) ─ */
 :root {
-  /* Backgrounds — canvas pushed deeper so Porcelain cards actually lift */
-  --color-background:      #F0EDE3;   /* Soft parchment — page canvas */
-  --color-surface:         #FFFDF7;   /* Porcelain — card / panel surface */
-  --color-surface-alt:     #F5F3EC;
-  --color-surface-subtle:  #F2EFE7;
-  --color-surface-muted:   #E7E3D8;
+  /* Backgrounds / surfaces (no warm parchment or porcelain) */
+  --color-background:      #F7F7F7;   /* Surface Neutral 2 / empty BG */
+  --color-surface:         #FFFFFF;   /* Surface / Card */
+  --color-surface-alt:     #F8F8F8;   /* Surface Neutral */
+  --color-surface-subtle:  #F7F7F7;
+  --color-surface-muted:   #F0F0F0;   /* Neutral Chip BG */
 
-  /* Borders — soft; edges should whisper, not outline. */
-  --color-border:          #E5E1D4;
-  --color-border-strong:   #BEB8A9;
+  /* Borders */
+  --color-border:          #E5E7EB;   /* Default Border */
+  --color-border-strong:   #D1D5DB;   /* Strong Border */
 
   /* Typography */
-  --color-text-primary:    #1D1F1E;   /* Carbon Black */
-  --color-text-secondary:  #454040;   /* Graphite */
-  --color-text-muted:      #7A7673;
-  --color-text-inverse:    #FFFDF7;   /* Porcelain */
+  --color-text-primary:    #1F2937;   /* Text Primary */
+  --color-text-secondary:  #4B5563;   /* Text Secondary */
+  --color-text-muted:      #6B7280;   /* Text Muted */
+  --color-text-inverse:    #FFFFFF;   /* on-dark / inverse */
 
   /* Primary — Twilight Indigo */
   --color-primary:         #142D50;
   --color-primary-hover:   #0F2240;
   --color-primary-subtle:  #E6EDF7;
-  --color-primary-fg:      #FFFDF7;
+  --color-primary-fg:      #FFFFFF;
 
   /* Danger — Dark Wine */
   --color-danger:          #851E1E;
   --color-danger-hover:    #6F1717;
-  --color-danger-subtle:   #F5E8E8;
-  --color-danger-fg:       #FFFDF7;
+  --color-danger-subtle:   #FEF2F2;   /* status blocked row (cool red) */
+  --color-danger-fg:       #FFFFFF;
 
   /* Success */
   --color-success:         #1A6340;
   --color-success-subtle:  #E8F5EE;
 
   /* Warning */
-  --color-warning:         #8A4A08;
-  --color-warning-subtle:  #FDF3E7;
+  --color-warning:         #D97706;   /* Caution accent (doc §10) */
+  --color-warning-subtle:  #F3F4F6;   /* cool neutral panel (not amber wash) */
 
   /* Info (alias primary) */
   --color-info:            #142D50;
   --color-info-subtle:     #E6EDF7;
 
   /* Neutral */
-  --color-neutral:         #7A7673;
-  --color-neutral-subtle:  #EEECEA;
+  --color-neutral:         #6B7280;
+  --color-neutral-subtle:  #F0F0F0;   /* Neutral Chip BG */
 
   /* Active alias */
   --color-active:          #142D50;
@@ -136,36 +129,38 @@
   --color-chart-1: #142D50;   /* Twilight Indigo — primary / in-progress */
   --color-chart-2: #1A6340;   /* Success green — completed / paid */
   --color-chart-3: #3A6490;   /* Mid-blue — review */
-  --color-chart-4: #B8B3A8;   /* Neutral gray — to-do / unassigned */
+  --color-chart-4: #9CA3AF;   /* cool neutral — to-do / unassigned */
   --color-chart-5: #851E1E;   /* Dark Wine — revision / blocked / danger */
 
-  /* ── Sidebar — dark Carbon Black, premium enterprise shell ── */
-  --sidebar-bg:            #1D1F1E;   /* Carbon Black */
-  --sidebar-border:        #2A2C2B;   /* dark carbon border */
-  --sidebar-hover:         #272928;   /* subtle hover on dark */
-  --sidebar-text:          #FFFDF7;   /* Porcelain — text on dark bg */
-  --sidebar-text-muted:    #8A96A4;   /* muted on dark */
-  --sidebar-active-bg:     #142D50;   /* Twilight Indigo */
-  --sidebar-active-text:   #FFFDF7;   /* Porcelain */
-  --sidebar-label:         #606C7A;   /* group labels on dark */
+  /* ── Sidebar — Stage 4B light neutral shell (maps to global neutrals) ── */
+  --sidebar-bg:            var(--surface-card);
+  --sidebar-border:        var(--border-default);
+  --sidebar-hover:         var(--surface-neutral);
+  --sidebar-text:          var(--text-primary-neutral);
+  --sidebar-text-muted:    var(--text-muted-neutral);
+  --sidebar-active-bg:     var(--surface-chip);
+  --sidebar-active-text:   var(--text-primary-neutral);
+  --sidebar-label:         var(--text-soft-muted);
 
   /* ── Badge variant tokens ─────────────────────────────────── */
   /* Used by StatusBadge and all module badge components.        */
   /* Centralised here so badge colors can be updated in one place. */
-  --badge-neutral-text:  #6A6666;
-  --badge-neutral-bg:    #F1EFE8;
+  --badge-neutral-text:  #8A8A8A;   /* Neutral Chip Text */
+  --badge-neutral-bg:    #F0F0F0;   /* Neutral Chip BG */
   --badge-active-text:   #142D50;   /* = --color-primary */
   --badge-active-bg:     #E8EEF8;
-  --badge-review-text:   #B45309;
-  --badge-review-bg:     #FFFBEB;
+  --badge-review-text:   #1D4ED8;   /* Internal Review (doc §9) */
+  --badge-review-bg:     #EFF6FF;
   --badge-success-text:  #166534;
   --badge-success-bg:    #ECFDF3;
-  --badge-danger-text:   #851E1E;   /* = --color-danger */
-  --badge-danger-bg:     #F8E9E8;
+  --badge-danger-text:   #991B1B;   /* On Hold / Blocked text */
+  --badge-danger-bg:     #FEF2F2;
 
-  /* Shadows — softer, more premium */
-  --shadow-sm:             0 1px 2px rgba(29,31,30,0.04), 0 1px 1px rgba(29,31,30,0.02);
-  --shadow-md:             0 6px 20px rgba(29,31,30,0.08), 0 1px 2px rgba(29,31,30,0.04);
+  /* Shadows — cool slate base */
+  --shadow-card:           0 10px 25px rgba(15, 23, 42, 0.06);
+  --shadow-card-hover:     0 14px 30px rgba(15, 23, 42, 0.08);
+  --shadow-sm:             0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.02);
+  --shadow-md:             0 6px 20px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
 
   /* Radius */
   --radius-card:           10px;
@@ -173,9 +168,13 @@
   --radius-pill:           999px;
   --radius:                6px;
 
-  /* Layout */
-  --sidebar-width:         248px;
+  /* Layout — desktop sidebar; width narrows when `html[data-sidebar-collapsed="true"]` */
+  --sidebar-expanded-width: 244px;
+  --sidebar-collapsed-width: 56px;
+  --sidebar-width:         var(--sidebar-expanded-width);
   --topbar-height:         56px;
+  /** Sidebar header band — match topbar for shell junction alignment */
+  --sidebar-header-height: var(--topbar-height);
   --content-max-width:     1320px;
 
   /* ── v0-ui alias tokens (map to existing brand tokens) ────── */
@@ -191,6 +190,139 @@
   --sidebar-accent:      var(--sidebar-active-bg);
   --sidebar-accent-foreground: var(--sidebar-active-text);
   --sidebar-hover-bg:    var(--sidebar-hover);
+
+  /* Stage 1 UI/UX global foundation (token-only, additive) */
+  --brand-accent: #A12228;
+  --brand-accent-hover: #8F1E24;
+  --brand-accent-soft: #F3F4F6; /* cool neutral panel (replaces pink-tint soft) */
+  --brand-accent-soft-border: #E7C7CA;
+
+  --surface-card: #FFFFFF;
+  --surface-neutral: #F8F8F8;
+  --surface-neutral-2: #F7F7F7;
+  --surface-chip: #F0F0F0;
+
+  --border-default: #E5E7EB;
+  --border-strong-neutral: #D1D5DB;
+  --border-soft: #E2E2E2;
+  --border-divider-soft: #F0F0F0;
+
+  --text-primary-neutral: #1F2937;
+  --text-secondary-neutral: #4B5563;
+  --text-muted-neutral: #6B7280;
+  --text-soft-muted: #8A8A8A;
+  --text-disabled-neutral: #9A9A9A;
+  --text-placeholder-neutral: #C4C4C4;
+  --text-empty-neutral: #5F5F5F;
+  --icon-empty-neutral: #9A9A9A;
+
+  --input-bg: #F8F8F8;
+  --input-bg-focus: #FFFFFF;
+  --input-border: #E5E7EB;
+  --input-placeholder: #C4C4C4;
+  --input-focus-border: #A12228;
+  --input-focus-ring: rgba(161, 34, 40, 0.12);
+
+  --table-header-bg: #F8F8F8;
+  --table-border: #E5E7EB;
+  --table-header-text: #4B5563;
+  --table-row-hover: #F3F4F6;
+  --table-scroll-track: #F3F4F6;
+  --table-scroll-thumb: #D1D5DB;
+  --table-scroll-thumb-hover: #9CA3AF;
+
+  /* ── Spacing rhythm (shared cards, tables, filters, KPI, dashboard shells) ──
+     4px-based scale; semantic aliases point at scale steps — no duplicate ad-hoc rem. */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+
+  /* Sidebar layout rhythm (after --space-* scale; uses same steps) */
+  --sidebar-section-gap:        0.875rem;
+  --sidebar-label-mb:           0.375rem;
+  --sidebar-nav-row-min-h:      2rem; /* 32px — compact desktop row */
+  --sidebar-nav-inline:         0.5rem; /* 8px — row edge padding */
+  --sidebar-parent-icon-indent: 1.5625rem; /* 16px icon + 9px gap */
+  --sidebar-row-gap:            0;
+  --sidebar-finance-children-gap: 0;
+  --sidebar-finance-parent-gap: 0;
+  --sidebar-nest-1:             calc(var(--sidebar-parent-icon-indent) + 0.125rem);
+  --sidebar-nest-2:             0.3125rem;
+  --sidebar-parent-open-bg:     rgba(0, 0, 0, 0.03);
+  /** Top-level / finance-direct active — light inset pill, not full-bleed block */
+  --sidebar-nav-row-active-bg:  rgba(0, 0, 0, 0.04);
+  --sidebar-nav-row-active-bg-nested: var(--surface-neutral-2);
+  --sidebar-nested-active-bg:   var(--surface-neutral-2);
+  /* Stage: sidebar nav polish (see AppSidebar) */
+  --sidebar-nav-text:           #374151;
+  --sidebar-nav-section-label: #9CA3AF;
+  /** Leaf-link active rows (sidebar only) */
+  --sidebar-nav-active-bg-top:    #FFF0F0;
+  --sidebar-nav-active-bg-nested: #FFF0F0;
+  --sidebar-nav-active-accent:    #A12228;
+  --sidebar-nav-active-text:      #A12228;
+  --sidebar-nav-accordion-caret: #9ca3af;
+  --sidebar-nav-item-py:        9px;
+  --sidebar-nav-item-px:        14px;
+  --sidebar-nav-child-pl:       26px;
+  --sidebar-drawer-max-w:       min(20rem, calc(100vw - 1rem));
+
+  --space-compact-gap: var(--space-2); /* tight stacks (title/meta, chip rows) */
+  --space-form-field-gap: var(--space-2); /* label → control */
+  --space-panel-gap: var(--space-2); /* filter row / inline control groups */
+  --space-grid-gap: var(--space-3); /* KPI strip, dense grids */
+  --space-section-gap: var(--space-4); /* blocks inside a card / dashboard section header */
+
+  --space-card-padding-x: var(--space-5); /* card + table horizontal edge */
+  --space-card-padding-y: var(--space-5); /* default card vertical padding */
+  --space-card-header-padding-y: 0.875rem; /* 14px — header band (SectionCard, tight card heads) */
+  --space-card-body-padding-y: var(--space-4); /* body under header */
+  --space-card-footer-padding-y: var(--space-4); /* footer band above border */
+
+  --space-kpi-padding-x: var(--space-4); /* KPI tiles slightly inset vs full cards */
+  --space-kpi-padding-y: var(--space-card-header-padding-y);
+
+  --space-pagination-y: var(--space-3);
+  --space-empty-block-y: 4rem;
+  --space-empty-block-y-emphasis: 5rem;
+
+  --table-edge-padding-x: var(--space-card-padding-x);
+  --table-cell-padding-x: 0.75rem;
+  --table-edge-x: var(--space-card-padding-x);
+
+  --empty-bg: #F7F7F7;
+  --empty-border: #E2E2E2;
+  --empty-text: #5F5F5F;
+  --empty-muted-text: #8A8A8A;
+  --empty-icon: #9A9A9A;
+  --empty-chip-bg: #F0F0F0;
+  --empty-chip-text: #8A8A8A;
+  --empty-chip-border: #E2E2E2;
+
+  --chart-track: #ECECEC;
+  --chart-grid: #ECECEC;
+  --chart-label: #6B7280;
+
+  --dashboard-overview: #A12228;
+  --dashboard-overview-soft: #F3F4F6; /* cool neutral (replaces pink-tint wash) */
+  --dashboard-commercial: #B45309;
+  --dashboard-commercial-soft: #F3F4F6; /* cool neutral (replaces warm cream) */
+  --dashboard-projects: #9C3D32;
+  --dashboard-projects-soft: #F3F4F6; /* cool neutral (replaces warm pink wash) */
+  --dashboard-resources: #4A5D44;
+  --dashboard-resources-soft: #EEF4EC;
+  --dashboard-finance: #5C3D5C;
+  --dashboard-finance-soft: #F3ECF3;
+
+  --placeholder-track: #ECECEC;
+  --placeholder-text: #C4C4C4;
+}
+
+html[data-sidebar-collapsed='true'] {
+  --sidebar-width: var(--sidebar-collapsed-width);
 }
 
 /* ─── Base ──────────────────────────────────────────────────── */
@@ -248,6 +380,26 @@ h4 { font-size: 0.875rem; font-weight: 600; }
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* Neutral scrollbar utility for dense data panes */
+.scrollbar-neutral {
+  scrollbar-color: var(--table-scroll-thumb) var(--table-scroll-track);
+}
+.scrollbar-neutral::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-neutral::-webkit-scrollbar-track {
+  background: var(--table-scroll-track);
+  border-radius: 999px;
+}
+.scrollbar-neutral::-webkit-scrollbar-thumb {
+  background: var(--table-scroll-thumb);
+  border-radius: 999px;
+}
+.scrollbar-neutral::-webkit-scrollbar-thumb:hover {
+  background: var(--table-scroll-thumb-hover);
 }
 
 /* ─── Sidebar nav interactions ──────────────────────────────── */
@@ -316,6 +468,73 @@ textarea:focus {
 }
 .tbl-row:hover {
   background-color: var(--color-surface-subtle);
+}
+
+/* Table edge alignment utilities */
+.table-edge-align {
+  --table-edge-x-local: var(--table-edge-x);
+}
+.table-edge-align :is(th, td):first-child {
+  padding-left: var(--table-edge-x-local) !important;
+}
+.table-edge-align :is(th, td):last-child {
+  padding-right: var(--table-edge-x-local) !important;
+}
+.table-edge-align--contained {
+  --table-edge-x-local: var(--table-edge-padding-x);
+}
+
+/* Global input/placeholder normalization */
+input::placeholder,
+textarea::placeholder,
+[contenteditable="true"]::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  background-color: var(--input-bg-focus);
+  border-color: var(--input-focus-border) !important;
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+/* Prevent browser autofill yellow from breaking neutral input surface */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary-neutral);
+  -webkit-box-shadow: 0 0 0px 1000px var(--input-bg-focus) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+/* Empty state shell utility */
+.empty-state-neutral {
+  background: var(--empty-bg);
+  border: 1px solid var(--empty-border);
+  color: var(--empty-text);
+}
+
+/* Chart / skeleton placeholder utility tokens */
+.placeholder-track {
+  background: var(--placeholder-track);
+}
+.placeholder-text {
+  color: var(--placeholder-text);
 }
 
 /* ─── Link inside table rows ────────────────────────────────── */

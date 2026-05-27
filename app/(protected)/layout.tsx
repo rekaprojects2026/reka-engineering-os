@@ -23,21 +23,20 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <div className="flex h-screen min-h-0 w-full max-w-[100vw] overflow-x-hidden overflow-y-hidden">
+    <div className="flex h-screen min-h-0 w-full max-w-[100vw] overflow-x-hidden overflow-y-hidden bg-[var(--surface-neutral-2)]">
       <AppSidebar {...sidebarProfile} />
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:pl-[var(--sidebar-width)]">
         <AppTopbar
           left={
-            <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <MobileSidebar {...sidebarProfile} />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 py-0.5">
                 <BreadcrumbNav />
               </div>
             </div>
           }
           right={<TopbarSearch />}
-          showSearch={true}
           notificationUserId={profile.id}
         />
 
@@ -79,7 +78,7 @@ export default async function ProtectedLayout({
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--color-background)]">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[var(--surface-neutral-2)]">
           <div className="mx-auto max-w-[var(--content-max-width)] px-4 py-6 sm:px-8 sm:py-8 md:px-12 xl:px-14">
             {children}
           </div>
