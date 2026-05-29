@@ -99,7 +99,7 @@ function memberColumns(
       key: 'system_role',
       header: 'Role',
       render: (m) => (
-        <span style={{ textTransform: 'capitalize' }}>{m.system_role ?? '—'}</span>
+        <span>{m.system_role ? (SYSTEM_ROLE_LABEL[m.system_role] ?? m.system_role) : '—'}</span>
       ),
     },
     {

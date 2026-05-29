@@ -8,6 +8,7 @@ import {
   ensureExpenseReviewMutation,
   ensureExpenseSubmitMutation,
 } from '@/lib/auth/mutation-policy'
+import { isOwner, isDirektur, isFinance } from '@/lib/auth/permissions'
 import { userCanViewProject } from '@/lib/auth/access-surface'
 import { getProjectById } from '@/lib/projects/queries'
 import type { ProjectExpenseCategory } from '@/types/database'
@@ -102,6 +103,9 @@ export async function submitExpense(formData: FormData): Promise<ExpenseActionRe
 
 export async function approveExpense(formData: FormData): Promise<void> {
   const profile = await loadMutationProfile()
+  if (!isOwner(profile.system_role) && !isDirektur(profile.system_role) && !isFinance(profile.system_role)) {
+    return
+  }
   const denied = ensureExpenseReviewMutation(profile)
   if (denied) return
 
@@ -127,6 +131,9 @@ export async function approveExpense(formData: FormData): Promise<void> {
 
 export async function rejectExpense(formData: FormData): Promise<void> {
   const profile = await loadMutationProfile()
+  if (!isOwner(profile.system_role) && !isDirektur(profile.system_role) && !isFinance(profile.system_role)) {
+    return
+  }
   const denied = ensureExpenseReviewMutation(profile)
   if (denied) return
 
@@ -165,12 +172,22 @@ export async function deleteExpense(formData: FormData): Promise<void> {
   const id = String(formData.get('id') ?? '').trim()
   if (!id) return
 
+  // Fetch expense to verify ownership and status before deleting
+  const { data: expense } = await supabase
+    .from('project_expenses')
+    .select('submitted_by, status')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (!expense) return
+  if (expense.submitted_by !== user.id || expense.status !== 'pending') {
+    return
+  }
+
   const { error } = await supabase
     .from('project_expenses')
     .delete()
     .eq('id', id)
-    .eq('submitted_by', user.id)
-    .eq('status', 'pending')
 
   if (error) return
 

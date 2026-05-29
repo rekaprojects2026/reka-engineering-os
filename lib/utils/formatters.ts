@@ -11,7 +11,12 @@ const relativeFormatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
 /** Format a date as "15 Apr 2026" */
 export function formatDate(date: string | Date | null | undefined): string {
   if (!date) return '—'
-  return dateFormatter.format(new Date(date))
+  // Prevent UTC midnight rollback for date-only strings (e.g. "2025-12-01" → treat as local midnight)
+  const normalized =
+    typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
+      ? date + 'T00:00:00'
+      : date
+  return dateFormatter.format(new Date(normalized))
 }
 
 /** Short relative time for activity feeds and comments, e.g. "12m ago", "3h ago". */

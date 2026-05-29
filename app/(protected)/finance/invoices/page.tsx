@@ -9,6 +9,8 @@ import type { Column } from '@/components/shared/DataTable'
 import { getInvoices } from '@/lib/invoices/queries'
 import type { InvoiceWithRelations } from '@/lib/invoices/queries'
 import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
+import { StatusBadge } from '@/components/shared/StatusBadge'
+import { INVOICE_STATUSES } from '@/lib/constants/statuses'
 import { getUsdToIdrRate } from '@/lib/fx/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { FileText, Plus } from 'lucide-react'
@@ -19,22 +21,9 @@ interface PageProps {
   searchParams: Promise<{ search?: string; status?: string }>
 }
 
-const STATUS_STYLES: Record<string, { bg: string; color: string; label: string }> = {
-  draft:   { bg: '#f1f5f9', color: '#475569', label: 'Draft' },
-  sent:    { bg: '#eff6ff', color: '#2563eb', label: 'Sent' },
-  partial: { bg: '#fefce8', color: '#ca8a04', label: 'Partial' },
-  paid:    { bg: '#f0fdf4', color: '#16a34a', label: 'Paid' },
-  overdue: { bg: '#fef2f2', color: '#dc2626', label: 'Overdue' },
-  void:    { bg: '#f8fafc', color: '#94a3b8', label: 'Void' },
-}
-
 function InvoiceStatusBadge({ status }: { status: string }) {
-  const s = STATUS_STYLES[status] ?? STATUS_STYLES.draft
-  return (
-    <span style={{ padding: '2px 8px', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, backgroundColor: s.bg, color: s.color }}>
-      {s.label}
-    </span>
-  )
+  const cfg = INVOICE_STATUSES[status as keyof typeof INVOICE_STATUSES] ?? INVOICE_STATUSES.draft
+  return <StatusBadge label={cfg.label} variant={cfg.variant} />
 }
 
 function invoiceColumns(fxRate: number): Column<InvoiceWithRelations>[] {
@@ -126,11 +115,46 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
 
   const hasActiveFilters = Boolean(params.search || params.status)
 
-  // Summary stats
-  const totalGross = invoices.filter(i => i.status !== 'void').reduce((s, i) => s + (i.gross_amount ?? 0), 0)
-  const totalNet   = invoices.filter(i => i.status !== 'void').reduce((s, i) => s + (i.net_amount ?? 0), 0)
-  const outstanding = invoices.filter(i => ['sent','partial','overdue'].includes(i.status)).reduce((s, i) => s + (i.net_amount ?? 0), 0)
-  const totalPaid  = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.net_amount ?? 0), 0)
+  // Summary stats — grouped by currency to avoid mixing USD and IDR
+  const activeInvoices = invoices.filter(i => i.status !== 'void')
+  const outstandingInvoices = invoices.filter(i => ['sent','partial','overdue'].includes(i.status))
+  const paidInvoices = invoices.filter(i => i.status === 'paid')
+
+  const sumByCurrency = (list: typeof invoices, field: 'gross_amount' | 'net_amount') => {
+    const usd = list.filter(i => i.currency === 'USD').reduce((s, i) => s + (i[field] ?? 0), 0)
+    const idr = list.filter(i => i.currency !== 'USD').reduce((s, i) => s + (i[field] ?? 0), 0)
+    return { usd, idr }
+  }
+
+  const grossTotals       = sumByCurrency(activeInvoices, 'gross_amount')
+  const netTotals         = sumByCurrency(activeInvoices, 'net_amount')
+  const outstandingTotals = sumByCurrency(outstandingInvoices, 'net_amount')
+  const paidTotals        = sumByCurrency(paidInvoices, 'net_amount')
+
+  function renderCurrencyAmounts(usd: number, idr: number) {
+    return (
+      <>
+        {usd > 0 && (
+          <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '1px' }}>
+            USD {usd.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          </p>
+        )}
+        {usd > 0 && (
+          <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: idr > 0 ? '4px' : '0' }}>
+            ~{(usd * fxRate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </p>
+        )}
+        {idr > 0 && (
+          <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '1px' }}>
+            {idr.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </p>
+        )}
+        {usd === 0 && idr === 0 && (
+          <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-muted)' }}>—</p>
+        )}
+      </>
+    )
+  }
 
   return (
     <div>
@@ -147,23 +171,18 @@ export default async function InvoicesPage({ searchParams }: PageProps) {
         }
       />
 
-      {/* Summary cards */}
+      {/* Summary cards — separate USD and IDR totals */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '12px', marginBottom: '20px' }}>
         {[
-          { label: 'Total Gross', amount: totalGross, note: 'Before any fees' },
-          { label: 'Net Revenue', amount: totalNet, note: 'After all fees' },
-          { label: 'Outstanding', amount: outstanding, note: 'Sent / partial / overdue' },
-          { label: 'Collected', amount: totalPaid, note: 'Paid invoices' },
+          { label: 'Total Gross', usd: grossTotals.usd, idr: grossTotals.idr, note: 'Before any fees' },
+          { label: 'Net Revenue', usd: netTotals.usd, idr: netTotals.idr, note: 'After all fees' },
+          { label: 'Outstanding', usd: outstandingTotals.usd, idr: outstandingTotals.idr, note: 'Sent / partial / overdue' },
+          { label: 'Collected', usd: paidTotals.usd, idr: paidTotals.idr, note: 'Paid invoices' },
         ].map(card => (
           <div key={card.label} style={{ padding: '14px 16px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-card)' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{card.label}</p>
-            <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '2px' }}>
-              USD {card.amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-            </p>
-            <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
-              ~{(card.amount * fxRate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-            </p>
-            <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>{card.note}</p>
+            <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{card.label}</p>
+            {renderCurrencyAmounts(card.usd, card.idr)}
+            <p style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginTop: '4px' }}>{card.note}</p>
           </div>
         ))}
       </div>

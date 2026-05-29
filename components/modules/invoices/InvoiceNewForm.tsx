@@ -38,11 +38,16 @@ export function InvoiceNewForm({ clients, projects, accounts, fxRate, createInvo
   const yyyymm = `${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}`
   const invoiceCodePlaceholder = `Kosongkan untuk auto-generate (INV-${yyyymm}-001)`
 
-  // Fee calculations
+  // Fee calculations — replicate server-side calcMoneyPercent rounding (ROUND_HALF_UP to 0 dp)
+  // This ensures the preview always matches what gets saved.
+  function calcMoneyPercent(base: number, pct: number): number {
+    if (pct === 0 || base === 0) return 0
+    return Math.round(base * pct / 100)
+  }
   const grossNum = parseFloat(gross) || 0
-  const platformFee = grossNum * (parseFloat(platformPct) || 0) / 100
-  const gatewayFee = (grossNum - platformFee) * (parseFloat(gatewayPct) || 0) / 100
-  const netAmount = grossNum - platformFee - gatewayFee
+  const platformFee = calcMoneyPercent(grossNum, parseFloat(platformPct) || 0)
+  const gatewayFee = calcMoneyPercent(grossNum - platformFee, parseFloat(gatewayPct) || 0)
+  const netAmount = Math.round((grossNum - platformFee - gatewayFee) * 100) / 100
 
   // Filter projects by client
   const filteredProjects = selectedClientId

@@ -173,6 +173,18 @@ export function getNavPermissions(role: SystemRole | null | undefined): NavPermi
 
 // ── Backward compat aliases ──────────────────────────────────
 
+// ── Single-role-only predicates (no owner escalation) ────────────────────────
+// Use these when you need to check EXACTLY that role without implicit owner escalation.
+
+export const isDirekturOnly = (r?: SystemRole | null) => effectiveRole(r) === 'direktur'
+export const isTDOnly = (r?: SystemRole | null) => effectiveRole(r) === 'technical_director'
+export const isManajerOnly = (r?: SystemRole | null) => effectiveRole(r) === 'manajer'
+
+/** Owner + Direktur + TD + Manajer — can override task status for any task. */
+export function canOverrideTaskStatus(role?: SystemRole | null): boolean {
+  return isOwner(role) || isDirekturOnly(role) || isTDOnly(role) || isManajerOnly(role)
+}
+
 /** @deprecated Prefer isDirektur() or isManagement() */
 export function isAdmin(role: SystemRole | null | undefined): boolean {
   return isManagement(role)

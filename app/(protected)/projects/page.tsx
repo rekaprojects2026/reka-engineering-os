@@ -20,6 +20,7 @@ import type { ProjectWithRelations } from '@/lib/projects/queries'
 import { FolderKanban, Plus } from 'lucide-react'
 import { parsePagination, totalPages } from '@/lib/utils/pagination'
 import { Pagination } from '@/components/shared/Pagination'
+import { PROJECT_STATUS_OPTIONS } from '@/lib/constants/statuses'
 
 export const metadata = { title: 'Projects — ReKa Engineering OS' }
 
@@ -41,9 +42,8 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
   const { page, pageSize } = parsePagination(params)
 
   const scopeOpts =
-    role === 'member' || role === 'freelancer' ? { assignedUserId: profile.id } :
+    role === 'member' || role === 'freelancer' || role === 'senior' ? { assignedUserId: profile.id } :
     role === 'manajer' ? { assignedUserId: profile.id } :
-    role === 'senior' ? { reviewerUserId: profile.id } :
     {}
 
   const [projectList, disciplineFilterOptions] = await Promise.all([
@@ -69,7 +69,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
   const pageTitle = role === 'member' ? 'My Projects' : 'Projects'
   const pageSubtitle =
     role === 'member' || isFreelancer(role) ? 'Projects you are assigned to.' :
-    isSenior(role) ? 'Projects where you are assigned as reviewer.' :
+    isSenior(role) ? 'Projects you are assigned to.' :
     role === 'manajer' ? 'Projects in your operational scope.' :
     'Active and historical engineering project work.'
 
@@ -137,17 +137,9 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           <select name="status" defaultValue={params.status ?? ''}
             className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
             <option value="">All Statuses</option>
-            <option value="pending_approval">Pending Approval</option>
-            <option value="rejected">Rejected</option>
-            <option value="new">New</option>
-            <option value="ready_to_start">Ready to Start</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="internal_review">Internal Review</option>
-            <option value="waiting_client">Waiting Client</option>
-            <option value="in_revision">In Revision</option>
-            <option value="on_hold">On Hold</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            {PROJECT_STATUS_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
           </select>
           <select name="discipline" defaultValue={params.discipline ?? ''}
             className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">

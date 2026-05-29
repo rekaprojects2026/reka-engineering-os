@@ -5,7 +5,7 @@ import { PageHeader }     from '@/components/layout/PageHeader'
 import { SectionCard }    from '@/components/shared/SectionCard'
 import { TeamMemberForm } from '@/components/modules/team/TeamMemberForm'
 import { AvatarUploadInput } from '@/components/modules/team/AvatarUploadInput'
-import { isFinance, isTD } from '@/lib/auth/permissions'
+import { isOwner } from '@/lib/auth/permissions'
 import { getSettingOptions } from '@/lib/settings/queries'
 
 export const metadata = { title: 'My Profile — ReKa Engineering OS' }
@@ -22,9 +22,12 @@ export default async function MyProfilePage() {
     getSettingOptions('worker_type'),
   ])
 
-  // Only TD / Finance may edit privileged fields (rates, system role, …) even on their own profile.
+  // Owner, TD, and Finance may edit privileged fields (rates, system role, …) even on their own profile.
   // Direktur & others use the same form but without those sections — matches server stripping in updateMember.
-  const showPrivilegedTeamFields = isTD(member?.system_role) || isFinance(member?.system_role)
+  const showPrivilegedTeamFields =
+    isOwner(member?.system_role) ||
+    member?.system_role === 'technical_director' ||
+    member?.system_role === 'finance'
 
   if (!member) {
     return (

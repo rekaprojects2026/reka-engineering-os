@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { logActivity } from '@/lib/activity/actions'
-import { effectiveRole, isFreelancer, isManajer, isManagement, isSenior } from '@/lib/auth/permissions'
+import { canOverrideTaskStatus, effectiveRole, isFreelancer, isManajer, isManagement, isSenior } from '@/lib/auth/permissions'
 import {
   loadMutationProfile,
   ensureProjectOperationalMutation,
@@ -323,11 +323,23 @@ export async function updateTaskStatus(id: string, status: string) {
 
   const { data: task, error: fetchError } = await supabase
     .from('tasks')
-    .select('project_id, status')
+    .select('project_id, status, assigned_to_user_id, reviewer_user_id')
     .eq('id', id)
     .single()
 
   if (fetchError) throw new Error(fetchError.message)
+
+  // Authorization check
+  const profile = await loadMutationProfile()
+  const role = profile.system_role
+  if (!canOverrideTaskStatus(role)) {
+    // Non-management roles: must be assignee or reviewer
+    const isAssignee = task?.assigned_to_user_id === user.id
+    const isReviewer = task?.reviewer_user_id === user.id
+    if (!isAssignee && !isReviewer) {
+      throw new Error('You are not authorized to update this task.')
+    }
+  }
 
   const previousStatus = task?.status ?? ''
 

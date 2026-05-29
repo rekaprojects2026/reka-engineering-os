@@ -29,6 +29,7 @@ import type { TaskWithRelations } from '@/lib/tasks/queries'
 import { formatDate } from '@/lib/utils/formatters'
 import { parsePagination, totalPages } from '@/lib/utils/pagination'
 import { Pagination } from '@/components/shared/Pagination'
+import { TASK_STATUS_OPTIONS } from '@/lib/constants/statuses'
 import { CheckSquare, Plus, AlertTriangle, List, LayoutGrid } from 'lucide-react'
 import { TasksViewWrapper } from '@/components/modules/tasks/TasksViewWrapper'
 
@@ -53,13 +54,18 @@ export default async function TasksPage({ searchParams }: PageProps) {
   const params  = await searchParams
   const { page, pageSize } = parsePagination(params)
 
+  const scopeProjectIds: string[] | undefined =
+    role === 'manajer'
+      ? ((await getViewableProjectIdsForUser(profile.id, profile.system_role)) ?? [])
+      : undefined
+
   const scopeOpts =
     role === 'member' || isFreelancer(role)
       ? { scopeAssignedTo: profile.id }
       : isSenior(role)
         ? { scopeReviewerId: profile.id }
         : role === 'manajer'
-          ? { scopeProjectIds: (await getViewableProjectIdsForUser(profile.id, profile.system_role)) ?? [] }
+          ? { scopeProjectIds: scopeProjectIds ?? [] }
           : {}
 
   const [taskResult, allUsers] = await Promise.all([
@@ -119,12 +125,9 @@ export default async function TasksPage({ searchParams }: PageProps) {
           <select name="status" defaultValue={params.status ?? ''}
             className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
             <option value="">All Statuses</option>
-            <option value="to_do">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="review">Review</option>
-            <option value="revision">Revision</option>
-            <option value="blocked">Blocked</option>
-            <option value="done">Done</option>
+            {TASK_STATUS_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
           </select>
           <select name="priority" defaultValue={params.priority ?? ''}
             className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] cursor-pointer">
@@ -157,19 +160,34 @@ export default async function TasksPage({ searchParams }: PageProps) {
 
       <SectionCard noPadding>
         {tasks.length === 0 ? (
-          <EmptyState
-            compact={hasActiveFilters}
-            icon={<CheckSquare size={hasActiveFilters ? 16 : 22} />}
-            title={hasActiveFilters ? 'No tasks match your filters' : 'No tasks yet'}
-            description={hasActiveFilters ? 'Try different criteria or clear filters.' : 'Create your first task to start tracking work items.'}
-            action={
-              hasActiveFilters
-                ? <Link href="/tasks" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium no-underline">Clear filters</Link>
-                : canCreate
-                  ? <Link href="/tasks/new" style={{ padding: '9px 18px', backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-fg)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 600, textDecoration: 'none' }}>Create first task</Link>
-                  : undefined
-            }
-          />
+          (() => {
+            const noProjectAssignments = scopeProjectIds !== undefined && scopeProjectIds.length === 0
+            const emptyTitle = hasActiveFilters
+              ? 'No tasks match your filters'
+              : noProjectAssignments
+                ? 'No project assignments yet'
+                : 'No tasks yet'
+            const emptyDescription = hasActiveFilters
+              ? 'Try different criteria or clear filters.'
+              : noProjectAssignments
+                ? "You haven't been assigned to any projects yet. Ask your manager to add you to a project."
+                : 'Create your first task to start tracking work items.'
+            return (
+              <EmptyState
+                compact={hasActiveFilters}
+                icon={<CheckSquare size={hasActiveFilters ? 16 : 22} />}
+                title={emptyTitle}
+                description={emptyDescription}
+                action={
+                  hasActiveFilters
+                    ? <Link href="/tasks" className="px-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium no-underline">Clear filters</Link>
+                    : !noProjectAssignments && canCreate
+                      ? <Link href="/tasks/new" style={{ padding: '9px 18px', backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-fg)', borderRadius: 'var(--radius-control)', fontSize: '0.8125rem', fontWeight: 600, textDecoration: 'none' }}>Create first task</Link>
+                      : undefined
+                }
+              />
+            )
+          })()
         ) : (
           <TasksViewWrapper tasks={tasks} today={today} onStatusUpdate={handleStatusUpdate} />
         )}

@@ -178,7 +178,8 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
     { key: 'portal', label: 'Client portal', icon: <Link2 size={13} /> },
   ]
 
-  const discParts = normalizeProjectDisciplines(project).map(
+  const disciplines = normalizeProjectDisciplines(project)
+  const discParts = disciplines.map(
     (d) => d.charAt(0).toUpperCase() + d.slice(1).replace(/_/g, ' '),
   )
   const discSubtitle =
@@ -319,6 +320,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           taskProgressTopLevel={taskProgressTopLevel}
           sourceType={sourceType}
           canAddConstructionAdmin={canAddConstructionAdmin}
+          disciplines={disciplines}
         />
       )}
       {activeTab === 'termin' && sourceType === 'DOMESTIC' && (
@@ -337,7 +339,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           projectId={project.id}
           teamMembers={teamMembers}
           users={users}
-          projectDisciplines={normalizeProjectDisciplines(project)}
+          projectDisciplines={disciplines}
           leadName={leadName}
           reviewerName={reviewerName}
           canManageTeam={allowOps && canEditProjectMeta}
@@ -436,6 +438,7 @@ function OverviewTab({
   taskProgressTopLevel,
   sourceType,
   canAddConstructionAdmin,
+  disciplines,
 }: {
   project: Awaited<ReturnType<typeof getProjectById>> & {}
   clientName: string
@@ -448,6 +451,7 @@ function OverviewTab({
   taskProgressTopLevel: { total: number; done: number }
   sourceType: string
   canAddConstructionAdmin: boolean
+  disciplines: string[]
 }) {
   if (!project) return null
 
@@ -522,11 +526,11 @@ function OverviewTab({
               </DetailField>
             ) : null}
             <DetailField label="Disciplines">
-              {normalizeProjectDisciplines(project).length === 0 ? (
+              {disciplines.length === 0 ? (
                 <span className="text-[var(--color-text-muted)]">—</span>
               ) : (
                 <div className="flex flex-wrap gap-1">
-                  {normalizeProjectDisciplines(project).map((d) => (
+                  {disciplines.map((d) => (
                     <span
                       key={d}
                       className="rounded-md bg-[var(--color-surface-muted)] px-2 py-0.5 text-[0.75rem] capitalize text-[var(--color-text-secondary)]"

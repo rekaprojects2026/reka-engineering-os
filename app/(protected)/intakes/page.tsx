@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation'
 
-// /intakes now lives at /leads — redirect for backward compatibility
+// /intakes now lives at /leads — permanent redirect for backward compatibility
 export default function IntakesRedirect() {
-  redirect('/leads')
+  permanentRedirect('/leads')
 }

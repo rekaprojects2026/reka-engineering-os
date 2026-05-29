@@ -39,7 +39,34 @@ export const PROJECT_STATUSES = {
   ON_HOLD:         { label: 'On Hold',           variant: 'neutral'  },
   COMPLETED:       { label: 'Completed',         variant: 'success'  },
   CANCELLED:       { label: 'Cancelled',         variant: 'danger'   },
+  CLOSED:          { label: 'Closed',            variant: 'neutral'  },
 } as const
+
+/** DB-value → display label for project status filter dropdowns */
+export const PROJECT_STATUS_OPTIONS: { value: string; label: string }[] = [
+  { value: 'pending_approval', label: 'Pending Approval' },
+  { value: 'rejected',         label: 'Rejected' },
+  { value: 'new',              label: 'New' },
+  { value: 'ready_to_start',   label: 'Ready to Start' },
+  { value: 'ongoing',          label: 'Ongoing' },
+  { value: 'internal_review',  label: 'Internal Review' },
+  { value: 'waiting_client',   label: 'Waiting Client' },
+  { value: 'in_revision',      label: 'In Revision' },
+  { value: 'on_hold',          label: 'On Hold' },
+  { value: 'completed',        label: 'Completed' },
+  { value: 'cancelled',        label: 'Cancelled' },
+  { value: 'closed',           label: 'Closed' },
+]
+
+/** DB-value → display label for task status filter dropdowns */
+export const TASK_STATUS_OPTIONS: { value: string; label: string }[] = [
+  { value: 'to_do',       label: 'To Do' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'review',      label: 'Review' },
+  { value: 'revision',    label: 'Revision' },
+  { value: 'blocked',     label: 'Blocked' },
+  { value: 'done',        label: 'Done' },
+]
 
 export const TASK_STATUSES = {
   TODO:        { label: 'To Do',      variant: 'neutral'  },
@@ -71,6 +98,15 @@ export const PAYMENT_STATUSES = {
   UNPAID:  { label: 'Unpaid',  variant: 'danger'  },
   PARTIAL: { label: 'Partial', variant: 'review'  },
   PAID:    { label: 'Paid',    variant: 'success' },
+} as const
+
+export const INVOICE_STATUSES = {
+  draft:   { label: 'Draft',   variant: 'neutral'  },
+  sent:    { label: 'Sent',    variant: 'active'   },
+  partial: { label: 'Partial', variant: 'review'   },
+  paid:    { label: 'Paid',    variant: 'success'  },
+  overdue: { label: 'Overdue', variant: 'danger'   },
+  void:    { label: 'Void',    variant: 'neutral'  },
 } as const
 
 export type StatusVariant = 'neutral' | 'active' | 'review' | 'success' | 'danger'

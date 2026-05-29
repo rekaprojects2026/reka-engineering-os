@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 import { Receipt, Plus } from 'lucide-react'
 
 import { getSessionProfile, requireRole } from '@/lib/auth/session'
-import { isFinance, isManajer } from '@/lib/auth/permissions'
+import { canProposeCompensation, isFinance, isManajer } from '@/lib/auth/permissions'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { SectionCard } from '@/components/shared/SectionCard'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -17,7 +17,7 @@ import {
   type CompensationListFilter,
   type CompensationRow,
 } from '@/lib/compensation/queries'
-import { formatDate, formatIDR } from '@/lib/utils/formatters'
+import { formatDate, formatIDR, formatUSD } from '@/lib/utils/formatters'
 import { RATE_TYPE_OPTIONS, WORK_BASIS_OPTIONS } from '@/lib/constants/options'
 import { parsePagination, totalPages } from '@/lib/utils/pagination'
 import { Pagination } from '@/components/shared/Pagination'
@@ -81,14 +81,18 @@ function compensationColumns(showProposer: boolean): Column<CompensationRow>[] {
     {
       key: 'rate',
       header: 'Rate',
-      render: (r) => <span style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{formatIDR(r.rate_amount)}</span>,
+      render: (r) => (
+        <span style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          {r.currency_code === 'USD' ? formatUSD(r.rate_amount) : formatIDR(r.rate_amount)}
+        </span>
+      ),
     },
     {
       key: 'subtotal',
       header: 'Subtotal',
       render: (r) => (
         <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-          {formatIDR(r.subtotal_amount)}
+          {r.currency_code === 'USD' ? formatUSD(r.subtotal_amount) : formatIDR(r.subtotal_amount)}
         </span>
       ),
     },
@@ -143,7 +147,7 @@ export default async function CompensationListPage({ searchParams }: PageProps) 
   const records = compList.rows
   const compensationTotalCount = compList.count
 
-  const canPropose = _sp.system_role === 'technical_director' || _sp.system_role === 'manajer'
+  const canPropose = canProposeCompensation(_sp.system_role)
   const showProposerCol = !isManajer(_sp.system_role)
 
   return (

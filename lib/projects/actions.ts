@@ -301,12 +301,15 @@ export async function updateProject(id: string, formData: FormData) {
     console.error('ensureDefaultTerminsForProject:', terminErr.error)
   }
 
+  const statusChanged = payload.status && payload.status !== project.status
   await logActivity({
     entity_type: 'project',
     entity_id: id,
-    action_type: 'status_updated',
+    action_type: statusChanged ? 'status_updated' : 'project_updated',
     user_id: user.id,
-    note: `Project updated (status ${payload.status})`,
+    note: statusChanged
+      ? `Project status changed to ${payload.status}`
+      : 'Project details updated',
   })
 
   revalidatePath('/projects')

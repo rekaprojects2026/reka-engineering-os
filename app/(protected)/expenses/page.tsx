@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSessionProfile } from '@/lib/auth/session'
-import { canAccessExpenses } from '@/lib/auth/permissions'
+import { canAccessExpenses, isManagement } from '@/lib/auth/permissions'
 import { getMyExpenses, getAllExpenses } from '@/lib/expenses/queries'
 import { approveExpense, rejectExpense, deleteExpense } from '@/lib/expenses/actions'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -42,16 +42,16 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
   const params = await searchParams
   const statusFilter = params.status
 
-  const isManagement = ['direktur', 'technical_director', 'finance'].includes(profile.system_role ?? '')
+  const userIsManagement = isManagement(profile.system_role)
 
-  const expenses = isManagement
+  const expenses = userIsManagement
     ? await getAllExpenses(statusFilter)
     : await getMyExpenses(profile.id)
 
   const supabase = await createServerClient()
   let projectRows: ExpenseProjectOption[] = []
 
-  if (isManagement) {
+  if (userIsManagement) {
     const { data } = await supabase
       .from('projects')
       .select('id, project_code, name')
@@ -86,7 +86,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
         title="Expenses"
         subtitle="Log pengeluaran operasional project. Expense yang diapprove masuk ke project cost."
         actions={
-          isManagement ? (
+          userIsManagement ? (
             <form method="GET" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {[
                 { value: '', label: 'Semua' },
@@ -129,7 +129,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
       <div className="mt-4">
         <SectionCard
           title={
-            isManagement
+            userIsManagement
               ? `Semua Expenses${pendingCount > 0 ? ` · ${pendingCount} pending` : ''}`
               : 'Expenses Saya'
           }
@@ -151,7 +151,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
                         'Kategori',
                         'Deskripsi',
                         'Jumlah',
-                        ...(isManagement ? ['Submitter'] : []),
+                        ...(userIsManagement ? ['Submitter'] : []),
                         'Status',
                         '\u00a0',
                       ] as const
@@ -225,7 +225,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
                                 maximumFractionDigits: 2,
                               })}`}
                         </td>
-                        {isManagement && (
+                        {userIsManagement && (
                           <td style={{ padding: '10px 12px', color: 'var(--color-text-secondary)' }}>
                             {exp.submittedByName}
                           </td>
@@ -250,7 +250,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
                           ) : null}
                         </td>
                         <td style={{ padding: '10px 12px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                          {isManagement && exp.status === 'pending' ? (
+                          {userIsManagement && exp.status === 'pending' ? (
                             <span style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'flex-end' }}>
                               <form action={approveExpense} style={{ display: 'inline' }}>
                                 <input type="hidden" name="id" value={exp.id} />
@@ -300,7 +300,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
                               </form>
                             </span>
                           ) : null}
-                          {!isManagement && exp.status === 'pending' ? (
+                          {!userIsManagement && exp.status === 'pending' ? (
                             <form action={deleteExpense} style={{ display: 'inline' }}>
                               <input type="hidden" name="id" value={exp.id} />
                               <button

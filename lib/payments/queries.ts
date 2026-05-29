@@ -26,15 +26,41 @@ const PAY_SELECT = `
   member:profiles!member_id(full_name)
 `.trim()
 
-export async function getPaymentRecords(): Promise<PaymentRow[]> {
+export interface GetPaymentRecordsOptions {
+  status?: string
+  memberName?: string
+  page?: number
+  pageSize?: number
+}
+
+export async function getPaymentRecords(opts: GetPaymentRecordsOptions = {}): Promise<{ rows: PaymentRow[]; count: number }> {
   const supabase = await createServerClient()
-  const { data, error } = await supabase
+  const { status, memberName, page = 1, pageSize = 30 } = opts
+
+  let query = supabase
     .from('payment_records')
-    .select(PAY_SELECT)
+    .select(PAY_SELECT, { count: 'exact' })
     .order('created_at', { ascending: false })
 
-  if (error) return []
-  return (data ?? []) as unknown as PaymentRow[]
+  if (status) query = query.eq('payment_status', status)
+
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+
+  if (error) return { rows: [], count: 0 }
+
+  let rows = (data ?? []) as unknown as PaymentRow[]
+
+  // Client-side member name filter (profile join can't be filtered server-side easily)
+  if (memberName && memberName.trim()) {
+    const needle = memberName.trim().toLowerCase()
+    rows = rows.filter(r => (r.member?.full_name ?? '').toLowerCase().includes(needle))
+  }
+
+  return { rows, count: count ?? 0 }
 }
 
 export async function getPaymentById(id: string): Promise<PaymentRow | null> {
